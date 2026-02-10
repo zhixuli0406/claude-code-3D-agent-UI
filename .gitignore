@@ -1,1 +1,4 @@
 /.claude
+AgentCommand/.build/
+AgentCommand/dist/
+.DS_Store
