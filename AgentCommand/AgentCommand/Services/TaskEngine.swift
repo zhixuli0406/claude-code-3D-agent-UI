@@ -48,6 +48,14 @@ class TaskEngine {
         timer = nil
     }
 
+    func addTask(_ task: AgentTask) {
+        taskStates[task.id] = TaskSimState(
+            taskId: task.id,
+            agentId: task.assignedAgentId,
+            estimatedDuration: task.estimatedDuration
+        )
+    }
+
     private func tick(deltaTime: TimeInterval) {
         for taskId in taskStates.keys {
             guard var state = taskStates[taskId] else { continue }

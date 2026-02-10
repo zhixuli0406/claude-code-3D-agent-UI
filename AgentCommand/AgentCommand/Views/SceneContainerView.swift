@@ -4,41 +4,46 @@ struct SceneContainerView: View {
     @EnvironmentObject var appState: AppState
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // 3D Scene
-            SceneKitView(
-                sceneManager: appState.sceneManager,
-                backgroundColor: appState.sceneManager.sceneBackgroundColor,
-                onAgentSelected: { agentId in
-                    appState.selectAgent(agentId)
-                }
-            )
-
-            // Top-left: agent status legend
-            VStack(alignment: .leading) {
-                StatusBadgeOverlay(
-                    agents: appState.agents,
-                    selectedAgentId: appState.selectedAgentId
+        VStack(spacing: 0) {
+            ZStack(alignment: .topLeading) {
+                // 3D Scene
+                SceneKitView(
+                    sceneManager: appState.sceneManager,
+                    backgroundColor: appState.sceneManager.sceneBackgroundColor,
+                    onAgentSelected: { agentId in
+                        appState.selectAgent(agentId)
+                    }
                 )
-                .allowsHitTesting(false)
 
-                Spacer()
-            }
-
-            // Top-center: progress HUD
-            VStack {
-                HStack {
-                    Spacer()
-                    ProgressOverlay(
-                        tasks: appState.tasks,
-                        isSimulationRunning: appState.isSimulationRunning
+                // Top-left: agent status legend
+                VStack(alignment: .leading) {
+                    StatusBadgeOverlay(
+                        agents: appState.agents,
+                        selectedAgentId: appState.selectedAgentId
                     )
                     .allowsHitTesting(false)
+
                     Spacer()
                 }
-                Spacer()
+
+                // Top-center: progress HUD
+                VStack {
+                    HStack {
+                        Spacer()
+                        ProgressOverlay(
+                            tasks: appState.tasks,
+                            isSimulationRunning: appState.isSimulationRunning
+                        )
+                        .allowsHitTesting(false)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .padding(.top, 8)
             }
-            .padding(.top, 8)
+
+            // Bottom: prompt input bar
+            PromptInputBar()
         }
     }
 }
