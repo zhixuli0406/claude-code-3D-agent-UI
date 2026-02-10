@@ -45,7 +45,7 @@ class CLIProcess: ObservableObject, Identifiable {
 
         let (execURL, extraArgs) = Self.resolveExecutable()
         process.executableURL = execURL
-        process.arguments = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose"]
+        process.arguments = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions"]
         process.currentDirectoryURL = URL(fileURLWithPath: workingDirectory)
         process.standardOutput = outputPipe
         process.standardError = errorPipe
