@@ -14,10 +14,6 @@ class CLIProcess: ObservableObject, Identifiable {
     @Published var toolCallCount: Int = 0
 
     private var process: Process?
-    private var outputPipe: Pipe?
-    private var errorPipe: Pipe?
-    private var readTask: Task<Void, Never>?
-    private var errorReadTask: Task<Void, Never>?
 
     // Callbacks
     var onStatusChange: ((AgentStatus) -> Void)?
@@ -26,6 +22,10 @@ class CLIProcess: ObservableObject, Identifiable {
     var onFailed: ((String) -> Void)?
 
     private static let maxOutputEntries = 500
+
+    // Buffers for incremental line assembly (accessed from readabilityHandler queues)
+    private let stdoutBuffer = LineBuffer()
+    private let stderrBuffer = LineBuffer()
 
     init(id: UUID = UUID(), taskId: UUID, agentId: UUID, prompt: String, workingDirectory: String) {
         self.id = id
@@ -69,8 +69,6 @@ class CLIProcess: ObservableObject, Identifiable {
         process.environment = env
 
         self.process = process
-        self.outputPipe = outputPipe
-        self.errorPipe = errorPipe
 
         isRunning = true
         onStatusChange?(.working)
@@ -78,20 +76,64 @@ class CLIProcess: ObservableObject, Identifiable {
         appendEntry(.systemInfo, "Working dir: \(workingDirectory)")
         appendEntry(.systemInfo, "Process started: \(prompt)")
 
-        // Read stdout in background
-        readTask = Task.detached { [weak self] in
-            await self?.readOutputStream(pipe: outputPipe)
+        // Non-blocking stdout reading via readabilityHandler
+        outputPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            let data = handle.availableData
+            guard !data.isEmpty, let self = self else {
+                // EOF — clean up handler
+                handle.readabilityHandler = nil
+                return
+            }
+
+            // Assemble complete lines from chunks
+            let lines = self.stdoutBuffer.append(data)
+            for lineData in lines {
+                Task { @MainActor in
+                    self.processLine(lineData)
+                }
+            }
         }
 
-        // Read stderr in background
-        errorReadTask = Task.detached { [weak self] in
-            await self?.readErrorStream(pipe: errorPipe)
+        // Non-blocking stderr reading via readabilityHandler
+        errorPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            let data = handle.availableData
+            guard !data.isEmpty, let self = self else {
+                handle.readabilityHandler = nil
+                return
+            }
+
+            let lines = self.stderrBuffer.append(data)
+            for lineData in lines {
+                if let text = String(data: lineData, encoding: .utf8)?
+                    .trimmingCharacters(in: .whitespacesAndNewlines),
+                   !text.isEmpty {
+                    Task { @MainActor in
+                        self.appendEntry(.error, text)
+                    }
+                }
+            }
         }
 
         // Handle termination
         process.terminationHandler = { [weak self] proc in
-            Task { @MainActor in
-                self?.handleTermination(exitCode: proc.terminationStatus)
+            // Flush remaining buffer content
+            if let self = self {
+                let remainingStdout = self.stdoutBuffer.flush()
+                let remainingStderr = self.stderrBuffer.flush()
+
+                Task { @MainActor in
+                    for lineData in remainingStdout {
+                        self.processLine(lineData)
+                    }
+                    for lineData in remainingStderr {
+                        if let text = String(data: lineData, encoding: .utf8)?
+                            .trimmingCharacters(in: .whitespacesAndNewlines),
+                           !text.isEmpty {
+                            self.appendEntry(.error, text)
+                        }
+                    }
+                    self.handleTermination(exitCode: proc.terminationStatus)
+                }
             }
         }
 
@@ -106,75 +148,10 @@ class CLIProcess: ObservableObject, Identifiable {
 
     func cancel() {
         process?.terminate()
-        readTask?.cancel()
-        errorReadTask?.cancel()
         appendEntry(.systemInfo, "Process cancelled by user")
     }
 
     // MARK: - Private
-
-    private func readOutputStream(pipe: Pipe) async {
-        let handle = pipe.fileHandleForReading
-        var buffer = Data()
-
-        while !Task.isCancelled {
-            let data = handle.availableData
-            if data.isEmpty { break } // EOF
-
-            buffer.append(data)
-
-            // Split by newlines to get complete JSON lines
-            while let newlineRange = buffer.range(of: Data("\n".utf8)) {
-                let lineData = buffer.subdata(in: buffer.startIndex..<newlineRange.lowerBound)
-                buffer.removeSubrange(buffer.startIndex...newlineRange.lowerBound)
-
-                guard !lineData.isEmpty else { continue }
-
-                await MainActor.run {
-                    self.processLine(lineData)
-                }
-            }
-        }
-
-        // Process remaining buffer
-        if !buffer.isEmpty {
-            await MainActor.run {
-                self.processLine(buffer)
-            }
-        }
-    }
-
-    private func readErrorStream(pipe: Pipe) async {
-        let handle = pipe.fileHandleForReading
-        var buffer = Data()
-
-        while !Task.isCancelled {
-            let data = handle.availableData
-            if data.isEmpty { break }
-
-            buffer.append(data)
-
-            while let newlineRange = buffer.range(of: Data("\n".utf8)) {
-                let lineData = buffer.subdata(in: buffer.startIndex..<newlineRange.lowerBound)
-                buffer.removeSubrange(buffer.startIndex...newlineRange.lowerBound)
-
-                if let text = String(data: lineData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
-                   !text.isEmpty {
-                    await MainActor.run {
-                        self.appendEntry(.error, text)
-                    }
-                }
-            }
-        }
-
-        if !buffer.isEmpty,
-           let text = String(data: buffer, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
-           !text.isEmpty {
-            await MainActor.run {
-                self.appendEntry(.error, text)
-            }
-        }
-    }
 
     private func processLine(_ data: Data) {
         if let event = CLIStreamEvent.parse(from: data) {
@@ -241,7 +218,6 @@ class CLIProcess: ObservableObject, Identifiable {
 
     private func appendEntry(_ kind: CLIOutputEntry.Kind, _ text: String) {
         outputEntries.append(CLIOutputEntry(timestamp: Date(), kind: kind, text: text))
-        // Trim old entries
         if outputEntries.count > Self.maxOutputEntries {
             outputEntries.removeFirst(outputEntries.count - Self.maxOutputEntries)
         }
@@ -259,8 +235,43 @@ class CLIProcess: ObservableObject, Identifiable {
                 return (URL(fileURLWithPath: path), [])
             }
         }
-        // Fallback: use /usr/bin/env to resolve from PATH
         return (URL(fileURLWithPath: "/usr/bin/env"), ["claude"])
+    }
+}
+
+/// Thread-safe line buffer for assembling complete lines from chunked pipe data
+private class LineBuffer: @unchecked Sendable {
+    private var buffer = Data()
+    private let lock = NSLock()
+
+    /// Append new data, return any complete lines (split by newline)
+    func append(_ data: Data) -> [Data] {
+        lock.lock()
+        defer { lock.unlock() }
+
+        buffer.append(data)
+        var lines: [Data] = []
+
+        while let newlineRange = buffer.range(of: Data("\n".utf8)) {
+            let lineData = buffer.subdata(in: buffer.startIndex..<newlineRange.lowerBound)
+            buffer.removeSubrange(buffer.startIndex...newlineRange.lowerBound)
+            if !lineData.isEmpty {
+                lines.append(lineData)
+            }
+        }
+
+        return lines
+    }
+
+    /// Flush any remaining data as a final line
+    func flush() -> [Data] {
+        lock.lock()
+        defer { lock.unlock() }
+
+        if buffer.isEmpty { return [] }
+        let remaining = buffer
+        buffer = Data()
+        return [remaining]
     }
 }
 
