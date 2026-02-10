@@ -15,7 +15,9 @@ class CLIProcess: ObservableObject, Identifiable {
 
     private var process: Process?
     private var outputPipe: Pipe?
+    private var errorPipe: Pipe?
     private var readTask: Task<Void, Never>?
+    private var errorReadTask: Task<Void, Never>?
 
     // Callbacks
     var onStatusChange: ((AgentStatus) -> Void)?
@@ -42,16 +44,25 @@ class CLIProcess: ObservableObject, Identifiable {
 
         let (execURL, extraArgs) = Self.resolveExecutable()
         process.executableURL = execURL
-        process.arguments = extraArgs + ["-p", "--output-format", "stream-json", prompt]
+        process.arguments = extraArgs + ["-p", prompt, "--output-format", "stream-json"]
         process.currentDirectoryURL = URL(fileURLWithPath: workingDirectory)
         process.standardOutput = outputPipe
         process.standardError = errorPipe
 
         // Inherit PATH for tool execution
         var env = ProcessInfo.processInfo.environment
-        let additionalPaths = ["/usr/local/bin", "/opt/homebrew/bin",
+        var additionalPaths = ["/usr/local/bin", "/opt/homebrew/bin",
                                "\(NSHomeDirectory())/.local/bin",
-                               "\(NSHomeDirectory())/.nvm/versions/node/*/bin"]
+                               "\(NSHomeDirectory())/.claude/bin"]
+
+        // Resolve nvm node path (glob doesn't expand in PATH)
+        let nvmBase = "\(NSHomeDirectory())/.nvm/versions/node"
+        if let versions = try? FileManager.default.contentsOfDirectory(atPath: nvmBase) {
+            if let latest = versions.sorted().last {
+                additionalPaths.append("\(nvmBase)/\(latest)/bin")
+            }
+        }
+
         if let existingPath = env["PATH"] {
             env["PATH"] = (additionalPaths + [existingPath]).joined(separator: ":")
         }
@@ -59,14 +70,22 @@ class CLIProcess: ObservableObject, Identifiable {
 
         self.process = process
         self.outputPipe = outputPipe
+        self.errorPipe = errorPipe
 
         isRunning = true
         onStatusChange?(.working)
+        appendEntry(.systemInfo, "CLI: \(execURL.path) \(extraArgs.joined(separator: " "))")
+        appendEntry(.systemInfo, "Working dir: \(workingDirectory)")
         appendEntry(.systemInfo, "Process started: \(prompt)")
 
         // Read stdout in background
         readTask = Task.detached { [weak self] in
             await self?.readOutputStream(pipe: outputPipe)
+        }
+
+        // Read stderr in background
+        errorReadTask = Task.detached { [weak self] in
+            await self?.readErrorStream(pipe: errorPipe)
         }
 
         // Handle termination
@@ -88,6 +107,7 @@ class CLIProcess: ObservableObject, Identifiable {
     func cancel() {
         process?.terminate()
         readTask?.cancel()
+        errorReadTask?.cancel()
         appendEntry(.systemInfo, "Process cancelled by user")
     }
 
@@ -120,6 +140,38 @@ class CLIProcess: ObservableObject, Identifiable {
         if !buffer.isEmpty {
             await MainActor.run {
                 self.processLine(buffer)
+            }
+        }
+    }
+
+    private func readErrorStream(pipe: Pipe) async {
+        let handle = pipe.fileHandleForReading
+        var buffer = Data()
+
+        while !Task.isCancelled {
+            let data = handle.availableData
+            if data.isEmpty { break }
+
+            buffer.append(data)
+
+            while let newlineRange = buffer.range(of: Data("\n".utf8)) {
+                let lineData = buffer.subdata(in: buffer.startIndex..<newlineRange.lowerBound)
+                buffer.removeSubrange(buffer.startIndex...newlineRange.lowerBound)
+
+                if let text = String(data: lineData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   !text.isEmpty {
+                    await MainActor.run {
+                        self.appendEntry(.error, text)
+                    }
+                }
+            }
+        }
+
+        if !buffer.isEmpty,
+           let text = String(data: buffer, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !text.isEmpty {
+            await MainActor.run {
+                self.appendEntry(.error, text)
             }
         }
     }
