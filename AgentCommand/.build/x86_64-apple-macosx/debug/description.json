@@ -1,0 +1,1213 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+    "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand_AgentCommand.bundle/SampleConfigs" : {
+      "inputs" : [
+        {
+          "kind" : "directory",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Resources/SampleConfigs"
+        }
+      ],
+      "outputs" : [
+        {
+          "kind" : "directory",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand_AgentCommand.bundle/SampleConfigs"
+        }
+      ]
+    }
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.AgentCommand-x86_64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/sources",
+      "importPath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AgentCommandApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AppState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/Agent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentTask.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneTheme.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/TaskStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/ThemeColorPalette.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/AgentAnimationController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/CompletedAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ErrorAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/IdleAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ThinkingAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/WorkingAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/CommandCenterScene.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/DeskBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/LightingSetup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/MonitorBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/RoomBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneCoordinator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneKitView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/CommandCenterThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/DungeonThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/FloatingIslandsThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilderFactory.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SpaceStationThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterTemplate.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelPalette.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/AgentCoordinator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/ConfigurationLoader.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/TaskEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/Color+Voxel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNNode+Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNVector3+Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/StatusIndicator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/TaskProgressBar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/ProgressOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/StatusBadgeOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentDetailView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentHierarchyView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/SidePanelView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/TaskListView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneContainerView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneSelectionView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DerivedSources/resource_bundle_accessor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<AgentCommand-x86_64-apple-macosx26.0-debug.module-resources>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "AgentCommand",
+      "moduleOutputPath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/Modules/AgentCommand.swiftmodule",
+      "objects" : [
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCommandApp.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AppState.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Agent.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentStatus.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentTask.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneConfiguration.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneTheme.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskStatus.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThemeColorPalette.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentAnimationController.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CompletedAnimation.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ErrorAnimation.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/IdleAnimation.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThinkingAnimation.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/WorkingAnimation.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterScene.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DeskBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/LightingSetup.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/MonitorBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/RoomBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneCoordinator.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneKitView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterThemeBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DungeonThemeBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/FloatingIslandsThemeBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilderFactory.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SpaceStationThemeBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelBuilder.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterNode.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterTemplate.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelPalette.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCoordinator.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ConfigurationLoader.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskEngine.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Color+Voxel.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNNode+Extensions.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNVector3+Extensions.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusIndicator.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskProgressBar.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ContentView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ProgressOverlay.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusBadgeOverlay.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentDetailView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentHierarchyView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SidePanelView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskListView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneContainerView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneSelectionView.swift.o",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/resource_bundle_accessor.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "x86_64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+        "-module-cache-path",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "AgentCommand_main",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "agentcommand"
+      ],
+      "outputFileMapPath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCommandApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AppState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Agent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentTask.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneTheme.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThemeColorPalette.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentAnimationController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CompletedAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ErrorAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/IdleAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThinkingAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/WorkingAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterScene.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DeskBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/LightingSetup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/MonitorBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/RoomBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneCoordinator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneKitView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DungeonThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/FloatingIslandsThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilderFactory.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SpaceStationThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterTemplate.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelPalette.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCoordinator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ConfigurationLoader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Color+Voxel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNNode+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNVector3+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusIndicator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskProgressBar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ProgressOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusBadgeOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentDetailView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentHierarchyView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SidePanelView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskListView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneContainerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneSelectionView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/resource_bundle_accessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/Modules/AgentCommand.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AgentCommandApp.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AppState.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/Agent.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentStatus.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentTask.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneConfiguration.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneTheme.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/TaskStatus.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/ThemeColorPalette.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/AgentAnimationController.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/CompletedAnimation.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ErrorAnimation.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/IdleAnimation.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ThinkingAnimation.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/WorkingAnimation.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/CommandCenterScene.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/DeskBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/LightingSetup.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/MonitorBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/RoomBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneCoordinator.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneKitView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/CommandCenterThemeBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/DungeonThemeBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/FloatingIslandsThemeBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilderFactory.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SpaceStationThemeBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelBuilder.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterNode.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterTemplate.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelPalette.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/AgentCoordinator.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/ConfigurationLoader.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/TaskEngine.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/Color+Voxel.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNNode+Extensions.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNVector3+Extensions.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/StatusIndicator.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/TaskProgressBar.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/ContentView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/ProgressOverlay.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/StatusBadgeOverlay.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentDetailView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentHierarchyView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/SidePanelView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/TaskListView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneContainerView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneSelectionView.swift",
+        "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DerivedSources/resource_bundle_accessor.swift"
+      ],
+      "tempsPath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "AgentCommand" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "AgentCommand",
+      "-package-name",
+      "agentcommand",
+      "-c",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AgentCommandApp.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AppState.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/Agent.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentStatus.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentTask.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneConfiguration.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneTheme.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/TaskStatus.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/ThemeColorPalette.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/AgentAnimationController.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/CompletedAnimation.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ErrorAnimation.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/IdleAnimation.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ThinkingAnimation.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/WorkingAnimation.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/CommandCenterScene.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/DeskBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/LightingSetup.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/MonitorBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/RoomBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneCoordinator.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneKitView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/CommandCenterThemeBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/DungeonThemeBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/FloatingIslandsThemeBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilderFactory.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SpaceStationThemeBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelBuilder.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterNode.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterTemplate.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelPalette.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/AgentCoordinator.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/ConfigurationLoader.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/TaskEngine.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/Color+Voxel.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNNode+Extensions.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNVector3+Extensions.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/StatusIndicator.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/TaskProgressBar.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/ContentView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/ProgressOverlay.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/StatusBadgeOverlay.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentDetailView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentHierarchyView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/SidePanelView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/TaskListView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneContainerView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneSelectionView.swift",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DerivedSources/resource_bundle_accessor.swift",
+      "-I",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/Modules",
+      "-target",
+      "x86_64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+      "-module-cache-path",
+      "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "AgentCommand_main",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "agentcommand",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "AgentCommand" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand-entitlement.plist" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<entitlement-plist>"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<com.apple.security.get-task-allow>"
+        }
+      ],
+      "outputFilePath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand-entitlement.plist"
+    },
+    "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AgentCommandApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/App/AppState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/Agent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/AgentTask.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/SceneTheme.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/TaskStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Models/ThemeColorPalette.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/AgentAnimationController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/CompletedAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ErrorAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/IdleAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/ThinkingAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Animation/WorkingAnimation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/CommandCenterScene.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/DeskBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/LightingSetup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/MonitorBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Environment/RoomBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneCoordinator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/SceneKitView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/CommandCenterThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/DungeonThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/FloatingIslandsThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SceneThemeBuilderFactory.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Themes/SpaceStationThemeBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelCharacterTemplate.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Scene3D/Voxel/VoxelPalette.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/AgentCoordinator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/ConfigurationLoader.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Services/TaskEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/Color+Voxel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNNode+Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Utilities/SCNVector3+Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/StatusIndicator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Components/TaskProgressBar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/ProgressOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Overlays/StatusBadgeOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentDetailView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/AgentHierarchyView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/SidePanelView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/Panels/TaskListView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneContainerView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/AgentCommand/Views/SceneSelectionView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DerivedSources/resource_bundle_accessor.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/sources"
+    },
+    "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Agent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentAnimationController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCommandApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentCoordinator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentDetailView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentHierarchyView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AgentTask.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/AppState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/Color+Voxel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterScene.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CommandCenterThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/CompletedAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ConfigurationLoader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DeskBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/DungeonThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ErrorAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/FloatingIslandsThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/IdleAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/LightingSetup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/MonitorBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ProgressOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/RoomBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNNode+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SCNVector3+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneContainerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneCoordinator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneKitView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneSelectionView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneTheme.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SceneThemeBuilderFactory.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SidePanelView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/SpaceStationThemeBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusBadgeOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/StatusIndicator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskListView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskProgressBar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/TaskStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThemeColorPalette.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/ThinkingAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelCharacterTemplate.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/VoxelPalette.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/WorkingAnimation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.build/resource_bundle_accessor.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/AgentCommand.product/Objects.LinkFileList"
+    },
+    "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/.build/x86_64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

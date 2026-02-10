@@ -1,0 +1,88 @@
+{
+  "tasks": [
+    {
+      "id": "550E8400-E29B-41D4-A716-446655440010",
+      "title": "Coordinate Feature Implementation",
+      "description": "Oversee the implementation of the new authentication module across all sub-agents",
+      "status": "pending",
+      "priority": "high",
+      "assignedAgentId": "550E8400-E29B-41D4-A716-446655440001",
+      "subtasks": [
+        { "id": "550E8400-E29B-41D4-A716-446655440020", "title": "Assign tasks to sub-agents", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440021", "title": "Review all implementations", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440022", "title": "Final integration check", "isCompleted": false }
+      ],
+      "progress": 0.0,
+      "createdAt": "2026-02-11T00:00:00Z",
+      "completedAt": null,
+      "estimatedDuration": 60
+    },
+    {
+      "id": "550E8400-E29B-41D4-A716-446655440011",
+      "title": "Implement Login API",
+      "description": "Build the REST API endpoint for user authentication with JWT tokens",
+      "status": "pending",
+      "priority": "high",
+      "assignedAgentId": "550E8400-E29B-41D4-A716-446655440002",
+      "subtasks": [
+        { "id": "550E8400-E29B-41D4-A716-446655440030", "title": "Design API schema", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440031", "title": "Write endpoint handler", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440032", "title": "Add validation middleware", "isCompleted": false }
+      ],
+      "progress": 0.0,
+      "createdAt": "2026-02-11T00:00:00Z",
+      "completedAt": null,
+      "estimatedDuration": 45
+    },
+    {
+      "id": "550E8400-E29B-41D4-A716-446655440012",
+      "title": "Build User Dashboard UI",
+      "description": "Create the frontend dashboard component with user statistics and activity feed",
+      "status": "pending",
+      "priority": "medium",
+      "assignedAgentId": "550E8400-E29B-41D4-A716-446655440002",
+      "subtasks": [
+        { "id": "550E8400-E29B-41D4-A716-446655440040", "title": "Create layout components", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440041", "title": "Integrate with API", "isCompleted": false }
+      ],
+      "progress": 0.0,
+      "createdAt": "2026-02-11T00:00:00Z",
+      "completedAt": null,
+      "estimatedDuration": 30
+    },
+    {
+      "id": "550E8400-E29B-41D4-A716-446655440013",
+      "title": "Research OAuth Providers",
+      "description": "Evaluate OAuth 2.0 providers and recommend the best fit for our architecture",
+      "status": "pending",
+      "priority": "medium",
+      "assignedAgentId": "550E8400-E29B-41D4-A716-446655440003",
+      "subtasks": [
+        { "id": "550E8400-E29B-41D4-A716-446655440050", "title": "Compare provider features", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440051", "title": "Test integration samples", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440052", "title": "Write recommendation report", "isCompleted": false }
+      ],
+      "progress": 0.0,
+      "createdAt": "2026-02-11T00:00:00Z",
+      "completedAt": null,
+      "estimatedDuration": 40
+    },
+    {
+      "id": "550E8400-E29B-41D4-A716-446655440014",
+      "title": "Write Integration Tests",
+      "description": "Create end-to-end integration tests for the authentication flow",
+      "status": "pending",
+      "priority": "critical",
+      "assignedAgentId": "550E8400-E29B-41D4-A716-446655440004",
+      "subtasks": [
+        { "id": "550E8400-E29B-41D4-A716-446655440060", "title": "Setup test environment", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440061", "title": "Write test cases", "isCompleted": false },
+        { "id": "550E8400-E29B-41D4-A716-446655440062", "title": "Run and verify results", "isCompleted": false }
+      ],
+      "progress": 0.0,
+      "createdAt": "2026-02-11T00:00:00Z",
+      "completedAt": null,
+      "estimatedDuration": 35
+    }
+  ]
+}
