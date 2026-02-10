@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SceneSelectionView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var localization: LocalizationManager
     @State private var selectedTheme: SceneTheme = .commandCenter
     @State private var hoveredTheme: SceneTheme?
     @State private var appeared = false
@@ -25,12 +26,12 @@ struct SceneSelectionView: View {
 
                 // Title
                 VStack(spacing: 8) {
-                    Text("AGENT COMMAND")
+                    Text(localization.localized(.agentCommand))
                         .font(.system(size: 36, weight: .black, design: .monospaced))
                         .foregroundColor(.white)
                         .shadow(color: Color(hex: "#00BCD4").opacity(0.5), radius: 10)
 
-                    Text("Select Your Environment")
+                    Text(localization.localized(.selectYourEnvironment))
                         .font(.system(size: 16, weight: .medium, design: .monospaced))
                         .foregroundColor(.gray)
                 }
@@ -68,7 +69,7 @@ struct SceneSelectionView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.right.circle.fill")
                             .font(.system(size: 18))
-                        Text("Enter")
+                        Text(localization.localized(.enter))
                             .font(.system(size: 16, weight: .semibold, design: .monospaced))
                     }
                     .foregroundColor(.white)
@@ -91,7 +92,7 @@ struct SceneSelectionView: View {
                 Spacer()
 
                 // Footer
-                Text("Theme can be changed later from the toolbar")
+                Text(localization.localized(.themeCanBeChangedLater))
                     .font(.system(size: 12, design: .monospaced))
                     .foregroundColor(.gray.opacity(0.5))
                     .padding(.bottom, 20)
@@ -118,6 +119,7 @@ struct ThemeCard: View {
     let theme: SceneTheme
     let isSelected: Bool
     let isHovered: Bool
+    @EnvironmentObject var localization: LocalizationManager
 
     private var palette: ThemeColorPalette {
         ThemeColorPalette.palette(for: theme)
@@ -148,12 +150,12 @@ struct ThemeCard: View {
             }
 
             // Title
-            Text(theme.displayName)
+            Text(theme.localizedName(localization))
                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                 .foregroundColor(.white)
 
             // Description
-            Text(theme.description)
+            Text(theme.localizedDescription(localization))
                 .font(.system(size: 10, design: .monospaced))
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)

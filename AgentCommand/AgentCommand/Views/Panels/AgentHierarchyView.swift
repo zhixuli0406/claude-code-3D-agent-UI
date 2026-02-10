@@ -2,10 +2,11 @@ import SwiftUI
 
 struct AgentHierarchyView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Agent Hierarchy")
+            Text(localization.localized(.agentHierarchy))
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(.white)

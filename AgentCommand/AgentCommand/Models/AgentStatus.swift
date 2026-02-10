@@ -18,6 +18,16 @@ enum AgentStatus: String, Codable, CaseIterable {
         }
     }
 
+    @MainActor func localizedName(_ l: LocalizationManager) -> String {
+        switch self {
+        case .idle: return l.localized(.statusIdle)
+        case .working: return l.localized(.statusWorking)
+        case .thinking: return l.localized(.statusThinking)
+        case .completed: return l.localized(.statusCompleted)
+        case .error: return l.localized(.statusError)
+        }
+    }
+
     var hexColor: String {
         switch self {
         case .idle: return "#888888"

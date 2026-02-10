@@ -30,6 +30,24 @@ enum SceneTheme: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    @MainActor func localizedName(_ l: LocalizationManager) -> String {
+        switch self {
+        case .commandCenter: return l.localized(.themeCommandCenter)
+        case .floatingIslands: return l.localized(.themeFloatingIslands)
+        case .dungeon: return l.localized(.themeDungeon)
+        case .spaceStation: return l.localized(.themeSpaceStation)
+        }
+    }
+
+    @MainActor func localizedDescription(_ l: LocalizationManager) -> String {
+        switch self {
+        case .commandCenter: return l.localized(.themeCommandCenterDesc)
+        case .floatingIslands: return l.localized(.themeFloatingIslandsDesc)
+        case .dungeon: return l.localized(.themeDungeonDesc)
+        case .spaceStation: return l.localized(.themeSpaceStationDesc)
+        }
+    }
+
     var iconSystemName: String {
         switch self {
         case .commandCenter: return "desktopcomputer"

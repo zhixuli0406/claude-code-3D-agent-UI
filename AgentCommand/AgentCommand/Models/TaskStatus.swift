@@ -15,6 +15,15 @@ enum TaskStatus: String, Codable, CaseIterable {
         }
     }
 
+    @MainActor func localizedName(_ l: LocalizationManager) -> String {
+        switch self {
+        case .pending: return l.localized(.taskPending)
+        case .inProgress: return l.localized(.taskInProgress)
+        case .completed: return l.localized(.taskCompleted)
+        case .failed: return l.localized(.taskFailed)
+        }
+    }
+
     var hexColor: String {
         switch self {
         case .pending: return "#9E9E9E"
@@ -32,6 +41,15 @@ enum TaskPriority: String, Codable, CaseIterable {
     case critical
 
     var displayName: String { rawValue.capitalized }
+
+    @MainActor func localizedName(_ l: LocalizationManager) -> String {
+        switch self {
+        case .low: return l.localized(.priorityLow)
+        case .medium: return l.localized(.priorityMedium)
+        case .high: return l.localized(.priorityHigh)
+        case .critical: return l.localized(.priorityCritical)
+        }
+    }
 
     var sortOrder: Int {
         switch self {

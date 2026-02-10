@@ -3,6 +3,7 @@ import SwiftUI
 struct ProgressOverlay: View {
     let tasks: [AgentTask]
     let isSimulationRunning: Bool
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         HStack(spacing: 16) {
@@ -11,14 +12,14 @@ struct ProgressOverlay: View {
                 Circle()
                     .fill(isSimulationRunning ? Color.green : Color.gray)
                     .frame(width: 8, height: 8)
-                Text(isSimulationRunning ? "RUNNING" : "IDLE")
+                Text(isSimulationRunning ? localization.localized(.running) : localization.localized(.idle))
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
                     .foregroundColor(isSimulationRunning ? .green : .gray)
             }
 
             // Overall progress
             HStack(spacing: 6) {
-                Text("PROGRESS")
+                Text(localization.localized(.progress))
                     .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundColor(.secondary)
 
@@ -32,10 +33,10 @@ struct ProgressOverlay: View {
 
             // Task counts
             HStack(spacing: 8) {
-                taskCountBadge(count: pendingCount, label: "PND", color: "#9E9E9E")
-                taskCountBadge(count: inProgressCount, label: "WRK", color: "#FF9800")
-                taskCountBadge(count: completedCount, label: "DON", color: "#4CAF50")
-                taskCountBadge(count: failedCount, label: "ERR", color: "#F44336")
+                taskCountBadge(count: pendingCount, label: localization.localized(.pnd), color: "#9E9E9E")
+                taskCountBadge(count: inProgressCount, label: localization.localized(.wrk), color: "#FF9800")
+                taskCountBadge(count: completedCount, label: localization.localized(.don), color: "#4CAF50")
+                taskCountBadge(count: failedCount, label: localization.localized(.err), color: "#F44336")
             }
         }
         .padding(.horizontal, 12)

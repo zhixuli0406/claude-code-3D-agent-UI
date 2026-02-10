@@ -3,6 +3,7 @@ import SwiftUI
 struct AgentDetailView: View {
     let agent: Agent
     let tasks: [AgentTask]
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -18,13 +19,13 @@ struct AgentDetailView: View {
                         .foregroundColor(.white)
 
                     HStack(spacing: 6) {
-                        Text(agent.role.displayName)
+                        Text(agent.role.localizedName(localization))
                             .font(.caption)
                             .foregroundColor(.secondary)
 
                         StatusIndicator(status: agent.status)
 
-                        Text(agent.status.displayName)
+                        Text(agent.status.localizedName(localization))
                             .font(.caption)
                             .foregroundColor(Color(hex: agent.status.hexColor))
                     }
@@ -38,18 +39,18 @@ struct AgentDetailView: View {
 
             // Agent info
             if agent.isMainAgent {
-                Label("\(agent.subAgentIds.count) Sub-Agents", systemImage: "person.3")
+                Label("\(agent.subAgentIds.count) \(localization.localized(.subAgents))", systemImage: "person.3")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } else {
-                Label("Sub-Agent", systemImage: "person.badge.shield.checkmark")
+                Label(localization.localized(.subAgent), systemImage: "person.badge.shield.checkmark")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             // Assigned tasks
             if !tasks.isEmpty {
-                Text("Assigned Tasks")
+                Text(localization.localized(.assignedTasks))
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -58,7 +59,7 @@ struct AgentDetailView: View {
                     TaskRowView(task: task)
                 }
             } else {
-                Text("No tasks assigned")
+                Text(localization.localized(.noTasksAssigned))
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .italic()

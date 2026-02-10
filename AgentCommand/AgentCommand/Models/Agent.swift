@@ -33,6 +33,17 @@ enum AgentRole: String, Codable, CaseIterable {
         }
     }
 
+    @MainActor func localizedName(_ l: LocalizationManager) -> String {
+        switch self {
+        case .commander: return l.localized(.roleCommander)
+        case .developer: return l.localized(.roleDeveloper)
+        case .researcher: return l.localized(.roleResearcher)
+        case .reviewer: return l.localized(.roleReviewer)
+        case .tester: return l.localized(.roleTester)
+        case .designer: return l.localized(.roleDesigner)
+        }
+    }
+
     var emoji: String {
         switch self {
         case .commander: return "⭐"

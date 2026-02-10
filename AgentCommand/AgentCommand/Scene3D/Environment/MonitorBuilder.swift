@@ -48,18 +48,18 @@ struct MonitorBuilder {
         return monitor
     }
 
-    static func createScreenContent(width: CGFloat, height: CGFloat, accentColor: String = "#00BCD4") -> SKScene {
+    static func createScreenContent(width: CGFloat, height: CGFloat, accentColor: String = "#00BCD4", headerText: String = "AGENT COMMAND v1.0", statusText: String = "> System Ready") -> SKScene {
         let skScene = SKScene(size: CGSize(width: width, height: height))
         skScene.backgroundColor = NSColor(hex: "#0D1117")
 
-        let header = SKLabelNode(text: "AGENT COMMAND v1.0")
+        let header = SKLabelNode(text: headerText)
         header.fontName = "Menlo-Bold"
         header.fontSize = 18
         header.fontColor = NSColor(hex: accentColor)
         header.position = CGPoint(x: width / 2, y: height - 30)
         skScene.addChild(header)
 
-        let statusLine = SKLabelNode(text: "> System Ready")
+        let statusLine = SKLabelNode(text: statusText)
         statusLine.fontName = "Menlo"
         statusLine.fontSize = 14
         statusLine.fontColor = NSColor(hex: "#4CAF50")
