@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SidePanelView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -9,7 +10,7 @@ struct SidePanelView: View {
             HStack {
                 Image(systemName: "command.circle.fill")
                     .foregroundColor(Color(hex: "#00BCD4"))
-                Text("Agent Command")
+                Text(localization.localized(.agentCommandTitle))
                     .font(.headline)
                     .foregroundColor(.white)
                 Spacer()
@@ -40,10 +41,10 @@ struct SidePanelView: View {
                             Image(systemName: "hand.tap")
                                 .font(.title2)
                                 .foregroundColor(.secondary)
-                            Text("Select an agent")
+                            Text(localization.localized(.selectAnAgent))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Text("Click on a 3D character or select from the hierarchy above")
+                            Text(localization.localized(.clickOnAgentHelpText))
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -58,6 +59,20 @@ struct SidePanelView: View {
                     // Task list
                     TaskListView(tasks: appState.tasks)
                         .padding(.horizontal)
+
+                    // CLI output for selected agent's live tasks
+                    if let _ = appState.selectedAgent {
+                        let liveTasks = appState.tasksForSelectedAgent.filter { $0.isRealExecution }
+                        if let latestLiveTask = liveTasks.last {
+                            Divider().background(Color.white.opacity(0.1))
+                                .padding(.horizontal)
+
+                            CLIOutputView(
+                                entries: appState.cliProcessManager.outputEntries(for: latestLiveTask.id)
+                            )
+                            .padding(.horizontal)
+                        }
+                    }
                 }
                 .padding(.vertical)
             }

@@ -12,6 +12,11 @@ struct AgentTask: Identifiable, Codable, Hashable {
     var createdAt: Date
     var completedAt: Date?
     var estimatedDuration: TimeInterval
+
+    // CLI execution fields
+    var isRealExecution: Bool = false
+    var cliResult: String?
+    var outputLogCount: Int = 0
 }
 
 struct SubTask: Identifiable, Codable, Hashable {

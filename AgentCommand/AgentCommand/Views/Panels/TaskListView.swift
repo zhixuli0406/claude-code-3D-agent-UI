@@ -2,12 +2,13 @@ import SwiftUI
 
 struct TaskListView: View {
     let tasks: [AgentTask]
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Header with summary
             HStack {
-                Text("All Tasks")
+                Text(localization.localized(.allTasks))
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -49,6 +50,7 @@ struct TaskListView: View {
 
 struct TaskCompactRow: View {
     let task: AgentTask
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         HStack(spacing: 8) {
@@ -67,7 +69,26 @@ struct TaskCompactRow: View {
                 TaskProgressBar(progress: task.progress, height: 3)
             }
 
+            if task.isRealExecution {
+                Text("CLI")
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                    .foregroundColor(.green)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 1)
+                    .background(Color.green.opacity(0.15))
+                    .cornerRadius(3)
+            }
+
             PriorityBadge(priority: task.priority)
+
+            if task.isRealExecution && task.status == .inProgress {
+                Button(action: { appState.cancelTask(task.id) }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.caption2)
+                        .foregroundColor(.red.opacity(0.7))
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 6)
@@ -85,6 +106,7 @@ struct TaskCompactRow: View {
 
 struct TaskDetailView: View {
     let task: AgentTask
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -104,7 +126,7 @@ struct TaskDetailView: View {
 
             TaskProgressBar(progress: task.progress, height: 8, showPercentage: true)
 
-            Text("Subtasks")
+            Text(localization.localized(.subtasks))
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundColor(.white)

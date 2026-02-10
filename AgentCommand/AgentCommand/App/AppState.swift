@@ -10,10 +10,19 @@ class AppState: ObservableObject {
     @Published var isSimulationRunning = false
     @Published var currentTheme: SceneTheme = .commandCenter
     @Published var showSceneSelection = true
+    @Published var executionMode: ExecutionMode = .simulation
 
+    enum ExecutionMode: String {
+        case simulation
+        case live
+    }
+
+    var localizationManager: LocalizationManager?
     let configLoader = ConfigurationLoader()
     let sceneManager = ThemeableScene()
     lazy var taskEngine = TaskEngine()
+    let cliProcessManager = CLIProcessManager()
+    let workspaceManager = WorkspaceManager()
 
     private static let themeKey = "selectedTheme"
 
@@ -148,6 +157,136 @@ class AppState: ObservableObject {
         taskEngine.stop()
         isSimulationRunning = false
         loadSampleConfig()
+    }
+
+    // MARK: - Prompt Task Submission
+
+    func submitPromptTask(title: String, assignTo agentId: UUID) {
+        let taskId = UUID()
+        let isLive = (executionMode == .live)
+        let newTask = AgentTask(
+            id: taskId,
+            title: title,
+            description: isLive ? "CLI task: \(title)" : "User task: \(title)",
+            status: .inProgress,
+            priority: .medium,
+            assignedAgentId: agentId,
+            subtasks: isLive ? [] : generateSubtasks(for: title),
+            progress: 0,
+            createdAt: Date(),
+            estimatedDuration: isLive ? 0 : estimateDuration(for: title),
+            isRealExecution: isLive
+        )
+        tasks.append(newTask)
+
+        // Update agent
+        if let idx = agents.firstIndex(where: { $0.id == agentId }) {
+            agents[idx].assignedTaskIds.append(taskId)
+            agents[idx].status = .working
+            sceneManager.updateAgentStatus(agentId, to: .working)
+        }
+
+        if isLive {
+            startCLIProcess(taskId: taskId, agentId: agentId, prompt: title)
+        } else {
+            // Start or add to simulation
+            if isSimulationRunning {
+                taskEngine.addTask(newTask)
+            } else {
+                startSimulation()
+            }
+        }
+    }
+
+    func cancelTask(_ taskId: UUID) {
+        guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
+        if tasks[idx].isRealExecution {
+            cliProcessManager.cancelProcess(taskId: taskId)
+        }
+        tasks[idx].status = .failed
+        if let agentId = tasks[idx].assignedAgentId {
+            handleAgentStatusChange(agentId, to: .idle)
+        }
+    }
+
+    private func startCLIProcess(taskId: UUID, agentId: UUID, prompt: String) {
+        let workDir = workspaceManager.activeDirectory
+
+        let _ = cliProcessManager.startProcess(
+            taskId: taskId,
+            agentId: agentId,
+            prompt: prompt,
+            workingDirectory: workDir,
+            onStatusChange: { [weak self] agentId, status in
+                Task { @MainActor in
+                    self?.handleAgentStatusChange(agentId, to: status)
+                }
+            },
+            onProgress: { [weak self] taskId, progress in
+                Task { @MainActor in
+                    self?.handleTaskProgress(taskId, progress: progress)
+                }
+            },
+            onCompleted: { [weak self] taskId, result in
+                Task { @MainActor in
+                    self?.handleCLICompleted(taskId, result: result)
+                }
+            },
+            onFailed: { [weak self] taskId, error in
+                Task { @MainActor in
+                    self?.handleCLIFailed(taskId, error: error)
+                }
+            }
+        )
+    }
+
+    private func handleCLICompleted(_ taskId: UUID, result: String) {
+        guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
+        tasks[idx].status = .completed
+        tasks[idx].progress = 1.0
+        tasks[idx].completedAt = Date()
+        tasks[idx].cliResult = result
+
+        if let agentId = tasks[idx].assignedAgentId {
+            handleAgentStatusChange(agentId, to: .completed)
+        }
+    }
+
+    private func handleCLIFailed(_ taskId: UUID, error: String) {
+        guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
+        tasks[idx].status = .failed
+        tasks[idx].cliResult = "Error: \(error)"
+
+        if let agentId = tasks[idx].assignedAgentId {
+            handleAgentStatusChange(agentId, to: .error)
+        }
+    }
+
+    func bestAvailableAgent() -> Agent? {
+        // Prefer idle agents
+        if let idle = agents.first(where: { $0.status == .idle }) {
+            return idle
+        }
+        // Then main agents
+        if let main = agents.first(where: { $0.isMainAgent }) {
+            return main
+        }
+        // Any agent
+        return agents.first
+    }
+
+    private func generateSubtasks(for title: String) -> [SubTask] {
+        let words = title.split(separator: " ")
+        let count = min(max(words.count, 2), 5)
+        return (1...count).map { i in
+            SubTask(id: UUID(), title: "Step \(i)", isCompleted: false)
+        }
+    }
+
+    private func estimateDuration(for title: String) -> TimeInterval {
+        let base = 8.0
+        let lengthFactor = Double(title.count) / 20.0
+        return base + lengthFactor * 4.0
     }
 
     // MARK: - Private

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         Group {
@@ -26,36 +27,70 @@ struct ContentView: View {
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: { appState.showThemeSelection() }) {
-                    Label("Theme", systemImage: "paintpalette")
+                    Label(localization.localized(.theme), systemImage: "paintpalette")
                 }
-                .help("Change scene theme (\(appState.currentTheme.displayName))")
+                .help(localization.localized(.helpChangeTheme))
 
                 Divider()
 
                 Button(action: { appState.loadSampleConfig() }) {
-                    Label("Load Config", systemImage: "folder")
+                    Label(localization.localized(.loadConfig), systemImage: "folder")
                 }
-                .help("Load sample configuration")
+                .help(localization.localized(.helpLoadConfig))
 
                 Divider()
 
                 if appState.isSimulationRunning {
                     Button(action: { appState.pauseSimulation() }) {
-                        Label("Pause", systemImage: "pause.fill")
+                        Label(localization.localized(.pause), systemImage: "pause.fill")
                     }
-                    .help("Pause simulation")
+                    .help(localization.localized(.helpPauseSimulation))
                 } else {
                     Button(action: { appState.startSimulation() }) {
-                        Label("Start", systemImage: "play.fill")
+                        Label(localization.localized(.start), systemImage: "play.fill")
                     }
-                    .help("Start simulation")
+                    .help(localization.localized(.helpStartSimulation))
                     .disabled(appState.agents.isEmpty)
                 }
 
                 Button(action: { appState.resetSimulation() }) {
-                    Label("Reset", systemImage: "arrow.counterclockwise")
+                    Label(localization.localized(.reset), systemImage: "arrow.counterclockwise")
                 }
-                .help("Reset simulation")
+                .help(localization.localized(.helpResetSimulation))
+
+                Divider()
+
+                // Language switcher
+                Menu {
+                    ForEach(AppLanguage.allCases) { lang in
+                        Button(action: { localization.setLanguage(lang) }) {
+                            HStack {
+                                Text(lang.displayName)
+                                if localization.currentLanguage == lang {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Label(localization.localized(.language), systemImage: "globe")
+                }
+                .help(localization.localized(.language))
+
+                Divider()
+
+                // Execution mode toggle
+                Picker(localization.localized(.executionMode), selection: $appState.executionMode) {
+                    Text(localization.localized(.simulation)).tag(AppState.ExecutionMode.simulation)
+                    Text(localization.localized(.liveCLI)).tag(AppState.ExecutionMode.live)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 160)
+
+                // Workspace picker (only in live mode)
+                if appState.executionMode == .live {
+                    WorkspacePicker()
+                }
             }
         }
         .background(Color(nsColor: appState.sceneManager.sceneBackgroundColor))
