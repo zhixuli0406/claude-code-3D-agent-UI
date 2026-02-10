@@ -60,18 +60,30 @@ struct SidePanelView: View {
                     TaskListView(tasks: appState.tasks)
                         .padding(.horizontal)
 
-                    // CLI output for selected agent's live tasks
-                    if let _ = appState.selectedAgent {
-                        let liveTasks = appState.tasksForSelectedAgent.filter { $0.isRealExecution }
-                        if let latestLiveTask = liveTasks.last {
+                    // Task team for selected task
+                    if let task = appState.selectedTask {
+                        let team = appState.teamForSelectedTask
+                        if !team.isEmpty {
                             Divider().background(Color.white.opacity(0.1))
                                 .padding(.horizontal)
 
-                            CLIOutputView(
-                                entries: appState.cliProcessManager.outputEntries(for: latestLiveTask.id)
+                            TaskTeamView(
+                                team: team,
+                                leadAgentId: task.assignedAgentId
                             )
                             .padding(.horizontal)
                         }
+                    }
+
+                    // CLI output for selected task
+                    if let taskId = appState.selectedTaskId {
+                        Divider().background(Color.white.opacity(0.1))
+                            .padding(.horizontal)
+
+                        CLIOutputView(
+                            entries: appState.cliProcessManager.outputEntries(for: taskId)
+                        )
+                        .padding(.horizontal)
                     }
                 }
                 .padding(.vertical)

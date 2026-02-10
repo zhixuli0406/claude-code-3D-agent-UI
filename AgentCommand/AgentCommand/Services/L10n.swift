@@ -16,9 +16,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
 enum L10nKey: String {
     // Toolbar
-    case theme, loadConfig, pause, start, reset, language
+    case theme, loadConfig, language
     case helpChangeTheme, helpLoadConfig
-    case helpPauseSimulation, helpStartSimulation, helpResetSimulation
 
     // SceneSelectionView
     case agentCommand, selectYourEnvironment, enter, themeCanBeChangedLater
@@ -43,7 +42,7 @@ enum L10nKey: String {
     case agentCommandVersion, systemReady
 
     // AgentStatus
-    case statusIdle, statusWorking, statusThinking, statusCompleted, statusError
+    case statusIdle, statusWorking, statusThinking, statusCompleted, statusError, statusRequestingPermission
 
     // TaskStatus
     case taskPending, taskInProgress, taskCompleted, taskFailed
@@ -65,10 +64,18 @@ enum L10nKey: String {
     case typeTaskPrompt, send, assignedTo, noAgentsAvailable, taskCreated
 
     // CLI integration
-    case executionMode, simulation, liveCLI
     case workspace, addWorkspace, removeWorkspace, noWorkspace
     case cliOutput, cliRunning, cliCompleted, cliFailed, cliCancelled
-    case live, sim, cancel
+    case live, cancel
+
+    // Team
+    case taskTeam, teamLead
+
+    // Copy
+    case copyAll, copyEntry, copied
+
+    // Dangerous command
+    case dangerousCommandDetected, continueExecution, cancelTask
 }
 
 struct L10n {
@@ -87,15 +94,9 @@ struct L10n {
         // Toolbar
         .theme: "主題",
         .loadConfig: "載入設定",
-        .pause: "暫停",
-        .start: "開始",
-        .reset: "重置",
         .language: "語言",
         .helpChangeTheme: "變更場景主題",
         .helpLoadConfig: "載入範例設定",
-        .helpPauseSimulation: "暫停模擬",
-        .helpStartSimulation: "開始模擬",
-        .helpResetSimulation: "重置模擬",
 
         // SceneSelectionView
         .agentCommand: "AGENT COMMAND",
@@ -140,6 +141,7 @@ struct L10n {
         .statusThinking: "思考中",
         .statusCompleted: "已完成",
         .statusError: "錯誤",
+        .statusRequestingPermission: "請求許可",
 
         // TaskStatus
         .taskPending: "待處理",
@@ -179,9 +181,6 @@ struct L10n {
         .taskCreated: "任務已建立",
 
         // CLI
-        .executionMode: "執行模式",
-        .simulation: "模擬",
-        .liveCLI: "即時 CLI",
         .workspace: "工作區",
         .addWorkspace: "新增工作區...",
         .removeWorkspace: "移除目前工作區",
@@ -192,8 +191,21 @@ struct L10n {
         .cliFailed: "CLI 失敗",
         .cliCancelled: "CLI 已取消",
         .live: "即時",
-        .sim: "模擬",
         .cancel: "取消",
+
+        // Team
+        .taskTeam: "任務團隊",
+        .teamLead: "主導",
+
+        // Copy
+        .copyAll: "全部複製",
+        .copyEntry: "複製",
+        .copied: "已複製",
+
+        // Dangerous command
+        .dangerousCommandDetected: "偵測到危險指令",
+        .continueExecution: "繼續執行",
+        .cancelTask: "取消任務",
     ]
 
     // MARK: - English
@@ -202,15 +214,9 @@ struct L10n {
         // Toolbar
         .theme: "Theme",
         .loadConfig: "Load Config",
-        .pause: "Pause",
-        .start: "Start",
-        .reset: "Reset",
         .language: "Language",
         .helpChangeTheme: "Change scene theme",
         .helpLoadConfig: "Load sample configuration",
-        .helpPauseSimulation: "Pause simulation",
-        .helpStartSimulation: "Start simulation",
-        .helpResetSimulation: "Reset simulation",
 
         // SceneSelectionView
         .agentCommand: "AGENT COMMAND",
@@ -255,6 +261,7 @@ struct L10n {
         .statusThinking: "Thinking",
         .statusCompleted: "Completed",
         .statusError: "Error",
+        .statusRequestingPermission: "Requesting Permission",
 
         // TaskStatus
         .taskPending: "Pending",
@@ -294,9 +301,6 @@ struct L10n {
         .taskCreated: "Task created",
 
         // CLI
-        .executionMode: "Execution Mode",
-        .simulation: "Simulation",
-        .liveCLI: "Live CLI",
         .workspace: "Workspace",
         .addWorkspace: "Add Workspace...",
         .removeWorkspace: "Remove Current",
@@ -307,7 +311,20 @@ struct L10n {
         .cliFailed: "CLI Failed",
         .cliCancelled: "CLI Cancelled",
         .live: "LIVE",
-        .sim: "SIM",
         .cancel: "Cancel",
+
+        // Team
+        .taskTeam: "Task Team",
+        .teamLead: "LEAD",
+
+        // Copy
+        .copyAll: "Copy All",
+        .copyEntry: "Copy",
+        .copied: "Copied",
+
+        // Dangerous command
+        .dangerousCommandDetected: "Dangerous Command Detected",
+        .continueExecution: "Continue",
+        .cancelTask: "Cancel Task",
     ]
 }

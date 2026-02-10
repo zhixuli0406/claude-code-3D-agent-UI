@@ -7,6 +7,7 @@ enum AgentStatus: String, Codable, CaseIterable {
     case thinking
     case completed
     case error
+    case requestingPermission
 
     var displayName: String {
         switch self {
@@ -15,6 +16,7 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .thinking: return "Thinking"
         case .completed: return "Completed"
         case .error: return "Error"
+        case .requestingPermission: return "Requesting Permission"
         }
     }
 
@@ -25,6 +27,7 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .thinking: return l.localized(.statusThinking)
         case .completed: return l.localized(.statusCompleted)
         case .error: return l.localized(.statusError)
+        case .requestingPermission: return l.localized(.statusRequestingPermission)
         }
     }
 
@@ -35,6 +38,7 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .thinking: return "#FF9800"
         case .completed: return "#2196F3"
         case .error: return "#F44336"
+        case .requestingPermission: return "#FF9800"
         }
     }
 }

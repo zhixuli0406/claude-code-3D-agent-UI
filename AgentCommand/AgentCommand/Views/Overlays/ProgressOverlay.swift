@@ -2,19 +2,22 @@ import SwiftUI
 
 struct ProgressOverlay: View {
     let tasks: [AgentTask]
-    let isSimulationRunning: Bool
     @EnvironmentObject var localization: LocalizationManager
+
+    private var isActive: Bool {
+        tasks.contains { $0.status == .inProgress }
+    }
 
     var body: some View {
         HStack(spacing: 16) {
-            // Simulation status
+            // Status indicator
             HStack(spacing: 6) {
                 Circle()
-                    .fill(isSimulationRunning ? Color.green : Color.gray)
+                    .fill(isActive ? Color.green : Color.gray)
                     .frame(width: 8, height: 8)
-                Text(isSimulationRunning ? localization.localized(.running) : localization.localized(.idle))
+                Text(isActive ? localization.localized(.running) : localization.localized(.idle))
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
-                    .foregroundColor(isSimulationRunning ? .green : .gray)
+                    .foregroundColor(isActive ? .green : .gray)
             }
 
             // Overall progress

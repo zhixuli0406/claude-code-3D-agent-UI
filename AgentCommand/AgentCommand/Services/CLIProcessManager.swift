@@ -20,6 +20,7 @@ class CLIProcess: ObservableObject, Identifiable {
     var onProgressEstimate: ((Double) -> Void)?
     var onCompleted: ((String) -> Void)?
     var onFailed: ((String) -> Void)?
+    var onDangerousCommand: ((String, String, String) -> Void)?  // (tool, input, reason)
 
     private static let maxOutputEntries = 500
 
@@ -169,12 +170,19 @@ class CLIProcess: ObservableObject, Identifiable {
             appendEntry(.assistantThinking, preview)
             onStatusChange?(.thinking)
 
-        case .assistantToolUse(let tool, _):
+        case .assistantToolUse(let tool, let input):
             toolCallCount += 1
             appendEntry(.toolInvocation, "Using tool: \(tool)")
             onStatusChange?(.working)
             let estimatedProgress = min(Double(toolCallCount) / 20.0, 0.9)
             onProgressEstimate?(estimatedProgress)
+
+            // Check for dangerous commands
+            let level = DangerousCommandClassifier.classify(tool: tool, input: input)
+            if case .dangerous(let reason) = level {
+                appendEntry(.dangerousWarning, "WARNING: \(reason)")
+                onDangerousCommand?(tool, input, reason)
+            }
 
         case .toolResult(_, let output):
             let preview = String(output.prefix(200))
@@ -288,7 +296,8 @@ class CLIProcessManager: ObservableObject {
         onStatusChange: @escaping (UUID, AgentStatus) -> Void,
         onProgress: @escaping (UUID, Double) -> Void,
         onCompleted: @escaping (UUID, String) -> Void,
-        onFailed: @escaping (UUID, String) -> Void
+        onFailed: @escaping (UUID, String) -> Void,
+        onDangerousCommand: ((UUID, UUID, String, String, String) -> Void)? = nil
     ) -> CLIProcess {
         let cliProcess = CLIProcess(
             taskId: taskId,
@@ -308,6 +317,9 @@ class CLIProcessManager: ObservableObject {
         }
         cliProcess.onFailed = { error in
             onFailed(taskId, error)
+        }
+        cliProcess.onDangerousCommand = { tool, input, reason in
+            onDangerousCommand?(taskId, agentId, tool, input, reason)
         }
 
         processes[taskId] = cliProcess

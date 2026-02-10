@@ -31,34 +31,10 @@ struct ContentView: View {
                 }
                 .help(localization.localized(.helpChangeTheme))
 
-                Divider()
-
                 Button(action: { appState.loadSampleConfig() }) {
                     Label(localization.localized(.loadConfig), systemImage: "folder")
                 }
                 .help(localization.localized(.helpLoadConfig))
-
-                Divider()
-
-                if appState.isSimulationRunning {
-                    Button(action: { appState.pauseSimulation() }) {
-                        Label(localization.localized(.pause), systemImage: "pause.fill")
-                    }
-                    .help(localization.localized(.helpPauseSimulation))
-                } else {
-                    Button(action: { appState.startSimulation() }) {
-                        Label(localization.localized(.start), systemImage: "play.fill")
-                    }
-                    .help(localization.localized(.helpStartSimulation))
-                    .disabled(appState.agents.isEmpty)
-                }
-
-                Button(action: { appState.resetSimulation() }) {
-                    Label(localization.localized(.reset), systemImage: "arrow.counterclockwise")
-                }
-                .help(localization.localized(.helpResetSimulation))
-
-                Divider()
 
                 // Language switcher
                 Menu {
@@ -77,26 +53,31 @@ struct ContentView: View {
                 }
                 .help(localization.localized(.language))
 
-                Divider()
-
-                // Execution mode toggle
-                Picker(localization.localized(.executionMode), selection: $appState.executionMode) {
-                    Text(localization.localized(.simulation)).tag(AppState.ExecutionMode.simulation)
-                    Text(localization.localized(.liveCLI)).tag(AppState.ExecutionMode.live)
-                }
-                .pickerStyle(.segmented)
-                .frame(width: 160)
-
-                // Workspace picker (only in live mode)
-                if appState.executionMode == .live {
-                    WorkspacePicker()
-                }
+                WorkspacePicker()
             }
         }
         .background(Color(nsColor: appState.sceneManager.sceneBackgroundColor))
         .onAppear {
             if appState.agents.isEmpty {
                 appState.loadSampleConfig()
+            }
+        }
+        .alert(
+            localization.localized(.dangerousCommandDetected),
+            isPresented: Binding(
+                get: { appState.dangerousCommandAlert != nil },
+                set: { if !$0 { appState.dismissDangerousAlert() } }
+            )
+        ) {
+            Button(localization.localized(.continueExecution)) {
+                appState.dismissDangerousAlert()
+            }
+            Button(localization.localized(.cancelTask), role: .destructive) {
+                appState.cancelDangerousTask()
+            }
+        } message: {
+            if let alert = appState.dangerousCommandAlert {
+                Text(alert.reason)
             }
         }
     }

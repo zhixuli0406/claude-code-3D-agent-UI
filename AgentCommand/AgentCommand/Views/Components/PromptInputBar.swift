@@ -8,30 +8,17 @@ struct PromptInputBar: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            // Mode indicator
-            if appState.executionMode == .live {
-                HStack(spacing: 4) {
-                    Circle().fill(Color.green).frame(width: 6, height: 6)
-                    Text(localization.localized(.live))
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
-                        .foregroundColor(.green)
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                .background(Color.green.opacity(0.1))
-                .cornerRadius(4)
-            } else {
-                HStack(spacing: 4) {
-                    Circle().fill(Color.orange).frame(width: 6, height: 6)
-                    Text(localization.localized(.sim))
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
-                        .foregroundColor(.orange)
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                .background(Color.orange.opacity(0.1))
-                .cornerRadius(4)
+            // LIVE mode indicator
+            HStack(spacing: 4) {
+                Circle().fill(Color.green).frame(width: 6, height: 6)
+                Text(localization.localized(.live))
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundColor(.green)
             }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(Color.green.opacity(0.1))
+            .cornerRadius(4)
 
             // Target agent indicator
             if let agent = appState.bestAvailableAgent() {

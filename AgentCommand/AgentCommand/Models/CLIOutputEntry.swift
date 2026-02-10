@@ -14,5 +14,6 @@ struct CLIOutputEntry: Identifiable {
         case finalResult
         case error
         case systemInfo
+        case dangerousWarning
     }
 }

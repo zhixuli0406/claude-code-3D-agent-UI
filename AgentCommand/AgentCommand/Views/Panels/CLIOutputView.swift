@@ -1,8 +1,10 @@
 import SwiftUI
+import AppKit
 
 struct CLIOutputView: View {
     let entries: [CLIOutputEntry]
     @EnvironmentObject var localization: LocalizationManager
+    @State private var showCopied = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -14,6 +16,30 @@ struct CLIOutputView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                 Spacer()
+
+                if showCopied {
+                    Text(localization.localized(.copied))
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color(hex: "#4CAF50"))
+                        .transition(.opacity)
+                }
+
+                Button(action: copyAll) {
+                    HStack(spacing: 3) {
+                        Image(systemName: "doc.on.doc")
+                            .font(.caption2)
+                        Text(localization.localized(.copyAll))
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    }
+                    .foregroundColor(Color(hex: "#00BCD4"))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color(hex: "#00BCD4").opacity(0.1))
+                    .cornerRadius(4)
+                }
+                .buttonStyle(.plain)
+                .disabled(entries.isEmpty)
+
                 Text("\(entries.count)")
                     .font(.caption2)
                     .foregroundColor(.secondary)
@@ -41,10 +67,26 @@ struct CLIOutputView: View {
             .cornerRadius(4)
         }
     }
+
+    private func copyAll() {
+        let text = entries.map(\.text).joined(separator: "\n")
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+
+        withAnimation(.easeInOut(duration: 0.2)) {
+            showCopied = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                showCopied = false
+            }
+        }
+    }
 }
 
 struct CLIOutputEntryRow: View {
     let entry: CLIOutputEntry
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         HStack(alignment: .top, spacing: 6) {
@@ -57,9 +99,18 @@ struct CLIOutputEntryRow: View {
                 .font(.system(size: 11, design: .monospaced))
                 .foregroundColor(textColor)
                 .lineLimit(3)
+                .textSelection(.enabled)
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 2)
+        .contextMenu {
+            Button(action: {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(entry.text, forType: .string)
+            }) {
+                Label(localization.localized(.copyEntry), systemImage: "doc.on.doc")
+            }
+        }
     }
 
     private var icon: String {
@@ -70,6 +121,7 @@ struct CLIOutputEntryRow: View {
         case .finalResult:      return "*"
         case .error:            return "!"
         case .systemInfo:       return "#"
+        case .dangerousWarning: return "\u{26A0}"
         }
     }
 
@@ -81,6 +133,7 @@ struct CLIOutputEntryRow: View {
         case .finalResult:      return Color(hex: "#4CAF50")
         case .error:            return Color(hex: "#F44336")
         case .systemInfo:       return Color.white.opacity(0.4)
+        case .dangerousWarning: return Color(hex: "#FF9800")
         }
     }
 }

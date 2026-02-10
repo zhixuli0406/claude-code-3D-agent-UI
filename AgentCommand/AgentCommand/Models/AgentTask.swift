@@ -13,6 +13,9 @@ struct AgentTask: Identifiable, Codable, Hashable {
     var completedAt: Date?
     var estimatedDuration: TimeInterval
 
+    // Team
+    var teamAgentIds: [UUID] = []
+
     // CLI execution fields
     var isRealExecution: Bool = false
     var cliResult: String?

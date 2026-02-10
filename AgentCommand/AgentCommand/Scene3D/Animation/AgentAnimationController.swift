@@ -29,6 +29,8 @@ class AgentAnimationController {
                 CompletedAnimation.apply(to: character)
             case .error:
                 ErrorAnimation.apply(to: character)
+            case .requestingPermission:
+                RequestingPermissionAnimation.apply(to: character)
             }
 
             // Update status indicator color
@@ -50,6 +52,8 @@ class AgentAnimationController {
             CompletedAnimation.remove(from: character)
         case .error:
             ErrorAnimation.remove(from: character)
+        case .requestingPermission:
+            RequestingPermissionAnimation.remove(from: character)
         }
     }
 

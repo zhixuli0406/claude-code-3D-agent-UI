@@ -30,11 +30,8 @@ struct SceneContainerView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        ProgressOverlay(
-                            tasks: appState.tasks,
-                            isSimulationRunning: appState.isSimulationRunning
-                        )
-                        .allowsHitTesting(false)
+                        ProgressOverlay(tasks: appState.tasks)
+                            .allowsHitTesting(false)
                         Spacer()
                     }
                     Spacer()

@@ -52,46 +52,61 @@ struct TaskCompactRow: View {
     let task: AgentTask
     @EnvironmentObject var appState: AppState
 
+    private var isSelected: Bool {
+        appState.selectedTaskId == task.id
+    }
+
     var body: some View {
-        HStack(spacing: 8) {
-            // Status icon
-            Image(systemName: statusIcon)
-                .foregroundColor(Color(hex: task.status.hexColor))
-                .font(.caption)
-                .frame(width: 16)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(task.title)
+        Button(action: { appState.selectTask(task.id) }) {
+            HStack(spacing: 8) {
+                // Status icon
+                Image(systemName: statusIcon)
+                    .foregroundColor(Color(hex: task.status.hexColor))
                     .font(.caption)
-                    .foregroundColor(.white)
-                    .lineLimit(1)
+                    .frame(width: 16)
 
-                TaskProgressBar(progress: task.progress, height: 3)
-            }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(task.title)
+                        .font(.caption)
+                        .foregroundColor(.white)
+                        .lineLimit(1)
 
-            if task.isRealExecution {
-                Text("CLI")
-                    .font(.system(size: 8, weight: .bold, design: .monospaced))
-                    .foregroundColor(.green)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 1)
-                    .background(Color.green.opacity(0.15))
-                    .cornerRadius(3)
-            }
-
-            PriorityBadge(priority: task.priority)
-
-            if task.isRealExecution && task.status == .inProgress {
-                Button(action: { appState.cancelTask(task.id) }) {
-                    Image(systemName: "xmark.circle")
-                        .font(.caption2)
-                        .foregroundColor(.red.opacity(0.7))
+                    TaskProgressBar(progress: task.progress, height: 3)
                 }
-                .buttonStyle(.plain)
+
+                if task.isRealExecution {
+                    Text("CLI")
+                        .font(.system(size: 8, weight: .bold, design: .monospaced))
+                        .foregroundColor(.green)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .background(Color.green.opacity(0.15))
+                        .cornerRadius(3)
+                }
+
+                PriorityBadge(priority: task.priority)
+
+                if task.isRealExecution && task.status == .inProgress {
+                    Button(action: { appState.cancelTask(task.id) }) {
+                        Image(systemName: "xmark.circle")
+                            .font(.caption2)
+                            .foregroundColor(.red.opacity(0.7))
+                    }
+                    .buttonStyle(.plain)
+                }
             }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(isSelected ? Color(hex: "#00BCD4").opacity(0.15) : Color.clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(isSelected ? Color(hex: "#00BCD4").opacity(0.4) : Color.clear, lineWidth: 1)
+            )
         }
-        .padding(.vertical, 4)
-        .padding(.horizontal, 6)
+        .buttonStyle(.plain)
     }
 
     private var statusIcon: String {

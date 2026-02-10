@@ -7,20 +7,14 @@ class AppState: ObservableObject {
     @Published var tasks: [AgentTask] = []
     @Published var sceneConfig: SceneConfiguration?
     @Published var selectedAgentId: UUID?
-    @Published var isSimulationRunning = false
+    @Published var selectedTaskId: UUID?
     @Published var currentTheme: SceneTheme = .commandCenter
     @Published var showSceneSelection = true
-    @Published var executionMode: ExecutionMode = .simulation
-
-    enum ExecutionMode: String {
-        case simulation
-        case live
-    }
+    @Published var dangerousCommandAlert: DangerousCommandAlertData?
 
     var localizationManager: LocalizationManager?
     let configLoader = ConfigurationLoader()
     let sceneManager = ThemeableScene()
-    lazy var taskEngine = TaskEngine()
     let cliProcessManager = CLIProcessManager()
     let workspaceManager = WorkspaceManager()
 
@@ -55,6 +49,24 @@ class AppState: ObservableObject {
         return tasks.filter { agent.assignedTaskIds.contains($0.id) }
     }
 
+    var selectedTask: AgentTask? {
+        guard let id = selectedTaskId else { return nil }
+        return tasks.first { $0.id == id }
+    }
+
+    var teamForSelectedTask: [Agent] {
+        guard let task = selectedTask else { return [] }
+        return agents.filter { task.teamAgentIds.contains($0.id) }
+    }
+
+    func selectTask(_ taskId: UUID) {
+        selectedTaskId = taskId
+        if let task = tasks.first(where: { $0.id == taskId }),
+           let agentId = task.assignedAgentId {
+            selectedAgentId = agentId
+        }
+    }
+
     func mainAgents() -> [Agent] {
         agents.filter { $0.isMainAgent }
     }
@@ -66,7 +78,6 @@ class AppState: ObservableObject {
     // MARK: - Configuration Loading
 
     func loadSampleConfig() {
-        // Try loading from bundle first
         let bundleAgents = configLoader.loadAgentsFromBundle()
         let bundleTasks = configLoader.loadTasksFromBundle()
         let bundleScene = configLoader.loadSceneConfigFromBundle()
@@ -76,7 +87,6 @@ class AppState: ObservableObject {
             tasks = bundleTasks
             sceneConfig = bundleScene
         } else {
-            // Fallback: load from file path
             loadFromSampleDirectory()
         }
 
@@ -107,95 +117,48 @@ class AppState: ObservableObject {
         selectedAgentId = id
     }
 
-    // MARK: - Simulation
-
-    func startSimulation() {
-        guard !isSimulationRunning else { return }
-        isSimulationRunning = true
-
-        // Set all pending tasks to in-progress
-        for i in tasks.indices where tasks[i].status == .pending {
-            tasks[i].status = .inProgress
-        }
-
-        // Update agent statuses
-        for i in agents.indices {
-            let agentTasks = tasks.filter { agents[i].assignedTaskIds.contains($0.id) }
-            if agentTasks.contains(where: { $0.status == .inProgress }) {
-                agents[i].status = .working
-                sceneManager.updateAgentStatus(agents[i].id, to: .working)
-            }
-        }
-
-        taskEngine.startSimulation(
-            agents: agents,
-            tasks: tasks,
-            onStatusChange: { [weak self] agentId, status in
-                Task { @MainActor in
-                    self?.handleAgentStatusChange(agentId, to: status)
-                }
-            },
-            onTaskProgress: { [weak self] taskId, progress in
-                Task { @MainActor in
-                    self?.handleTaskProgress(taskId, progress: progress)
-                }
-            }
-        )
-    }
-
-    func pauseSimulation() {
-        isSimulationRunning = false
-        taskEngine.stop()
-
-        for i in agents.indices where agents[i].status == .working {
-            agents[i].status = .idle
-            sceneManager.updateAgentStatus(agents[i].id, to: .idle)
-        }
-    }
-
-    func resetSimulation() {
-        taskEngine.stop()
-        isSimulationRunning = false
-        loadSampleConfig()
-    }
-
     // MARK: - Prompt Task Submission
 
     func submitPromptTask(title: String, assignTo agentId: UUID) {
         let taskId = UUID()
-        let isLive = (executionMode == .live)
+        let descendants = AgentCoordinator.allDescendants(of: agentId, in: agents)
+        let teamIds = [agentId] + descendants.map(\.id)
+
         let newTask = AgentTask(
             id: taskId,
             title: title,
-            description: isLive ? "CLI task: \(title)" : "User task: \(title)",
+            description: "CLI task: \(title)",
             status: .inProgress,
             priority: .medium,
             assignedAgentId: agentId,
-            subtasks: isLive ? [] : generateSubtasks(for: title),
+            subtasks: [],
             progress: 0,
             createdAt: Date(),
-            estimatedDuration: isLive ? 0 : estimateDuration(for: title),
-            isRealExecution: isLive
+            estimatedDuration: 0,
+            teamAgentIds: teamIds,
+            isRealExecution: true
         )
         tasks.append(newTask)
 
-        // Update agent
+        // Update lead agent
         if let idx = agents.firstIndex(where: { $0.id == agentId }) {
             agents[idx].assignedTaskIds.append(taskId)
             agents[idx].status = .working
             sceneManager.updateAgentStatus(agentId, to: .working)
         }
 
-        if isLive {
-            startCLIProcess(taskId: taskId, agentId: agentId, prompt: title)
-        } else {
-            // Start or add to simulation
-            if isSimulationRunning {
-                taskEngine.addTask(newTask)
-            } else {
-                startSimulation()
+        // Update team members to thinking
+        for descendant in descendants {
+            if let idx = agents.firstIndex(where: { $0.id == descendant.id }) {
+                agents[idx].status = .thinking
+                sceneManager.updateAgentStatus(descendant.id, to: .thinking)
             }
         }
+
+        // Auto-select the new task
+        selectedTaskId = taskId
+
+        startCLIProcess(taskId: taskId, agentId: agentId, prompt: title)
     }
 
     func cancelTask(_ taskId: UUID) {
@@ -204,7 +167,8 @@ class AppState: ObservableObject {
             cliProcessManager.cancelProcess(taskId: taskId)
         }
         tasks[idx].status = .failed
-        if let agentId = tasks[idx].assignedAgentId {
+        // Reset all team agents to idle
+        for agentId in tasks[idx].teamAgentIds {
             handleAgentStatusChange(agentId, to: .idle)
         }
     }
@@ -236,6 +200,11 @@ class AppState: ObservableObject {
                 Task { @MainActor in
                     self?.handleCLIFailed(taskId, error: error)
                 }
+            },
+            onDangerousCommand: { [weak self] taskId, agentId, tool, input, reason in
+                Task { @MainActor in
+                    self?.handleDangerousCommand(taskId: taskId, agentId: agentId, tool: tool, input: input, reason: reason)
+                }
             }
         )
     }
@@ -247,7 +216,8 @@ class AppState: ObservableObject {
         tasks[idx].completedAt = Date()
         tasks[idx].cliResult = result
 
-        if let agentId = tasks[idx].assignedAgentId {
+        // Update all team agents to completed
+        for agentId in tasks[idx].teamAgentIds {
             handleAgentStatusChange(agentId, to: .completed)
         }
     }
@@ -257,36 +227,55 @@ class AppState: ObservableObject {
         tasks[idx].status = .failed
         tasks[idx].cliResult = "Error: \(error)"
 
-        if let agentId = tasks[idx].assignedAgentId {
-            handleAgentStatusChange(agentId, to: .error)
+        // Update lead to error, team members to idle
+        if let leadId = tasks[idx].assignedAgentId {
+            handleAgentStatusChange(leadId, to: .error)
+        }
+        let teamWithoutLead = tasks[idx].teamAgentIds.filter { $0 != tasks[idx].assignedAgentId }
+        for agentId in teamWithoutLead {
+            handleAgentStatusChange(agentId, to: .idle)
         }
     }
 
     func bestAvailableAgent() -> Agent? {
-        // Prefer idle agents
         if let idle = agents.first(where: { $0.status == .idle }) {
             return idle
         }
-        // Then main agents
         if let main = agents.first(where: { $0.isMainAgent }) {
             return main
         }
-        // Any agent
         return agents.first
     }
 
-    private func generateSubtasks(for title: String) -> [SubTask] {
-        let words = title.split(separator: " ")
-        let count = min(max(words.count, 2), 5)
-        return (1...count).map { i in
-            SubTask(id: UUID(), title: "Step \(i)", isCompleted: false)
-        }
+    // MARK: - Dangerous Command Handling
+
+    private func handleDangerousCommand(taskId: UUID, agentId: UUID, tool: String, input: String, reason: String) {
+        // Set agent to requesting permission animation
+        handleAgentStatusChange(agentId, to: .requestingPermission)
+
+        // Show alert
+        dangerousCommandAlert = DangerousCommandAlertData(
+            taskId: taskId,
+            agentId: agentId,
+            tool: tool,
+            input: input,
+            reason: reason
+        )
     }
 
-    private func estimateDuration(for title: String) -> TimeInterval {
-        let base = 8.0
-        let lengthFactor = Double(title.count) / 20.0
-        return base + lengthFactor * 4.0
+    func dismissDangerousAlert() {
+        if let alert = dangerousCommandAlert {
+            // Resume agent to working
+            handleAgentStatusChange(alert.agentId, to: .working)
+        }
+        dangerousCommandAlert = nil
+    }
+
+    func cancelDangerousTask() {
+        if let alert = dangerousCommandAlert {
+            cancelTask(alert.taskId)
+        }
+        dangerousCommandAlert = nil
     }
 
     // MARK: - Private
@@ -306,12 +295,10 @@ class AppState: ObservableObject {
             tasks[idx].status = .completed
             tasks[idx].completedAt = Date()
 
-            // Mark all subtasks as completed
             for si in tasks[idx].subtasks.indices {
                 tasks[idx].subtasks[si].isCompleted = true
             }
 
-            // Check if the assigned agent has all tasks completed
             if let agentId = tasks[idx].assignedAgentId,
                let agentIdx = agents.firstIndex(where: { $0.id == agentId }) {
                 let agentTasks = tasks.filter { agents[agentIdx].assignedTaskIds.contains($0.id) }
@@ -321,23 +308,15 @@ class AppState: ObservableObject {
                 }
             }
         } else {
-            // Update subtask completion based on progress
             let totalSubtasks = tasks[idx].subtasks.count
             let completedCount = Int(progress * Double(totalSubtasks))
             for si in tasks[idx].subtasks.indices {
                 tasks[idx].subtasks[si].isCompleted = si < completedCount
             }
         }
-
-        // Check if simulation is done
-        if tasks.allSatisfy({ $0.status == .completed || $0.status == .failed }) {
-            isSimulationRunning = false
-            taskEngine.stop()
-        }
     }
 
     private func loadFromSampleDirectory() {
-        // Try to find configs relative to executable
         let execURL = Bundle.main.bundleURL
         let configDir = execURL.appendingPathComponent("Contents/Resources/SampleConfigs")
         if FileManager.default.fileExists(atPath: configDir.path) {
