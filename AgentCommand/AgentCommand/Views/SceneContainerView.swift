@@ -169,6 +169,19 @@ struct SceneContainerView: View {
                     }
                 }
 
+                // Performance Metrics (right side, D5)
+                if appState.isMetricsVisible {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            PerformanceMetricsOverlay()
+                                .padding(.trailing, 12)
+                                .padding(.top, 80)
+                        }
+                        Spacer()
+                    }
+                }
+
                 // Mini-map (bottom-right corner, B6)
                 if appState.isMiniMapVisible {
                     VStack {
@@ -193,6 +206,16 @@ struct SceneContainerView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .transition(.opacity)
                 }
+
+                // Session Replay controls (bottom-center, D4)
+                if appState.isInReplayMode {
+                    VStack {
+                        Spacer()
+                        SessionReplayOverlay()
+                            .padding(.bottom, 8)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
             }
 
             // Timeline
@@ -200,8 +223,12 @@ struct SceneContainerView: View {
                 TimelineView(timelineManager: appState.timelineManager)
             }
 
-            // Bottom: prompt input bar
-            PromptInputBar()
+            // Bottom: prompt input bar or replay indicator
+            if appState.isInReplayMode {
+                replayModeBar
+            } else {
+                PromptInputBar()
+            }
         }
         // Escape key to exit first-person mode
         .onKeyPress(.escape) {
@@ -248,6 +275,36 @@ struct SceneContainerView: View {
                     }
             }
         }
+    }
+
+    // D4: Replay mode indicator bar
+    private var replayModeBar: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "play.circle.fill")
+                .foregroundColor(Color(hex: "#00BCD4"))
+            Text("Replay Mode")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(.white)
+
+            Spacer()
+
+            Button(action: { appState.stopSessionReplay() }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "stop.fill")
+                    Text("Stop Replay")
+                }
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.red.opacity(0.6))
+                .cornerRadius(6)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(Color(hex: "#0D1117"))
     }
 }
 

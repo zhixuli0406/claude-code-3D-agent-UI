@@ -17,6 +17,7 @@ struct SkillBookView: View {
     @State private var showDeleteAlert = false
     @State private var skillToDelete: AgentSkill?
     @State private var feedbackMessage: String?
+    @State private var showSkillsMPSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,6 +32,22 @@ struct SkillBookView: View {
         }
         .frame(width: 720, height: 620)
         .background(Color(hex: "#0D1117"))
+        .sheet(isPresented: $showSkillsMPSheet) {
+            SkillsMPBrowseSheet(
+                onImport: { skill in
+                    appState.skillManager.addCustomSkill(skill)
+                    showFeedback(localization.localized(.skillsMPImported))
+                },
+                onAddCustom: {
+                    showSkillsMPSheet = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showAddSkillSheet = true
+                    }
+                }
+            )
+            .environmentObject(appState)
+            .environmentObject(localization)
+        }
         .sheet(isPresented: $showAddSkillSheet) {
             AddCustomSkillSheet(onSave: { skill in
                 appState.skillManager.addCustomSkill(skill)
@@ -128,13 +145,13 @@ struct SkillBookView: View {
                 }
             }
 
-            Button(action: { showAddSkillSheet = true }) {
+            Button(action: { showSkillsMPSheet = true }) {
                 Image(systemName: "plus.circle.fill")
                     .foregroundColor(.green)
                     .font(.title3)
             }
             .buttonStyle(.plain)
-            .help(localization.localized(.addCustomSkill))
+            .help(localization.localized(.browseSkillsMP))
 
             Button(action: { dismiss() }) {
                 Image(systemName: "xmark.circle.fill")
@@ -259,8 +276,6 @@ struct SkillBookView: View {
 
             if selectedSkill != nil {
                 skillDetailPanel
-            } else if selectedAgentName == nil {
-                noAgentSelectedView
             } else {
                 skillGrid
             }
@@ -291,7 +306,7 @@ struct SkillBookView: View {
     }
 
     private var filterOptions: [SkillSource?] {
-        [nil, .preBuilt, .custom]
+        [nil, .preBuilt, .community, .custom]
     }
 
     private func filterLabel(for source: SkillSource?) -> String {
@@ -329,6 +344,7 @@ struct SkillBookView: View {
                             skill: skill,
                             installation: inst,
                             isCustom: isCustom,
+                            hasAgent: selectedAgentName != nil,
                             onInstall: { installSkill(skill) },
                             onToggleActive: { toggleActive(skill) },
                             onTap: { selectedSkill = skill }
@@ -354,19 +370,6 @@ struct SkillBookView: View {
                 .padding()
             }
         }
-    }
-
-    private var noAgentSelectedView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "person.crop.circle.badge.questionmark")
-                .font(.system(size: 40))
-                .foregroundColor(.secondary)
-            Text(localization.localized(.noAgentSelected))
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 100)
     }
 
     // MARK: - Skill Detail Panel
@@ -773,6 +776,7 @@ struct SkillCardView: View {
     let skill: AgentSkill
     let installation: SkillInstallation?
     let isCustom: Bool
+    var hasAgent: Bool = true
     let onInstall: () -> Void
     let onToggleActive: () -> Void
     let onTap: () -> Void
@@ -851,40 +855,42 @@ struct SkillCardView: View {
 
                 // Action row
                 HStack {
-                    if isInstalled {
-                        Button(action: onToggleActive) {
-                            HStack(spacing: 4) {
-                                Image(systemName: isActive ? "bolt.fill" : "bolt.slash")
-                                    .font(.system(size: 9))
-                                Text(isActive ? "Active" : "Inactive")
-                                    .font(.system(size: 9, weight: .medium))
+                    if hasAgent {
+                        if isInstalled {
+                            Button(action: onToggleActive) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: isActive ? "bolt.fill" : "bolt.slash")
+                                        .font(.system(size: 9))
+                                    Text(isActive ? "Active" : "Inactive")
+                                        .font(.system(size: 9, weight: .medium))
+                                }
+                                .foregroundColor(isActive ? .green : .orange)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(
+                                    Capsule()
+                                        .fill((isActive ? Color.green : Color.orange).opacity(0.12))
+                                )
                             }
-                            .foregroundColor(isActive ? .green : .orange)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(
-                                Capsule()
-                                    .fill((isActive ? Color.green : Color.orange).opacity(0.12))
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    } else {
-                        Button(action: onInstall) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "arrow.down.circle")
-                                    .font(.system(size: 9))
-                                Text("Install")
-                                    .font(.system(size: 9, weight: .medium))
+                            .buttonStyle(.plain)
+                        } else {
+                            Button(action: onInstall) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "arrow.down.circle")
+                                        .font(.system(size: 9))
+                                    Text("Install")
+                                        .font(.system(size: 9, weight: .medium))
+                                }
+                                .foregroundColor(.cyan)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.cyan.opacity(0.12))
+                                )
                             }
-                            .foregroundColor(.cyan)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(
-                                Capsule()
-                                    .fill(Color.cyan.opacity(0.12))
-                            )
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
 
                     Spacer()

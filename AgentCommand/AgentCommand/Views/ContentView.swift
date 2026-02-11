@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var showStatsDashboard = false
     @State private var showCosmeticShop = false
     @State private var showSkillBook = false
+    @State private var showSessionHistory = false
 
     var body: some View {
         Group {
@@ -103,6 +104,18 @@ struct ContentView: View {
                     Label(localization.localized(.taskQueue), systemImage: appState.isTaskQueueVisible ? "list.bullet.rectangle.portrait.fill" : "list.bullet.rectangle.portrait")
                 }
                 .help(localization.localized(.helpTaskQueue))
+
+                // Performance Metrics toggle (D5)
+                Button(action: { appState.toggleMetrics() }) {
+                    Label(localization.localized(.performanceMetrics), systemImage: appState.isMetricsVisible ? "gauge.with.dots.needle.67percent" : "gauge.with.dots.needle.33percent")
+                }
+                .help(localization.localized(.helpPerformanceMetrics))
+
+                // Session History (D4)
+                Button(action: { showSessionHistory = true }) {
+                    Label(localization.localized(.sessionHistory), systemImage: "clock.arrow.circlepath")
+                }
+                .help(localization.localized(.helpSessionHistory))
 
                 // Multi-Window menu (D2)
                 Menu {
@@ -234,6 +247,11 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showSkillBook) {
             SkillBookView()
+                .environmentObject(appState)
+                .environmentObject(localization)
+        }
+        .sheet(isPresented: $showSessionHistory) {
+            SessionHistoryView()
                 .environmentObject(appState)
                 .environmentObject(localization)
         }

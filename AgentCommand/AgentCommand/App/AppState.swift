@@ -50,6 +50,12 @@ class AppState: ObservableObject {
     @Published var isTaskQueueVisible: Bool = true
     @Published var taskQueueOrder: [UUID] = []
 
+    // Performance Metrics state (D5)
+    @Published var isMetricsVisible: Bool = false
+
+    // Session History & Replay state (D4)
+    @Published var isInReplayMode: Bool = false
+
     // Multi-Window Support (D2)
     let windowManager = WindowManager()
 
@@ -65,7 +71,10 @@ class AppState: ObservableObject {
     let timelineManager = TimelineManager()
     let coinManager = CoinManager()
     let skillManager = SkillManager()
+    let skillsMPService = SkillsMPService()
     let explorationManager = ExplorationManager()
+    let metricsManager = PerformanceMetricsManager()
+    let sessionHistoryManager = SessionHistoryManager()
     private let dayNightController = DayNightCycleController()
 
     /// Tracks teams that are currently being disbanded (animation in progress)
@@ -80,6 +89,7 @@ class AppState: ObservableObject {
 
     private static let miniMapKey = "miniMapVisible"
     private static let taskQueueKey = "taskQueueVisible"
+    private static let metricsKey = "metricsVisible"
 
     init() {
         if let saved = UserDefaults.standard.string(forKey: Self.themeKey),
@@ -94,6 +104,7 @@ class AppState: ObservableObject {
         } else {
             isTaskQueueVisible = UserDefaults.standard.bool(forKey: Self.taskQueueKey)
         }
+        isMetricsVisible = UserDefaults.standard.bool(forKey: Self.metricsKey)
     }
 
     func setTheme(_ theme: SceneTheme) {
@@ -382,6 +393,15 @@ class AppState: ObservableObject {
         // Record timeline event
         timelineManager.recordEvent(kind: .taskCreated, taskId: taskId, agentId: agentId, title: "Task created: \(title)")
 
+        // D4: Start session recording if not already recording
+        if !sessionHistoryManager.isRecording && !isInReplayMode {
+            sessionHistoryManager.startSession(
+                theme: currentTheme.rawValue,
+                agents: agents,
+                sceneConfig: sceneConfig
+            )
+        }
+
         startCLIProcess(taskId: taskId, agentId: agentId, prompt: title)
     }
 
@@ -454,7 +474,10 @@ class AppState: ObservableObject {
     private func startCLIProcess(taskId: UUID, agentId: UUID, prompt: String, resumeSessionId: String? = nil) {
         let workDir = workspaceManager.activeDirectory
 
-        let _ = cliProcessManager.startProcess(
+        // D5: Track task start
+        metricsManager.taskStarted(taskId: taskId, agentId: agentId, prompt: prompt)
+
+        let cliProcess = cliProcessManager.startProcess(
             taskId: taskId,
             agentId: agentId,
             prompt: prompt,
@@ -501,6 +524,11 @@ class AppState: ObservableObject {
                 }
             }
         )
+
+        // D5: Register process PID for resource monitoring
+        if cliProcess.processIdentifier > 0 {
+            metricsManager.registerProcess(taskId: taskId, pid: cliProcess.processIdentifier)
+        }
     }
 
     private func handleCLICompleted(_ taskId: UUID, result: String) {
@@ -510,7 +538,34 @@ class AppState: ObservableObject {
         tasks[idx].completedAt = Date()
         tasks[idx].cliResult = result
 
+        // D5: Extract cost/duration from CLI process output and record metrics
+        let cliEntries = cliProcessManager.outputEntries(for: taskId)
+        var costUSD: Double?
+        var durationMs: Int?
+        for entry in cliEntries {
+            if entry.kind == .systemInfo {
+                if entry.text.hasPrefix("Cost: $"), let cost = Double(entry.text.dropFirst(7)) {
+                    costUSD = cost
+                }
+                if entry.text.hasPrefix("Duration: "), entry.text.hasSuffix("ms"),
+                   let dur = Int(entry.text.dropFirst(10).dropLast(2)) {
+                    durationMs = dur
+                }
+            }
+        }
+        metricsManager.taskCompleted(taskId: taskId, costUSD: costUSD, durationMs: durationMs)
+        metricsManager.unregisterProcess(taskId: taskId)
+
         timelineManager.recordEvent(kind: .taskCompleted, taskId: taskId, agentId: tasks[idx].assignedAgentId, title: "Task completed: \(tasks[idx].title)")
+
+        // D4: Update session recording
+        if sessionHistoryManager.isRecording {
+            sessionHistoryManager.updateSession(
+                agents: agents, tasks: tasks,
+                timelineEvents: timelineManager.events,
+                cliOutputs: gatherCLIOutputs()
+            )
+        }
 
         // Update all team agents to completed
         for agentId in tasks[idx].teamAgentIds {
@@ -591,7 +646,20 @@ class AppState: ObservableObject {
         tasks[idx].status = .failed
         tasks[idx].cliResult = "Error: \(error)"
 
+        // D5: Record failure metrics
+        metricsManager.taskFailed(taskId: taskId)
+        metricsManager.unregisterProcess(taskId: taskId)
+
         timelineManager.recordEvent(kind: .taskFailed, taskId: taskId, agentId: tasks[idx].assignedAgentId, title: "Task failed: \(tasks[idx].title)", detail: String(error.prefix(100)))
+
+        // D4: Update session recording
+        if sessionHistoryManager.isRecording {
+            sessionHistoryManager.updateSession(
+                agents: agents, tasks: tasks,
+                timelineEvents: timelineManager.events,
+                cliOutputs: gatherCLIOutputs()
+            )
+        }
 
         // Update lead to error (sub-agents will be propagated to idle automatically)
         if let leadId = tasks[idx].assignedAgentId {
@@ -892,6 +960,16 @@ class AppState: ObservableObject {
 
         disbandingTeamIds.remove(commanderId)
 
+        // D4: End session if no more active agents
+        if agents.isEmpty && sessionHistoryManager.isRecording {
+            sessionHistoryManager.endSession(
+                agents: [],
+                tasks: tasks,
+                timelineEvents: timelineManager.events,
+                cliOutputs: gatherCLIOutputs()
+            )
+        }
+
         // Rebuild scene layout (empty scene if no agents remain)
         rebuildScene()
     }
@@ -899,6 +977,9 @@ class AppState: ObservableObject {
     // MARK: - Chat Bubble Output
 
     private func handleCLIOutput(agentId: UUID, entry: CLIOutputEntry) {
+        // D5: Track metrics per output entry
+        let taskId = tasks.first(where: { $0.assignedAgentId == agentId && $0.status == .inProgress })?.id
+
         switch entry.kind {
         case .assistantThinking:
             sceneManager.updateChatBubble(
@@ -907,6 +988,9 @@ class AppState: ObservableObject {
                 style: .thought,
                 toolIcon: nil
             )
+            if let taskId = taskId {
+                metricsManager.recordAssistantText(taskId: taskId, textLength: entry.text.count)
+            }
         case .toolInvocation:
             // Extract tool name from "Using tool: ToolName"
             let toolName = entry.text.replacingOccurrences(of: "Using tool: ", with: "")
@@ -916,9 +1000,10 @@ class AppState: ObservableObject {
                 style: .speech,
                 toolIcon: ToolIcon.from(toolName: toolName)
             )
-            // Find associated task for this agent
-            let taskId = tasks.first(where: { $0.assignedAgentId == agentId && $0.status == .inProgress })?.id
             timelineManager.recordEvent(kind: .toolInvocation, taskId: taskId, agentId: agentId, title: "Tool: \(toolName)", cliEntryId: entry.id)
+            if let taskId = taskId {
+                metricsManager.recordToolCall(taskId: taskId, tool: toolName)
+            }
         case .toolOutput:
             sceneManager.updateChatBubble(
                 agentId: agentId,
@@ -1093,6 +1178,13 @@ class AppState: ObservableObject {
         discoveryPopupItem = nil
     }
 
+    // MARK: - Performance Metrics (D5)
+
+    func toggleMetrics() {
+        isMetricsVisible.toggle()
+        UserDefaults.standard.set(isMetricsVisible, forKey: Self.metricsKey)
+    }
+
     // MARK: - Task Queue (D1)
 
     func toggleTaskQueue() {
@@ -1255,6 +1347,127 @@ class AppState: ObservableObject {
     private func cancelCollaborationTimer(commanderId: UUID) {
         collaborationTimers[commanderId]?.cancel()
         collaborationTimers.removeValue(forKey: commanderId)
+    }
+
+    // MARK: - Session History & Replay (D4)
+
+    /// Gather CLI output entries from all active processes
+    private func gatherCLIOutputs() -> [UUID: [CLIOutputEntry]] {
+        var outputs: [UUID: [CLIOutputEntry]] = [:]
+        for task in tasks {
+            let entries = cliProcessManager.outputEntries(for: task.id)
+            if !entries.isEmpty {
+                outputs[task.id] = entries
+            }
+        }
+        return outputs
+    }
+
+    func startSessionReplay(_ session: SessionRecord) {
+        isInReplayMode = true
+
+        // Restore agents and tasks from session snapshot
+        agents = session.agents
+        tasks = session.tasks
+
+        if let config = session.sceneConfig {
+            sceneConfig = config
+        }
+        if let theme = SceneTheme(rawValue: session.theme) {
+            currentTheme = theme
+        }
+
+        // Clear timeline for replay
+        timelineManager.events = []
+
+        // Rebuild 3D scene with session data
+        rebuildScene()
+
+        // Reset all agents to idle initially (replay will drive status changes)
+        for i in agents.indices {
+            agents[i].status = .idle
+            sceneManager.updateAgentStatus(agents[i].id, to: .idle)
+        }
+
+        // Start replay
+        sessionHistoryManager.startReplay(session: session) { [weak self] event in
+            Task { @MainActor in
+                self?.applyReplayEvent(event)
+            }
+        }
+    }
+
+    func stopSessionReplay() {
+        isInReplayMode = false
+        sessionHistoryManager.stopReplay()
+
+        // Clear replay state
+        agents = []
+        tasks = []
+        timelineManager.events = []
+        rebuildScene()
+    }
+
+    private func applyReplayEvent(_ event: TimelineEvent) {
+        // Add event to timeline for display
+        timelineManager.events.append(event)
+
+        // Drive 3D scene changes based on event kind
+        switch event.kind {
+        case .agentStatusChange:
+            if let agentId = event.agentId {
+                let status = parseStatusFromTitle(event.title)
+                if let idx = agents.firstIndex(where: { $0.id == agentId }) {
+                    agents[idx].status = status
+                }
+                sceneManager.updateAgentStatus(agentId, to: status)
+            }
+        case .taskCompleted:
+            if let agentId = event.agentId {
+                if let idx = agents.firstIndex(where: { $0.id == agentId }) {
+                    agents[idx].status = .completed
+                }
+                sceneManager.updateAgentStatus(agentId, to: .completed)
+            }
+        case .taskFailed:
+            if let agentId = event.agentId {
+                if let idx = agents.firstIndex(where: { $0.id == agentId }) {
+                    agents[idx].status = .error
+                }
+                sceneManager.updateAgentStatus(agentId, to: .error)
+            }
+        case .toolInvocation:
+            if let agentId = event.agentId {
+                let toolName = event.title.replacingOccurrences(of: "Tool: ", with: "")
+                sceneManager.updateChatBubble(
+                    agentId: agentId,
+                    text: event.title,
+                    style: .speech,
+                    toolIcon: ToolIcon.from(toolName: toolName)
+                )
+            }
+        case .taskCreated:
+            if let taskId = event.taskId,
+               let idx = tasks.firstIndex(where: { $0.id == taskId }) {
+                tasks[idx].status = .inProgress
+            }
+            if let agentId = event.agentId {
+                if let idx = agents.firstIndex(where: { $0.id == agentId }) {
+                    agents[idx].status = .working
+                }
+                sceneManager.updateAgentStatus(agentId, to: .working)
+            }
+        default:
+            break
+        }
+    }
+
+    private func parseStatusFromTitle(_ title: String) -> AgentStatus {
+        // title format: "Agent → working"
+        let parts = title.components(separatedBy: "→")
+        guard parts.count >= 2 else { return .idle }
+        let statusRaw = parts.last!.trimmingCharacters(in: .whitespaces)
+        return AgentStatus(rawValue: statusRaw) ?? .idle
     }
 
     private func defaultSceneConfig() -> SceneConfiguration {

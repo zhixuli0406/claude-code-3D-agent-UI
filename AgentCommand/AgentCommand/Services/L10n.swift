@@ -152,6 +152,36 @@ enum L10nKey: String {
     case noTaskSelected, selectTaskToViewCLI
     case selectAgentToViewDetails
     case activeAgents, activeTasks, systemOverview
+
+    // D5: Performance Metrics
+    case performanceMetrics, helpPerformanceMetrics
+    case sessionCost, tokenUsage, tasksRun, avgDuration
+    case resourceUsage, recentTasks
+    case costPerTask, durationComparison
+
+    // D4: Session History & Replay
+    case sessionHistory, helpSessionHistory
+    case sessionReplay, replayMode, stopReplay
+    case sessionRecording, sessionEnded
+    case noSessions, sessionDetails
+    case replayControls, playReplay, pauseReplay
+    case replaySpeed, replayProgress
+    case exportSession, deleteSession, confirmDeleteSession
+    case searchSessions, searchPlaceholder, noSearchResults
+    case sessionDuration, sessionTheme, sessionTasks, sessionEvents
+    case sessionStarted, sessionAgent, sessionCLIOutput
+
+    // SkillsMP Integration
+    case browseSkillsMP, skillsMPMarketplace
+    case skillsMPSearch, skillsMPAISearch, skillsMPSearchPlaceholder
+    case skillsMPAPIKey, skillsMPEnterAPIKey, skillsMPSaveKey, skillsMPGetKey
+    case skillsMPNoAPIKey, skillsMPNoAPIKeyDesc
+    case skillsMPImport, skillsMPImported, skillsMPOpenInBrowser
+    case skillsMPStars, skillsMPUpdatedAt
+    case skillsMPNoResults, skillsMPLoading, skillsMPError
+    case skillsMPSortByStars, skillsMPSortByDate
+    case skillsMPAlreadyImported
+    case addManualSkill
 }
 
 struct L10n {
@@ -441,6 +471,72 @@ struct L10n {
         .activeAgents: "活躍代理",
         .activeTasks: "活躍任務",
         .systemOverview: "系統總覽",
+
+        // D4: Session History & Replay
+        .sessionHistory: "工作歷程",
+        .helpSessionHistory: "查看與回放過去的工作歷程",
+        .sessionReplay: "歷程回放",
+        .replayMode: "回放模式",
+        .stopReplay: "停止回放",
+        .sessionRecording: "錄製中",
+        .sessionEnded: "歷程已結束",
+        .noSessions: "尚無工作歷程",
+        .sessionDetails: "歷程詳情",
+        .replayControls: "回放控制",
+        .playReplay: "播放",
+        .pauseReplay: "暫停",
+        .replaySpeed: "回放速度",
+        .replayProgress: "回放進度",
+        .exportSession: "匯出歷程",
+        .deleteSession: "刪除歷程",
+        .confirmDeleteSession: "確定要刪除此工作歷程嗎？",
+        .searchSessions: "搜尋歷程",
+        .searchPlaceholder: "搜尋任務名稱、事件...",
+        .noSearchResults: "找不到符合的歷程",
+        .sessionDuration: "歷程時長",
+        .sessionTheme: "場景主題",
+        .sessionTasks: "任務數",
+        .sessionEvents: "事件數",
+        .sessionStarted: "開始時間",
+        .sessionAgent: "代理",
+        .sessionCLIOutput: "CLI 輸出",
+
+        // D5: Performance Metrics
+        .performanceMetrics: "效能指標",
+        .helpPerformanceMetrics: "顯示/隱藏效能指標面板",
+        .sessionCost: "會話費用",
+        .tokenUsage: "Token 用量",
+        .tasksRun: "已執行任務",
+        .avgDuration: "平均時長",
+        .resourceUsage: "資源使用",
+        .recentTasks: "最近任務",
+        .costPerTask: "每任務費用",
+        .durationComparison: "時長比較",
+
+        // SkillsMP
+        .browseSkillsMP: "瀏覽 SkillsMP",
+        .skillsMPMarketplace: "SkillsMP 技能市集",
+        .skillsMPSearch: "搜尋",
+        .skillsMPAISearch: "AI 搜尋",
+        .skillsMPSearchPlaceholder: "搜尋技能...",
+        .skillsMPAPIKey: "API 金鑰",
+        .skillsMPEnterAPIKey: "輸入 SkillsMP API 金鑰",
+        .skillsMPSaveKey: "儲存",
+        .skillsMPGetKey: "取得 API 金鑰",
+        .skillsMPNoAPIKey: "尚未設定 API 金鑰",
+        .skillsMPNoAPIKeyDesc: "請先設定 SkillsMP API 金鑰以搜尋社群技能",
+        .skillsMPImport: "匯入",
+        .skillsMPImported: "技能已匯入！",
+        .skillsMPOpenInBrowser: "在瀏覽器中開啟",
+        .skillsMPStars: "星星",
+        .skillsMPUpdatedAt: "更新日期",
+        .skillsMPNoResults: "找不到相關技能",
+        .skillsMPLoading: "搜尋中...",
+        .skillsMPError: "搜尋失敗",
+        .skillsMPSortByStars: "依星星數排序",
+        .skillsMPSortByDate: "依更新日期排序",
+        .skillsMPAlreadyImported: "此技能已匯入",
+        .addManualSkill: "手動新增自訂技能...",
     ]
 
     // MARK: - English
@@ -720,5 +816,71 @@ struct L10n {
         .activeAgents: "Active Agents",
         .activeTasks: "Active Tasks",
         .systemOverview: "System Overview",
+
+        // D4: Session History & Replay
+        .sessionHistory: "Session History",
+        .helpSessionHistory: "View and replay past sessions",
+        .sessionReplay: "Session Replay",
+        .replayMode: "Replay Mode",
+        .stopReplay: "Stop Replay",
+        .sessionRecording: "Recording",
+        .sessionEnded: "Session Ended",
+        .noSessions: "No sessions yet",
+        .sessionDetails: "Session Details",
+        .replayControls: "Replay Controls",
+        .playReplay: "Play",
+        .pauseReplay: "Pause",
+        .replaySpeed: "Speed",
+        .replayProgress: "Progress",
+        .exportSession: "Export Session",
+        .deleteSession: "Delete Session",
+        .confirmDeleteSession: "Are you sure you want to delete this session?",
+        .searchSessions: "Search Sessions",
+        .searchPlaceholder: "Search task names, events...",
+        .noSearchResults: "No matching sessions found",
+        .sessionDuration: "Duration",
+        .sessionTheme: "Theme",
+        .sessionTasks: "Tasks",
+        .sessionEvents: "Events",
+        .sessionStarted: "Started",
+        .sessionAgent: "Agent",
+        .sessionCLIOutput: "CLI Output",
+
+        // D5: Performance Metrics
+        .performanceMetrics: "Performance",
+        .helpPerformanceMetrics: "Toggle performance metrics panel",
+        .sessionCost: "Session Cost",
+        .tokenUsage: "Tokens",
+        .tasksRun: "Tasks Run",
+        .avgDuration: "Avg Duration",
+        .resourceUsage: "Resources",
+        .recentTasks: "Recent",
+        .costPerTask: "Cost/Task",
+        .durationComparison: "Duration Comparison",
+
+        // SkillsMP
+        .browseSkillsMP: "Browse SkillsMP",
+        .skillsMPMarketplace: "SkillsMP Marketplace",
+        .skillsMPSearch: "Search",
+        .skillsMPAISearch: "AI Search",
+        .skillsMPSearchPlaceholder: "Search skills...",
+        .skillsMPAPIKey: "API Key",
+        .skillsMPEnterAPIKey: "Enter SkillsMP API Key",
+        .skillsMPSaveKey: "Save",
+        .skillsMPGetKey: "Get API Key",
+        .skillsMPNoAPIKey: "No API Key configured",
+        .skillsMPNoAPIKeyDesc: "Set up your SkillsMP API key to browse community skills",
+        .skillsMPImport: "Import",
+        .skillsMPImported: "Skill Imported!",
+        .skillsMPOpenInBrowser: "Open in Browser",
+        .skillsMPStars: "Stars",
+        .skillsMPUpdatedAt: "Updated",
+        .skillsMPNoResults: "No matching skills found",
+        .skillsMPLoading: "Searching...",
+        .skillsMPError: "Search failed",
+        .skillsMPSortByStars: "Sort by Stars",
+        .skillsMPSortByDate: "Sort by Date",
+        .skillsMPAlreadyImported: "Skill already imported",
+        .addManualSkill: "Add custom skill manually...",
     ]
 }

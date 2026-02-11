@@ -1,6 +1,6 @@
 # Feature Backlog - Claude Code 3D Agent UI
 
-> Last updated: 2026-02-11
+> Last updated: 2026-02-12
 
 ---
 
@@ -143,16 +143,16 @@
 - [x] Do-not-disturb mode (mute button in toolbar)
 
 ### D4. Session History & Replay (工作歷程與回放)
-- [ ] Record full session with timestamps
-- [ ] Replay past sessions in 3D scene
-- [ ] Export session logs as markdown report
-- [ ] Searchable history across all sessions
+- [x] Record full session with timestamps
+- [x] Replay past sessions in 3D scene
+- [x] Export session logs as markdown report
+- [x] Searchable history across all sessions
 
 ### D5. Performance Metrics (效能指標)
-- [ ] Real-time token usage counter
-- [ ] Cost estimation per task/session
-- [ ] Task duration tracking and comparison
-- [ ] Resource usage monitoring (CPU, memory of CLI processes)
+- [x] Real-time token usage counter
+- [x] Cost estimation per task/session
+- [x] Task duration tracking and comparison
+- [x] Resource usage monitoring (CPU, memory of CLI processes)
 
 ---
 

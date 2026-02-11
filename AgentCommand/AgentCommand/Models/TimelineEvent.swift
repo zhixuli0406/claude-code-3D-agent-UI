@@ -1,6 +1,6 @@
 import Foundation
 
-struct TimelineEvent: Identifiable {
+struct TimelineEvent: Identifiable, Codable, Hashable {
     let id: UUID
     let timestamp: Date
     let kind: TimelineEventKind
@@ -11,7 +11,7 @@ struct TimelineEvent: Identifiable {
     let cliEntryId: UUID?
 }
 
-enum TimelineEventKind: String, CaseIterable {
+enum TimelineEventKind: String, CaseIterable, Codable {
     case taskCreated
     case taskStarted
     case taskCompleted

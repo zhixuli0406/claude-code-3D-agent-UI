@@ -15,6 +15,7 @@ class CLIProcess: ObservableObject, Identifiable {
     @Published var outputEntries: [CLIOutputEntry] = []
     @Published var toolCallCount: Int = 0
     @Published var sessionId: String?
+    @Published var processIdentifier: Int32 = 0
 
     private var process: Process?
     private var hasPendingQuestion = false
@@ -164,6 +165,7 @@ class CLIProcess: ObservableObject, Identifiable {
 
         do {
             try process.run()
+            processIdentifier = process.processIdentifier
         } catch {
             appendEntry(.error, "Failed to start: \(error.localizedDescription)")
             isRunning = false

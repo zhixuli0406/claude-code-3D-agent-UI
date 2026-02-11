@@ -110,9 +110,12 @@ class SkillManager: ObservableObject {
 
     // MARK: - Custom Skills CRUD
 
-    func addCustomSkill(_ skill: AgentSkill) {
+    @discardableResult
+    func addCustomSkill(_ skill: AgentSkill) -> Bool {
+        guard !customSkills.contains(where: { $0.id == skill.id }) else { return false }
         customSkills.append(skill)
         save()
+        return true
     }
 
     func updateCustomSkill(_ updated: AgentSkill) {
