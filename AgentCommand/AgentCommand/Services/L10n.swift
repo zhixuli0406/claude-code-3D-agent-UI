@@ -121,6 +121,37 @@ enum L10nKey: String {
     case miniMap, helpMiniMap
     case explorationProgress
     case easterEggFound, loreDiscovered
+
+    // D1: Task Queue Visualization
+    case taskQueue, helpTaskQueue
+    case estimatedTime, dragToReorder, noQueuedTasks
+
+    // Skill Store (Agent Skills)
+    case skillStore, helpSkillStore
+    case installedSkills, activeSkills, totalSkills
+    case installSkill, uninstallSkill, activateSkill, deactivateSkill
+    case skillInstalled, skillUninstalled, skillActivated, skillDeactivated
+    case addCustomSkill, editSkill, removeSkill, skillName, skillDescription
+    case selectSkillCategory, selectSkillIcon, confirmDeleteSkill
+    case skillInstructions, skillResources, skillVersion, skillAuthor, skillTags
+    case skillCompatiblePlatforms, skillUsageCount, skillLastUsed, skillInstalledAt
+    case searchSkills, filterAll, filterPreBuilt, filterCustom
+    case noSkillsFound, noAgentSelected
+    case skillCategoryFileProcessing, skillCategoryCodeExecution
+    case skillCategoryDataAnalysis, skillCategoryWebInteraction
+    case skillCategoryContentCreation, skillCategorySystemIntegration
+    case skillCategoryCustom
+    case skillSourcePreBuilt, skillSourceCustom, skillSourceCommunity
+
+    // D2: Multi-Window Support
+    case multiWindow, helpMultiWindow
+    case popOutCLI, detachAgentPanel, floatingMonitor
+    case helpPopOutCLI, helpDetachAgentPanel, helpFloatingMonitor
+    case multiMonitor, helpMultiMonitor, moveToScreen
+    case alwaysOnTop, monitorOpacity
+    case noTaskSelected, selectTaskToViewCLI
+    case selectAgentToViewDetails
+    case activeAgents, activeTasks, systemOverview
 }
 
 struct L10n {
@@ -334,6 +365,82 @@ struct L10n {
         .explorationProgress: "探索進度",
         .easterEggFound: "發現彩蛋！",
         .loreDiscovered: "發現傳說！",
+
+        // D1: Task Queue Visualization
+        .taskQueue: "任務佇列",
+        .helpTaskQueue: "顯示/隱藏任務佇列",
+        .estimatedTime: "預估時間",
+        .dragToReorder: "拖曳排序",
+        .noQueuedTasks: "佇列無任務",
+
+        // Skill Store (Agent Skills)
+        .skillStore: "技能商店",
+        .helpSkillStore: "管理代理技能",
+        .installedSkills: "已安裝",
+        .activeSkills: "啟用中",
+        .totalSkills: "技能總數",
+        .installSkill: "安裝",
+        .uninstallSkill: "解除安裝",
+        .activateSkill: "啟用",
+        .deactivateSkill: "停用",
+        .skillInstalled: "技能已安裝！",
+        .skillUninstalled: "技能已解除安裝",
+        .skillActivated: "技能已啟用",
+        .skillDeactivated: "技能已停用",
+        .addCustomSkill: "新增自訂技能",
+        .editSkill: "編輯技能",
+        .removeSkill: "移除技能",
+        .skillName: "技能名稱",
+        .skillDescription: "技能描述",
+        .selectSkillCategory: "選擇技能分類",
+        .selectSkillIcon: "選擇圖標",
+        .confirmDeleteSkill: "確定要刪除此技能嗎？",
+        .skillInstructions: "技能指令",
+        .skillResources: "附帶資源",
+        .skillVersion: "版本",
+        .skillAuthor: "作者",
+        .skillTags: "標籤",
+        .skillCompatiblePlatforms: "相容平台",
+        .skillUsageCount: "使用次數",
+        .skillLastUsed: "最後使用",
+        .skillInstalledAt: "安裝日期",
+        .searchSkills: "搜尋技能...",
+        .filterAll: "全部",
+        .filterPreBuilt: "內建",
+        .filterCustom: "自訂",
+        .noSkillsFound: "找不到符合的技能",
+        .noAgentSelected: "請選擇一個代理",
+        .skillCategoryFileProcessing: "檔案處理",
+        .skillCategoryCodeExecution: "程式執行",
+        .skillCategoryDataAnalysis: "資料分析",
+        .skillCategoryWebInteraction: "網路互動",
+        .skillCategoryContentCreation: "內容建立",
+        .skillCategorySystemIntegration: "系統整合",
+        .skillCategoryCustom: "自訂技能",
+        .skillSourcePreBuilt: "官方內建",
+        .skillSourceCustom: "使用者自訂",
+        .skillSourceCommunity: "社群",
+
+        // D2: Multi-Window Support
+        .multiWindow: "多視窗",
+        .helpMultiWindow: "管理多視窗設定",
+        .popOutCLI: "彈出 CLI 視窗",
+        .detachAgentPanel: "獨立代理面板",
+        .floatingMonitor: "浮動監控",
+        .helpPopOutCLI: "將 CLI 輸出分離至獨立視窗",
+        .helpDetachAgentPanel: "將代理詳細資訊分離至獨立視窗",
+        .helpFloatingMonitor: "開啟/關閉浮動監控視窗",
+        .multiMonitor: "多螢幕",
+        .helpMultiMonitor: "多螢幕佈局設定",
+        .moveToScreen: "移至螢幕",
+        .alwaysOnTop: "置頂顯示",
+        .monitorOpacity: "監控透明度",
+        .noTaskSelected: "未選擇任務",
+        .selectTaskToViewCLI: "選擇一個任務以檢視 CLI 輸出",
+        .selectAgentToViewDetails: "選擇一個代理以檢視詳細資訊",
+        .activeAgents: "活躍代理",
+        .activeTasks: "活躍任務",
+        .systemOverview: "系統總覽",
     ]
 
     // MARK: - English
@@ -537,5 +644,81 @@ struct L10n {
         .explorationProgress: "Exploration",
         .easterEggFound: "Easter Egg Found!",
         .loreDiscovered: "Lore Discovered!",
+
+        // D1: Task Queue Visualization
+        .taskQueue: "Task Queue",
+        .helpTaskQueue: "Toggle task queue",
+        .estimatedTime: "Est. Time",
+        .dragToReorder: "Drag to reorder",
+        .noQueuedTasks: "No queued tasks",
+
+        // Skill Store (Agent Skills)
+        .skillStore: "Skill Store",
+        .helpSkillStore: "Manage agent skills",
+        .installedSkills: "Installed",
+        .activeSkills: "Active",
+        .totalSkills: "Total Skills",
+        .installSkill: "Install",
+        .uninstallSkill: "Uninstall",
+        .activateSkill: "Activate",
+        .deactivateSkill: "Deactivate",
+        .skillInstalled: "Skill Installed!",
+        .skillUninstalled: "Skill Uninstalled",
+        .skillActivated: "Skill Activated",
+        .skillDeactivated: "Skill Deactivated",
+        .addCustomSkill: "Add Custom Skill",
+        .editSkill: "Edit Skill",
+        .removeSkill: "Remove Skill",
+        .skillName: "Skill Name",
+        .skillDescription: "Skill Description",
+        .selectSkillCategory: "Select Category",
+        .selectSkillIcon: "Select Icon",
+        .confirmDeleteSkill: "Are you sure you want to delete this skill?",
+        .skillInstructions: "Instructions",
+        .skillResources: "Resources",
+        .skillVersion: "Version",
+        .skillAuthor: "Author",
+        .skillTags: "Tags",
+        .skillCompatiblePlatforms: "Platforms",
+        .skillUsageCount: "Usage Count",
+        .skillLastUsed: "Last Used",
+        .skillInstalledAt: "Installed",
+        .searchSkills: "Search skills...",
+        .filterAll: "All",
+        .filterPreBuilt: "Pre-built",
+        .filterCustom: "Custom",
+        .noSkillsFound: "No matching skills found",
+        .noAgentSelected: "Select an agent",
+        .skillCategoryFileProcessing: "File Processing",
+        .skillCategoryCodeExecution: "Code Execution",
+        .skillCategoryDataAnalysis: "Data Analysis",
+        .skillCategoryWebInteraction: "Web Interaction",
+        .skillCategoryContentCreation: "Content Creation",
+        .skillCategorySystemIntegration: "System Integration",
+        .skillCategoryCustom: "Custom Skills",
+        .skillSourcePreBuilt: "Pre-built",
+        .skillSourceCustom: "Custom",
+        .skillSourceCommunity: "Community",
+
+        // D2: Multi-Window Support
+        .multiWindow: "Multi-Window",
+        .helpMultiWindow: "Manage multi-window settings",
+        .popOutCLI: "Pop Out CLI",
+        .detachAgentPanel: "Detach Agent Panel",
+        .floatingMonitor: "Floating Monitor",
+        .helpPopOutCLI: "Pop out CLI output to separate window",
+        .helpDetachAgentPanel: "Detach agent details to separate window",
+        .helpFloatingMonitor: "Toggle floating monitor window",
+        .multiMonitor: "Multi-Monitor",
+        .helpMultiMonitor: "Multi-monitor layout settings",
+        .moveToScreen: "Move to Screen",
+        .alwaysOnTop: "Always on Top",
+        .monitorOpacity: "Monitor Opacity",
+        .noTaskSelected: "No Task Selected",
+        .selectTaskToViewCLI: "Select a task to view CLI output",
+        .selectAgentToViewDetails: "Select an agent to view details",
+        .activeAgents: "Active Agents",
+        .activeTasks: "Active Tasks",
+        .systemOverview: "System Overview",
     ]
 }

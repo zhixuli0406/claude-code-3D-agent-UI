@@ -16,6 +16,8 @@ class ThemeableScene: ObservableObject {
     let chatBubbleManager = ChatBubbleManager()
     /// Callback when an interactive object is clicked
     var onInteractiveObjectClicked: ((InteractiveObjectType, UUID?) -> Void)?
+    /// Reference to the SCNView for camera controller access
+    weak var scnView: SCNView?
 
     var sceneBackgroundColor: NSColor {
         currentThemeBuilder?.sceneBackgroundColor ?? NSColor(hex: "#0A0A1A")
@@ -132,7 +134,9 @@ class ThemeableScene: ObservableObject {
         placeInteractiveObjects(roomSize: config.roomSize, themeBuilder: themeBuilder)
 
         // 8. Setup camera
-        let cameraConfig = themeBuilder.cameraConfigOverride() ?? config.cameraDefaults
+        // Multi-team layout computes optimal camera; theme overrides are only for single-team
+        let isMultiTeam = (config.teamLayouts?.count ?? 0) > 1
+        let cameraConfig = isMultiTeam ? config.cameraDefaults : (themeBuilder.cameraConfigOverride() ?? config.cameraDefaults)
         setupCamera(config: cameraConfig)
 
         // 9. Ambient particles
@@ -267,17 +271,23 @@ class ThemeableScene: ObservableObject {
     // MARK: - Camera Zoom to Agent
 
     func zoomToAgent(_ agentId: UUID) {
-        guard let character = agentNodes[agentId] else { return }
+        guard let character = agentNodes[agentId],
+              let view = scnView,
+              let cameraNode = view.pointOfView else { return }
         let targetPos = character.worldPosition
-
-        guard let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
 
         let newCamPos = SCNVector3(targetPos.x + 2.5, targetPos.y + 3.0, targetPos.z + 3.5)
         let lookAt = SCNVector3(targetPos.x, targetPos.y + 1.0, targetPos.z)
 
+        view.allowsCameraControl = false
+
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 1.0
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        SCNTransaction.completionBlock = {
+            view.allowsCameraControl = true
+            view.defaultCameraController.target = lookAt
+        }
         cameraNode.position = newCamPos
         cameraNode.look(at: lookAt)
         SCNTransaction.commit()
@@ -292,12 +302,22 @@ class ThemeableScene: ObservableObject {
     }
 
     func setCameraPreset(_ preset: CameraPreset) {
-        guard let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
+        // Use the SCNView's actual pointOfView camera (managed by allowsCameraControl)
+        guard let view = scnView,
+              let cameraNode = view.pointOfView else { return }
 
-        let themeConfig = currentThemeBuilder?.cameraConfigOverride()
+        // Use scene-computed camera as the base (accounts for multi-team layout).
+        // Only fall back to theme override for single-team scenarios.
         let sceneDefaults = currentSceneConfig?.cameraDefaults
-        let defaultPos = themeConfig?.position.toSCNVector3() ?? sceneDefaults?.position.toSCNVector3() ?? SCNVector3(0, 8, 12)
-        let defaultTarget = themeConfig?.lookAtTarget.toSCNVector3() ?? sceneDefaults?.lookAtTarget.toSCNVector3() ?? SCNVector3(0, 1, 0)
+        let isMultiTeam = (currentSceneConfig?.teamLayouts?.count ?? 0) > 1
+        let themeConfig = isMultiTeam ? nil : currentThemeBuilder?.cameraConfigOverride()
+
+        let defaultPos = sceneDefaults?.position.toSCNVector3() ?? themeConfig?.position.toSCNVector3() ?? SCNVector3(0, 8, 12)
+        let defaultTarget = sceneDefaults?.lookAtTarget.toSCNVector3() ?? themeConfig?.lookAtTarget.toSCNVector3() ?? SCNVector3(0, 1, 0)
+        let defaultFOV = sceneDefaults?.fieldOfView ?? themeConfig?.fieldOfView ?? 60
+
+        // Compute the center of all agents for multi-team awareness
+        let agentCenter = computeAgentCenter()
 
         let newPos: SCNVector3
         let lookAt: SCNVector3
@@ -307,24 +327,60 @@ class ThemeableScene: ObservableObject {
         case .overview:
             newPos = defaultPos
             lookAt = defaultTarget
-            fov = CGFloat(themeConfig?.fieldOfView ?? sceneDefaults?.fieldOfView ?? 60)
+            fov = CGFloat(defaultFOV)
         case .closeUp:
-            newPos = SCNVector3(defaultPos.x * 0.4, defaultPos.y * 0.5, defaultPos.z * 0.4)
-            lookAt = defaultTarget
+            // Move closer to the center of all agents
+            let target = agentCenter ?? defaultTarget
+            let dx = defaultPos.x - target.x
+            let dz = defaultPos.z - target.z
+            newPos = SCNVector3(
+                target.x + dx * 0.35,
+                max(defaultPos.y * 0.45, 3.0),
+                target.z + dz * 0.35
+            )
+            lookAt = SCNVector3(target.x, target.y + 0.5, target.z)
             fov = 45
         case .cinematic:
-            newPos = SCNVector3(defaultPos.x + 5, defaultPos.y * 0.3, defaultPos.z + 2)
-            lookAt = SCNVector3(defaultTarget.x, defaultTarget.y + 0.5, defaultTarget.z)
+            // Side-angle view looking across all agents
+            let target = agentCenter ?? defaultTarget
+            newPos = SCNVector3(
+                defaultPos.x + 6,
+                max(defaultPos.y * 0.4, 3.0),
+                defaultPos.z * 0.7
+            )
+            lookAt = SCNVector3(target.x, target.y + 0.5, target.z)
             fov = 75
         }
+
+        // Temporarily disable camera control to prevent the controller from fighting
+        view.allowsCameraControl = false
 
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 1.2
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        SCNTransaction.completionBlock = {
+            // Re-enable camera control after animation completes
+            view.allowsCameraControl = true
+            // Update the camera controller's target so future orbit/pan works from the new position
+            view.defaultCameraController.target = lookAt
+        }
         cameraNode.position = newPos
         cameraNode.look(at: lookAt)
         cameraNode.camera?.fieldOfView = fov
         SCNTransaction.commit()
+    }
+
+    /// Compute the average center of all agent characters in the scene
+    private func computeAgentCenter() -> SCNVector3? {
+        guard !agentNodes.isEmpty else { return nil }
+        var sumX: CGFloat = 0, sumY: CGFloat = 0, sumZ: CGFloat = 0
+        for node in agentNodes.values {
+            sumX += node.position.x
+            sumY += node.position.y
+            sumZ += node.position.z
+        }
+        let count = CGFloat(agentNodes.count)
+        return SCNVector3(sumX / count, sumY / count, sumZ / count)
     }
 
     // MARK: - Code Rain Effect
@@ -702,42 +758,95 @@ class ThemeableScene: ObservableObject {
 
     // MARK: - Scene Transition Effect
 
-    /// Play a fade-out/fade-in transition effect during scene rebuild
+    /// Play a fade-out/fade-in transition effect during scene rebuild.
+    /// Agents teleport out before the scene fades, then teleport in after rebuild.
     func playSceneTransition(completion: @escaping () -> Void) {
-        // Create a full-screen overlay that fades in then out
-        let overlay = SCNNode()
-        overlay.name = "transitionOverlay"
+        // Phase 1: Teleport all agents out
+        teleportAllAgentsOut { [weak self] in
+            guard let self = self else {
+                completion()
+                return
+            }
 
-        let plane = SCNPlane(width: 50, height: 50)
-        let mat = SCNMaterial()
-        mat.diffuse.contents = NSColor.black
-        mat.isDoubleSided = true
-        plane.materials = [mat]
-        overlay.geometry = plane
+            // Phase 2: Fade overlay while rebuilding
+            let overlay = SCNNode()
+            overlay.name = "transitionOverlay"
 
-        // Position in front of camera
-        if let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) {
-            overlay.position = cameraNode.position
-            overlay.eulerAngles = cameraNode.eulerAngles
-            // Push slightly forward
-            let forward = SCNVector3(0, 0, -2)
-            overlay.position = cameraNode.position + forward
+            let plane = SCNPlane(width: 50, height: 50)
+            let mat = SCNMaterial()
+            mat.diffuse.contents = NSColor.black
+            mat.isDoubleSided = true
+            plane.materials = [mat]
+            overlay.geometry = plane
+
+            if let cameraNode = self.scene.rootNode.childNode(withName: "camera", recursively: false) {
+                overlay.position = cameraNode.position
+                overlay.eulerAngles = cameraNode.eulerAngles
+                let forward = SCNVector3(0, 0, -2)
+                overlay.position = cameraNode.position + forward
+            }
+
+            overlay.opacity = 0
+            self.scene.rootNode.addChildNode(overlay)
+
+            let fadeIn = SCNAction.fadeIn(duration: 0.3)
+            fadeIn.timingMode = .easeIn
+            let fadeOut = SCNAction.fadeOut(duration: 0.3)
+            fadeOut.timingMode = .easeOut
+
+            overlay.runAction(.sequence([
+                fadeIn,
+                .run { _ in completion() },
+                fadeOut,
+                .removeFromParentNode()
+            ]))
+        }
+    }
+
+    // MARK: - Agent Teleportation
+
+    /// Teleport all agents out of the scene with staggered animations
+    func teleportAllAgentsOut(completion: @escaping () -> Void) {
+        let agents = Array(agentNodes.values)
+        guard !agents.isEmpty else {
+            completion()
+            return
         }
 
-        overlay.opacity = 0
-        scene.rootNode.addChildNode(overlay)
+        let group = DispatchGroup()
+        for (index, character) in agents.enumerated() {
+            group.enter()
+            let stagger = Double(index) * 0.08
+            TeleportAnimation.playOut(on: character, delay: stagger) {
+                group.leave()
+            }
+        }
 
-        let fadeIn = SCNAction.fadeIn(duration: 0.4)
-        fadeIn.timingMode = .easeIn
-        let fadeOut = SCNAction.fadeOut(duration: 0.4)
-        fadeOut.timingMode = .easeOut
+        group.notify(queue: .main) {
+            completion()
+        }
+    }
 
-        overlay.runAction(.sequence([
-            fadeIn,
-            .run { _ in completion() },
-            fadeOut,
-            .removeFromParentNode()
-        ]))
+    /// Teleport all agents into the scene with staggered animations after a rebuild
+    func teleportAllAgentsIn(completion: (() -> Void)? = nil) {
+        let agents = Array(agentNodes.values)
+        guard !agents.isEmpty else {
+            completion?()
+            return
+        }
+
+        let group = DispatchGroup()
+        for (index, character) in agents.enumerated() {
+            group.enter()
+            let stagger = Double(index) * 0.1
+            TeleportAnimation.playIn(on: character, delay: stagger) {
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion?()
+        }
     }
 
     // MARK: - First-Person Camera
@@ -747,7 +856,7 @@ class ThemeableScene: ObservableObject {
 
     func enterFirstPerson(agentId: UUID) {
         guard let character = agentNodes[agentId],
-              let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
+              let cameraNode = scnView?.pointOfView ?? scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
 
         savedCameraState = (cameraNode.position, cameraNode.eulerAngles, cameraNode.camera?.fieldOfView ?? 60)
         firstPersonTargetId = agentId
@@ -773,7 +882,7 @@ class ThemeableScene: ObservableObject {
     func updateFirstPersonCamera() {
         guard let agentId = firstPersonTargetId,
               let character = agentNodes[agentId],
-              let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
+              let cameraNode = scnView?.pointOfView ?? scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
 
         let headPos = character.worldPosition
         let headHeight: CGFloat = 1.8
@@ -787,7 +896,8 @@ class ThemeableScene: ObservableObject {
 
     func exitFirstPerson() {
         guard let saved = savedCameraState,
-              let cameraNode = scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
+              let view = scnView,
+              let cameraNode = view.pointOfView ?? scene.rootNode.childNode(withName: "camera", recursively: false) else { return }
 
         firstPersonTargetId = nil
         savedCameraState = nil
@@ -795,6 +905,9 @@ class ThemeableScene: ObservableObject {
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 1.0
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        SCNTransaction.completionBlock = {
+            view.defaultCameraController.target = SCNVector3(0, 1, 0)
+        }
         cameraNode.position = saved.position
         cameraNode.eulerAngles = saved.eulerAngles
         cameraNode.camera?.fieldOfView = saved.fov
@@ -808,11 +921,12 @@ class ThemeableScene: ObservableObject {
     }
 
     func pipCameraConfig() -> (position: SCNVector3, lookAt: SCNVector3, fov: CGFloat) {
-        let themeConfig = currentThemeBuilder?.cameraConfigOverride()
         let sceneDefaults = currentSceneConfig?.cameraDefaults
-        let defaultPos = themeConfig?.position.toSCNVector3() ?? sceneDefaults?.position.toSCNVector3() ?? SCNVector3(0, 8, 12)
-        let defaultTarget = themeConfig?.lookAtTarget.toSCNVector3() ?? sceneDefaults?.lookAtTarget.toSCNVector3() ?? SCNVector3(0, 1, 0)
-        let fov = CGFloat(themeConfig?.fieldOfView ?? sceneDefaults?.fieldOfView ?? 60)
+        let isMultiTeam = (currentSceneConfig?.teamLayouts?.count ?? 0) > 1
+        let themeConfig = isMultiTeam ? nil : currentThemeBuilder?.cameraConfigOverride()
+        let defaultPos = sceneDefaults?.position.toSCNVector3() ?? themeConfig?.position.toSCNVector3() ?? SCNVector3(0, 8, 12)
+        let defaultTarget = sceneDefaults?.lookAtTarget.toSCNVector3() ?? themeConfig?.lookAtTarget.toSCNVector3() ?? SCNVector3(0, 1, 0)
+        let fov = CGFloat(sceneDefaults?.fieldOfView ?? themeConfig?.fieldOfView ?? 60)
         return (defaultPos, defaultTarget, fov)
     }
 
@@ -919,7 +1033,7 @@ class ThemeableScene: ObservableObject {
             targetPosition: targetPos
         ) { [weak self] in
             // Restore desk facing rotation
-            if let deskPos = self?.agentDeskPositions[visitorId] {
+            if self?.agentDeskPositions[visitorId] != nil {
                 SCNTransaction.begin()
                 SCNTransaction.animationDuration = 0.3
                 visitor.eulerAngles.y = CGFloat(Float.pi)

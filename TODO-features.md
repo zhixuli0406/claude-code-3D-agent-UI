@@ -118,23 +118,23 @@
 ### C5. Transition Animations (場景轉場動畫)
 - [x] Smooth camera transition when switching themes
 - [x] Portal/warp effect during theme change
-- [ ] Agent teleportation animation between themes
+- [x] Agent teleportation animation between themes
 
 ---
 
 ## D. Productivity & Monitoring Features (生產力與監控功能)
 
 ### D1. Task Queue Visualization (任務佇列視覺化)
-- [ ] Visual queue showing pending tasks as floating cards
-- [ ] Priority color coding (red=critical, yellow=high, etc.)
-- [ ] Drag to reorder task queue
-- [ ] Estimated time remaining display
+- [x] Visual queue showing pending tasks as floating cards
+- [x] Priority color coding (red=critical, yellow=high, etc.)
+- [x] Drag to reorder task queue
+- [x] Estimated time remaining display
 
 ### D2. Multi-Window Support (多視窗支援)
-- [ ] Pop-out CLI output to separate window
-- [ ] Detachable agent detail panel
-- [ ] Multi-monitor support with scene on one and panels on another
-- [ ] Floating mini-view for always-on-top monitoring
+- [x] Pop-out CLI output to separate window
+- [x] Detachable agent detail panel
+- [x] Multi-monitor support with scene on one and panels on another
+- [x] Floating mini-view for always-on-top monitoring
 
 ### D3. Notification System (通知系統)
 - [x] macOS native notifications for task completion/failure

@@ -1,7 +1,12 @@
 import SceneKit
-import SpriteKit
+import AppKit
 
-/// A 3D speech/thought bubble that floats above an agent
+/// A 3D speech/thought bubble that floats above an agent.
+///
+/// Uses CoreGraphics-rendered static images as material textures instead of
+/// live SpriteKit scenes. This avoids a thread-safety crash where the main
+/// thread modifies SKScene content while SceneKit's render thread reads it
+/// (EXC_BAD_ACCESS in SKCShapeNode::addRenderOps).
 class ChatBubbleNode: SCNNode {
 
     enum BubbleStyle {
@@ -10,75 +15,23 @@ class ChatBubbleNode: SCNNode {
     }
 
     private let planeNode: SCNNode
-    private let skScene: SKScene
-    private let backgroundShape: SKShapeNode
-    private let textLabel: SKLabelNode
-    private let iconSprite: SKSpriteNode
-    private let typingDotsNode: SKNode
+    private let material: SCNMaterial
 
-    private static let skWidth: CGFloat = 320
-    private static let skHeight: CGFloat = 100
+    // Current state (mutated on main thread, rendered to static image)
+    private var currentText: String?
+    private var currentStyle: BubbleStyle = .speech
+    private var currentIcon: ToolIcon?
+    private var isShowingTyping = false
+    private var typingDotPhase: Int = 0
+    private var typingTimer: Timer?
+
+    private static let texWidth: CGFloat = 320
+    private static let texHeight: CGFloat = 100
     private static let maxChars = 60
 
     override init() {
-        // SpriteKit scene as texture
-        skScene = SKScene(size: CGSize(width: Self.skWidth, height: Self.skHeight))
-        skScene.backgroundColor = .clear
-
-        // Background
-        backgroundShape = SKShapeNode()
-        backgroundShape.zPosition = 0
-        skScene.addChild(backgroundShape)
-
-        // Text
-        textLabel = SKLabelNode(fontNamed: "Menlo")
-        textLabel.fontSize = 13
-        textLabel.fontColor = .white
-        textLabel.preferredMaxLayoutWidth = Self.skWidth - 40
-        textLabel.numberOfLines = 2
-        textLabel.lineBreakMode = .byTruncatingTail
-        textLabel.verticalAlignmentMode = .center
-        textLabel.horizontalAlignmentMode = .left
-        textLabel.position = CGPoint(x: 36, y: Self.skHeight / 2)
-        textLabel.zPosition = 1
-        skScene.addChild(textLabel)
-
-        // Icon
-        iconSprite = SKSpriteNode()
-        iconSprite.size = CGSize(width: 18, height: 18)
-        iconSprite.position = CGPoint(x: 18, y: Self.skHeight / 2)
-        iconSprite.zPosition = 1
-        iconSprite.isHidden = true
-        skScene.addChild(iconSprite)
-
-        // Typing dots
-        typingDotsNode = SKNode()
-        typingDotsNode.position = CGPoint(x: Self.skWidth / 2, y: Self.skHeight / 2)
-        typingDotsNode.isHidden = true
-        typingDotsNode.zPosition = 1
-        for i in 0..<3 {
-            let dot = SKShapeNode(circleOfRadius: 4)
-            dot.fillColor = .white
-            dot.strokeColor = .clear
-            dot.position = CGPoint(x: CGFloat(i - 1) * 14, y: 0)
-            dot.alpha = 0.4
-
-            let wait = SKAction.wait(forDuration: Double(i) * 0.2)
-            let up = SKAction.moveBy(x: 0, y: 6, duration: 0.3)
-            up.timingMode = .easeInEaseOut
-            let down = SKAction.moveBy(x: 0, y: -6, duration: 0.3)
-            down.timingMode = .easeInEaseOut
-            let pause = SKAction.wait(forDuration: 0.4)
-            dot.run(.repeatForever(.sequence([wait, up, down, pause])))
-
-            typingDotsNode.addChild(dot)
-        }
-        skScene.addChild(typingDotsNode)
-
-        // SCNPlane with SpriteKit texture
         let plane = SCNPlane(width: 2.0, height: 0.625)
-        let material = SCNMaterial()
-        material.diffuse.contents = skScene
+        material = SCNMaterial()
         material.isDoubleSided = true
         material.lightingModel = .constant
         material.transparency = 0.95
@@ -100,48 +53,57 @@ class ChatBubbleNode: SCNNode {
         opacity = 0
         scale = SCNVector3(0.01, 0.01, 0.01)
 
-        // Draw initial background
-        drawBackground(style: .speech)
+        renderBubble()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        typingTimer?.invalidate()
+    }
+
     // MARK: - Public API
 
     func updateText(_ text: String, style: BubbleStyle) {
-        typingDotsNode.isHidden = true
-        textLabel.isHidden = false
-
-        let trimmed = String(text.prefix(Self.maxChars))
-        textLabel.text = trimmed
-        drawBackground(style: style)
+        isShowingTyping = false
+        stopTypingTimer()
+        currentText = String(text.prefix(Self.maxChars))
+        currentStyle = style
+        renderBubble()
     }
 
     func showTypingIndicator() {
-        textLabel.isHidden = true
-        iconSprite.isHidden = true
-        typingDotsNode.isHidden = false
-        drawBackground(style: .speech)
-    }
+        isShowingTyping = true
+        currentText = nil
+        currentIcon = nil
+        currentStyle = .speech
+        typingDotPhase = 0
+        renderBubble()
 
-    func hideTypingIndicator() {
-        typingDotsNode.isHidden = true
-    }
-
-    func setToolIcon(_ icon: ToolIcon) {
-        if let image = NSImage(systemSymbolName: icon.rawValue, accessibilityDescription: nil) {
-            let tinted = image.tinted(with: .white)
-            iconSprite.texture = SKTexture(image: tinted)
-            iconSprite.isHidden = false
-        } else {
-            iconSprite.isHidden = true
+        typingTimer?.invalidate()
+        typingTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            self.typingDotPhase = (self.typingDotPhase + 1) % 4
+            self.renderBubble()
         }
     }
 
+    func hideTypingIndicator() {
+        isShowingTyping = false
+        stopTypingTimer()
+        renderBubble()
+    }
+
+    func setToolIcon(_ icon: ToolIcon) {
+        currentIcon = icon
+        renderBubble()
+    }
+
     func clearToolIcon() {
-        iconSprite.isHidden = true
+        currentIcon = nil
+        renderBubble()
     }
 
     func animateIn() {
@@ -153,6 +115,7 @@ class ChatBubbleNode: SCNNode {
     }
 
     func animateOut(completion: (() -> Void)? = nil) {
+        stopTypingTimer()
         let scaleDown = SCNAction.scale(to: 0.01, duration: 0.2)
         scaleDown.timingMode = .easeIn
         let fadeOut = SCNAction.fadeOut(duration: 0.15)
@@ -160,53 +123,133 @@ class ChatBubbleNode: SCNNode {
         runAction(.sequence([.group([scaleDown, fadeOut]), done]))
     }
 
-    // MARK: - Drawing
+    // MARK: - Private
 
-    private func drawBackground(style: BubbleStyle) {
-        backgroundShape.removeAllChildren()
-        let rect = CGRect(x: 4, y: 4, width: Self.skWidth - 8, height: Self.skHeight - 8)
+    private func stopTypingTimer() {
+        typingTimer?.invalidate()
+        typingTimer = nil
+    }
 
-        switch style {
-        case .speech:
-            let path = CGMutablePath()
-            path.addRoundedRect(in: rect, cornerWidth: 10, cornerHeight: 10)
-            backgroundShape.path = path
-            backgroundShape.fillColor = NSColor(white: 0.1, alpha: 0.85)
-            backgroundShape.strokeColor = NSColor(white: 0.3, alpha: 0.6)
-            backgroundShape.lineWidth = 1
+    /// Render the bubble to a static image and set as material texture.
+    /// Thread-safe: SceneKit only reads the finished NSImage, never a live
+    /// SpriteKit scene graph that could be mutated concurrently.
+    private func renderBubble() {
+        let w = Self.texWidth
+        let h = Self.texHeight
 
-        case .thought:
-            let path = CGMutablePath()
-            path.addRoundedRect(in: rect, cornerWidth: 14, cornerHeight: 14)
-            backgroundShape.path = path
-            backgroundShape.fillColor = NSColor(red: 0.15, green: 0.1, blue: 0.25, alpha: 0.85)
-            backgroundShape.strokeColor = NSColor(hex: "#9C27B0").withAlphaComponent(0.5)
-            backgroundShape.lineWidth = 1
+        guard let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: Int(w * 2), pixelsHigh: Int(h * 2),
+            bitsPerSample: 8, samplesPerPixel: 4,
+            hasAlpha: true, isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: 0, bitsPerPixel: 0
+        ) else { return }
+        rep.size = NSSize(width: w, height: h)
 
-            // Thought dots below
-            for i in 0..<2 {
-                let dotRadius: CGFloat = CGFloat(4 - i * 1)
-                let dot = SKShapeNode(circleOfRadius: dotRadius)
-                dot.fillColor = backgroundShape.fillColor
-                dot.strokeColor = backgroundShape.strokeColor
-                dot.lineWidth = 1
-                dot.position = CGPoint(x: Self.skWidth / 2 - CGFloat(i) * 8, y: -CGFloat(i) * 6 - 2)
-                backgroundShape.addChild(dot)
+        guard let gfx = NSGraphicsContext(bitmapImageRep: rep) else { return }
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = gfx
+        let ctx = gfx.cgContext
+
+        // AppKit coordinate system: origin at bottom-left, y increases upward
+        drawBubbleBackground(ctx: ctx, w: w, h: h)
+
+        if isShowingTyping {
+            drawTypingDots(ctx: ctx, w: w, h: h)
+        } else {
+            if let icon = currentIcon {
+                drawToolIcon(icon, h: h)
+            }
+            if let text = currentText {
+                drawTextContent(text, w: w, h: h)
             }
         }
+
+        NSGraphicsContext.restoreGraphicsState()
+
+        let image = NSImage(size: NSSize(width: w, height: h))
+        image.addRepresentation(rep)
+        material.diffuse.contents = image
     }
-}
 
-// MARK: - NSImage tinting helper
+    private func drawBubbleBackground(ctx: CGContext, w: CGFloat, h: CGFloat) {
+        let rect = CGRect(x: 4, y: 4, width: w - 8, height: h - 8)
 
-private extension NSImage {
-    func tinted(with color: NSColor) -> NSImage {
-        let image = self.copy() as! NSImage
-        image.lockFocus()
-        color.set()
-        let imageRect = NSRect(origin: .zero, size: image.size)
-        imageRect.fill(using: .sourceAtop)
-        image.unlockFocus()
-        return image
+        let fillColor: CGColor
+        let strokeColor: CGColor
+        let cornerRadius: CGFloat
+
+        switch currentStyle {
+        case .speech:
+            fillColor = CGColor(gray: 0.1, alpha: 0.85)
+            strokeColor = CGColor(gray: 0.3, alpha: 0.6)
+            cornerRadius = 10
+        case .thought:
+            fillColor = CGColor(red: 0.15, green: 0.1, blue: 0.25, alpha: 0.85)
+            strokeColor = NSColor(hex: "#9C27B0").withAlphaComponent(0.5).cgColor
+            cornerRadius = 14
+        }
+
+        let path = CGMutablePath()
+        path.addRoundedRect(in: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+
+        ctx.addPath(path)
+        ctx.setFillColor(fillColor)
+        ctx.fillPath()
+
+        ctx.addPath(path)
+        ctx.setStrokeColor(strokeColor)
+        ctx.setLineWidth(1)
+        ctx.strokePath()
+    }
+
+    /// Draw text using NSString.draw (uses current NSGraphicsContext)
+    private func drawTextContent(_ text: String, w: CGFloat, h: CGFloat) {
+        let hasIcon = currentIcon != nil
+        let leftX: CGFloat = hasIcon ? 36 : 16
+        let textRect = NSRect(x: leftX, y: (h - 30) / 2, width: w - leftX - 16, height: 30)
+
+        let style = NSMutableParagraphStyle()
+        style.lineBreakMode = .byTruncatingTail
+
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: NSFont(name: "Menlo", size: 13) ?? NSFont.monospacedSystemFont(ofSize: 13, weight: .regular),
+            .foregroundColor: NSColor.white,
+            .paragraphStyle: style
+        ]
+        (text as NSString).draw(in: textRect, withAttributes: attrs)
+    }
+
+    /// Draw SF Symbol icon using NSImage.draw (uses current NSGraphicsContext)
+    private func drawToolIcon(_ icon: ToolIcon, h: CGFloat) {
+        let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+            .applying(.init(hierarchicalColor: .white))
+        guard let image = NSImage(systemSymbolName: icon.rawValue, accessibilityDescription: nil)?
+            .withSymbolConfiguration(config) else { return }
+
+        let iconSize: CGFloat = 18
+        let iconRect = NSRect(x: 10, y: (h - iconSize) / 2, width: iconSize, height: iconSize)
+        image.draw(in: iconRect)
+    }
+
+    private func drawTypingDots(ctx: CGContext, w: CGFloat, h: CGFloat) {
+        let dotRadius: CGFloat = 4
+        let centerY = h / 2
+
+        for i in 0..<3 {
+            let cx = w / 2 + CGFloat(i - 1) * 14
+            let isActive = typingDotPhase == i
+            let yShift: CGFloat = isActive ? 6 : 0
+            let alpha: CGFloat = isActive ? 1.0 : 0.4
+
+            ctx.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: alpha))
+            ctx.fillEllipse(in: CGRect(
+                x: cx - dotRadius,
+                y: centerY + yShift - dotRadius,
+                width: dotRadius * 2,
+                height: dotRadius * 2
+            ))
+        }
     }
 }

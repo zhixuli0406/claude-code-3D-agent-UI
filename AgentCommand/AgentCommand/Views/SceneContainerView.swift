@@ -134,31 +134,54 @@ struct SceneContainerView: View {
                 // PiP inset (bottom-left corner)
                 if appState.isPiPEnabled {
                     let pipConfig = appState.sceneManager.pipCameraConfig()
-                    PiPSceneView(
-                        scene: appState.sceneManager.scene,
-                        cameraPosition: pipConfig.position,
-                        lookAt: pipConfig.lookAt,
-                        fov: pipConfig.fov
-                    )
-                    .frame(width: 220, height: 165)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(hex: "#00BCD4").opacity(0.5), lineWidth: 1)
-                    )
-                    .shadow(color: .black.opacity(0.5), radius: 4)
-                    .padding(12)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                    VStack {
+                        Spacer()
+                        HStack {
+                            PiPSceneView(
+                                scene: appState.sceneManager.scene,
+                                cameraPosition: pipConfig.position,
+                                lookAt: pipConfig.lookAt,
+                                fov: pipConfig.fov
+                            )
+                            .frame(width: 220, height: 165)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(hex: "#00BCD4").opacity(0.5), lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.5), radius: 4)
+                            .padding(12)
+                            Spacer()
+                        }
+                    }
+                }
+
+                // Task Queue (left side, D1)
+                if appState.isTaskQueueVisible && !appState.pendingTasksOrdered.isEmpty {
+                    VStack {
+                        HStack {
+                            TaskQueueOverlay()
+                                .padding(.leading, 12)
+                                .padding(.top, 80)
+                            Spacer()
+                        }
+                        Spacer()
+                    }
                 }
 
                 // Mini-map (bottom-right corner, B6)
                 if appState.isMiniMapVisible {
-                    MiniMapOverlay(onAgentTap: { agentId in
-                        appState.selectAgent(agentId)
-                        appState.sceneManager.zoomToAgent(agentId)
-                    })
-                    .padding(12)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            MiniMapOverlay(onAgentTap: { agentId in
+                                appState.selectAgent(agentId)
+                                appState.sceneManager.zoomToAgent(agentId)
+                            })
+                            .padding(12)
+                        }
+                    }
                 }
 
                 // Discovery popup (center, B6)

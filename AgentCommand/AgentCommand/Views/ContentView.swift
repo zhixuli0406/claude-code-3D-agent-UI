@@ -3,9 +3,11 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var localization: LocalizationManager
+    @Environment(\.openWindow) private var openWindow
     @State private var showAchievementGallery = false
     @State private var showStatsDashboard = false
     @State private var showCosmeticShop = false
+    @State private var showSkillBook = false
 
     var body: some View {
         Group {
@@ -90,6 +92,62 @@ struct ContentView: View {
                 }
                 .help(localization.localized(.helpCosmeticShop))
 
+                // Skill Store (Agent Skills)
+                Button(action: { showSkillBook = true }) {
+                    Label(localization.localized(.skillStore), systemImage: "puzzlepiece.extension.fill")
+                }
+                .help(localization.localized(.helpSkillStore))
+
+                // Task Queue toggle (D1)
+                Button(action: { appState.toggleTaskQueue() }) {
+                    Label(localization.localized(.taskQueue), systemImage: appState.isTaskQueueVisible ? "list.bullet.rectangle.portrait.fill" : "list.bullet.rectangle.portrait")
+                }
+                .help(localization.localized(.helpTaskQueue))
+
+                // Multi-Window menu (D2)
+                Menu {
+                    Button(action: {
+                        openWindow(id: "cli-output")
+                        appState.windowManager.isCLIWindowOpen = true
+                        appState.windowManager.isCLIWindowDetached = true
+                    }) {
+                        Label(localization.localized(.popOutCLI), systemImage: "terminal")
+                    }
+                    .help(localization.localized(.helpPopOutCLI))
+
+                    Button(action: {
+                        openWindow(id: "agent-details")
+                        appState.windowManager.isAgentDetailWindowOpen = true
+                    }) {
+                        Label(localization.localized(.detachAgentPanel), systemImage: "person.crop.rectangle")
+                    }
+                    .help(localization.localized(.helpDetachAgentPanel))
+
+                    Button(action: {
+                        openWindow(id: "floating-monitor")
+                        appState.windowManager.isFloatingMonitorOpen = true
+                    }) {
+                        Label(localization.localized(.floatingMonitor), systemImage: "pip")
+                    }
+                    .help(localization.localized(.helpFloatingMonitor))
+
+                    if NSScreen.screens.count > 1 {
+                        Divider()
+                        Menu(localization.localized(.multiMonitor)) {
+                            ForEach(0..<NSScreen.screens.count, id: \.self) { index in
+                                Button("\(localization.localized(.moveToScreen)) \(index + 1)") {
+                                    if let window = NSApp.mainWindow {
+                                        appState.windowManager.moveWindowToScreen(window, screenIndex: index)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Label(localization.localized(.multiWindow), systemImage: "macwindow.on.rectangle")
+                }
+                .help(localization.localized(.helpMultiWindow))
+
                 // Mini-map toggle (B6)
                 Button(action: { appState.toggleMiniMap() }) {
                     Label(localization.localized(.miniMap), systemImage: appState.isMiniMapVisible ? "map.fill" : "map")
@@ -173,6 +231,11 @@ struct ContentView: View {
         .sheet(isPresented: $showCosmeticShop) {
             CosmeticShopView()
                 .environmentObject(appState)
+        }
+        .sheet(isPresented: $showSkillBook) {
+            SkillBookView()
+                .environmentObject(appState)
+                .environmentObject(localization)
         }
         .overlay(alignment: .bottom) {
             if let reward = appState.coinManager.lastCoinReward {

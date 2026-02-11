@@ -46,6 +46,13 @@ class AppState: ObservableObject {
     @Published var isMiniMapVisible: Bool = false
     @Published var discoveryPopupItem: ExplorationItem?
 
+    // Task Queue Visualization state (D1)
+    @Published var isTaskQueueVisible: Bool = true
+    @Published var taskQueueOrder: [UUID] = []
+
+    // Multi-Window Support (D2)
+    let windowManager = WindowManager()
+
     var localizationManager: LocalizationManager?
     let configLoader = ConfigurationLoader()
     let sceneManager = ThemeableScene()
@@ -57,6 +64,7 @@ class AppState: ObservableObject {
     let achievementManager = AchievementManager()
     let timelineManager = TimelineManager()
     let coinManager = CoinManager()
+    let skillManager = SkillManager()
     let explorationManager = ExplorationManager()
     private let dayNightController = DayNightCycleController()
 
@@ -71,6 +79,7 @@ class AppState: ObservableObject {
     private static let themeKey = "selectedTheme"
 
     private static let miniMapKey = "miniMapVisible"
+    private static let taskQueueKey = "taskQueueVisible"
 
     init() {
         if let saved = UserDefaults.standard.string(forKey: Self.themeKey),
@@ -79,6 +88,12 @@ class AppState: ObservableObject {
             showSceneSelection = false
         }
         isMiniMapVisible = UserDefaults.standard.bool(forKey: Self.miniMapKey)
+        // Default to true if key hasn't been set
+        if UserDefaults.standard.object(forKey: Self.taskQueueKey) == nil {
+            isTaskQueueVisible = true
+        } else {
+            isTaskQueueVisible = UserDefaults.standard.bool(forKey: Self.taskQueueKey)
+        }
     }
 
     func setTheme(_ theme: SceneTheme) {
@@ -87,10 +102,12 @@ class AppState: ObservableObject {
         showSceneSelection = false
         achievementManager.onThemeUsed(theme.rawValue)
 
-        // Play transition animation, then rebuild
+        // Play transition animation (agents teleport out, fade, rebuild, agents teleport in)
         sceneManager.playSceneTransition { [weak self] in
             Task { @MainActor in
                 self?.rebuildScene()
+                // Agents teleport back in after scene rebuild
+                self?.sceneManager.teleportAllAgentsIn()
             }
         }
     }
@@ -596,6 +613,9 @@ class AppState: ObservableObject {
                     }
                 }
             }
+
+            // Schedule team disband after a delay (same as completion flow)
+            scheduleDisbandIfNeeded(commanderId: leadId)
         }
         achievementManager.onTaskFailed()
     }
@@ -795,14 +815,15 @@ class AppState: ObservableObject {
 
     // MARK: - Team Disband
 
-    /// Schedule a completed team to disband after a delay.
+    /// Schedule a completed or failed team to disband after a delay.
     private func scheduleDisbandIfNeeded(commanderId: UUID) {
-        // Only schedule if the entire team is completed
+        // Only schedule if the entire team is finished (completed or failed/error+idle)
         let teamAgents = [commanderId] + subAgents(of: commanderId).map(\.id)
-        let allCompleted = teamAgents.allSatisfy { agentId in
-            agents.first(where: { $0.id == agentId })?.status == .completed
+        let allFinished = teamAgents.allSatisfy { agentId in
+            guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
+            return status == .completed || status == .error || status == .idle
         }
-        guard allCompleted else { return }
+        guard allFinished else { return }
 
         // Don't schedule if already scheduled or disbanding
         guard disbandTimers[commanderId] == nil,
@@ -829,11 +850,12 @@ class AppState: ObservableObject {
 
         let teamAgentIds = [commanderId] + subAgents(of: commanderId).map(\.id)
 
-        // Verify team is still completed (might have been reactivated)
-        let allCompleted = teamAgentIds.allSatisfy { agentId in
-            agents.first(where: { $0.id == agentId })?.status == .completed
+        // Verify team is still finished (might have been reactivated)
+        let allFinished = teamAgentIds.allSatisfy { agentId in
+            guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
+            return status == .completed || status == .error || status == .idle
         }
-        guard allCompleted else { return }
+        guard allFinished else { return }
 
         disbandingTeamIds.insert(commanderId)
 
@@ -863,9 +885,9 @@ class AppState: ObservableObject {
         // Remove agents
         agents.removeAll { teamIdSet.contains($0.id) }
 
-        // Remove associated completed tasks
+        // Remove associated completed/failed tasks
         tasks.removeAll { task in
-            task.status == .completed && task.teamAgentIds.contains(where: { teamIdSet.contains($0) })
+            (task.status == .completed || task.status == .failed) && task.teamAgentIds.contains(where: { teamIdSet.contains($0) })
         }
 
         disbandingTeamIds.remove(commanderId)
@@ -972,8 +994,8 @@ class AppState: ObservableObject {
             }
         }
 
-        // If agent completed, check if the whole team is done
-        if status == .completed {
+        // If agent completed or errored, check if the whole team is done
+        if status == .completed || status == .error {
             if let agent = agents.first(where: { $0.id == agentId }) {
                 let commanderId = agent.isMainAgent ? agent.id : agent.parentAgentId
                 if let commanderId = commanderId {
@@ -1069,6 +1091,32 @@ class AppState: ObservableObject {
 
     func dismissDiscoveryPopup() {
         discoveryPopupItem = nil
+    }
+
+    // MARK: - Task Queue (D1)
+
+    func toggleTaskQueue() {
+        isTaskQueueVisible.toggle()
+        UserDefaults.standard.set(isTaskQueueVisible, forKey: Self.taskQueueKey)
+    }
+
+    /// Pending tasks ordered by custom queue order, falling back to priority descending
+    var pendingTasksOrdered: [AgentTask] {
+        let pending = tasks.filter { $0.status == .pending }
+        if taskQueueOrder.isEmpty {
+            return pending.sorted { $0.priority.sortOrder > $1.priority.sortOrder }
+        }
+        return pending.sorted { a, b in
+            let ai = taskQueueOrder.firstIndex(of: a.id) ?? Int.max
+            let bi = taskQueueOrder.firstIndex(of: b.id) ?? Int.max
+            return ai < bi
+        }
+    }
+
+    func reorderTaskQueue(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var ordered = pendingTasksOrdered.map(\.id)
+        ordered.move(fromOffsets: source, toOffset: destination)
+        taskQueueOrder = ordered
     }
 
     // MARK: - Camera Controls

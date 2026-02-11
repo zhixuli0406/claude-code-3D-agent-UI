@@ -29,7 +29,7 @@ class CoinManager: ObservableObject {
     /// Calculate and award coins for task completion
     @discardableResult
     func earnCoins(agentName: String, duration: TimeInterval, streak: Int) -> CoinReward {
-        var base = 20
+        let base = 20
         var streakBonus = 0
         var speedBonus = 0
 

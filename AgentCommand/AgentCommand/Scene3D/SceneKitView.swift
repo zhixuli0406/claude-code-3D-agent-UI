@@ -44,6 +44,7 @@ struct SceneKitView: NSViewRepresentable {
         clickGesture.delaysPrimaryMouseButtonEvents = false
 
         context.coordinator.scnView = scnView
+        sceneManager.scnView = scnView
 
         // Mouse hover tracking
         scnView.onMouseMoved = { [weak scnView] point in

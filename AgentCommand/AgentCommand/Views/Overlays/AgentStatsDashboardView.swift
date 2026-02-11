@@ -457,8 +457,8 @@ struct AgentStatsDashboardView: View {
     private func rankColor(_ rank: Int) -> Color {
         switch rank {
         case 1: return .yellow
-        case 2: return Color(hex: "#C0C0C0") ?? .gray
-        case 3: return Color(hex: "#CD7F32") ?? .orange
+        case 2: return Color(hex: "#C0C0C0")
+        case 3: return Color(hex: "#CD7F32")
         default: return .secondary
         }
     }
