@@ -69,6 +69,13 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - **Performance Metrics** — Real-time token usage, cost estimation, task duration tracking
 - **Sound Effects** — Completion chimes, error alerts, keyboard sounds, level-up fanfare
 
+### Git Integration Visualization
+
+- **3D Diff Panels** — Floating code blocks in 3D space showing staged/unstaged changes with colored additions/deletions
+- **Branch Tree** — Interactive branch visualization as a rotating tree structure with current branch highlight
+- **Commit Timeline** — 3D commit history with agent avatar linkage and commit details
+- **PR Workflow** — Create Pull Requests with visual preview card in 3D scene (requires `gh` CLI)
+
 ### CLI Integration
 
 - Spawns and manages Claude Code CLI processes
@@ -181,12 +188,10 @@ AgentCommand/
 
 See [TODO-features.md](./TODO-features.md) for the full feature backlog. Upcoming items include:
 
-- Session history recording and 3D replay
 - Agent personality and mood system
 - Spectator mode with live sharing
 - Theme-specific background music
 - Multi-model support (Opus / Sonnet / Haiku per agent)
-- Git diff visualization in 3D space
 
 ## License
 

@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var showCosmeticShop = false
     @State private var showSkillBook = false
     @State private var showSessionHistory = false
+    @State private var showGitIntegration = false
 
     var body: some View {
         Group {
@@ -116,6 +117,12 @@ struct ContentView: View {
                     Label(localization.localized(.sessionHistory), systemImage: "clock.arrow.circlepath")
                 }
                 .help(localization.localized(.helpSessionHistory))
+
+                // Git Integration (G3)
+                Button(action: { showGitIntegration = true }) {
+                    Label(localization.localized(.gitIntegration), systemImage: "arrow.triangle.branch")
+                }
+                .help(localization.localized(.helpGitIntegration))
 
                 // Multi-Window menu (D2)
                 Menu {
@@ -252,6 +259,11 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showSessionHistory) {
             SessionHistoryView()
+                .environmentObject(appState)
+                .environmentObject(localization)
+        }
+        .sheet(isPresented: $showGitIntegration) {
+            GitIntegrationView()
                 .environmentObject(appState)
                 .environmentObject(localization)
         }

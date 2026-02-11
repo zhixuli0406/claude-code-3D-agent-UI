@@ -28,6 +28,7 @@ class WindowManager: ObservableObject {
     // MARK: - Floating panel window reference
 
     private var floatingPanel: NSPanel?
+    private var floatingPanelDelegate: FloatingPanelDelegate?
 
     init() {
         // Restore persisted state
@@ -116,7 +117,9 @@ class WindowManager: ObservableObject {
             panel.setFrameOrigin(NSPoint(x: x, y: y))
         }
 
-        panel.delegate = FloatingPanelDelegate(manager: self)
+        let delegate = FloatingPanelDelegate(manager: self)
+        floatingPanelDelegate = delegate
+        panel.delegate = delegate
         panel.makeKeyAndOrderFront(nil)
         floatingPanel = panel
     }
@@ -124,6 +127,7 @@ class WindowManager: ObservableObject {
     private func hideFloatingPanel() {
         floatingPanel?.close()
         floatingPanel = nil
+        floatingPanelDelegate = nil
     }
 
     /// Get the floating panel's NSWindow for hosting SwiftUI content

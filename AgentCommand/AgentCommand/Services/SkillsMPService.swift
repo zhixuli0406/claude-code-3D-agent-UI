@@ -101,22 +101,71 @@ class SkillsMPService: ObservableObject {
 
             switch httpResponse.statusCode {
             case 200:
-                let decoded = try JSONDecoder().decode(SkillsMPSearchResponse.self, from: data)
-                searchResults = decoded.skills
-                totalResults = decoded.total ?? decoded.skills.count
+                let decoder = JSONDecoder()
+                do {
+                    // Try wrapped format first: { "success": true, "data": { "skills": [...] } }
+                    let apiResponse = try decoder.decode(SkillsMPAPIResponse.self, from: data)
+                    if let inner = apiResponse.data {
+                        let skills = inner.resolvedSkills
+                        searchResults = skills
+                        totalResults = inner.resolvedTotal ?? skills.count
+                    } else if let skills = apiResponse.resolvedSkills {
+                        // Fallback: direct (unwrapped) format
+                        searchResults = skills
+                        totalResults = apiResponse.resolvedTotal ?? skills.count
+                    } else {
+                        // Try decoding as a plain array of skills
+                        if let skills = try? decoder.decode([SkillsMPSkill].self, from: data) {
+                            searchResults = skills
+                            totalResults = skills.count
+                        } else {
+                            searchResults = []
+                            totalResults = 0
+                        }
+                    }
+                } catch let decodingError {
+                    // Try decoding as a plain array of skills as last resort
+                    if let skills = try? decoder.decode([SkillsMPSkill].self, from: data) {
+                        searchResults = skills
+                        totalResults = skills.count
+                    } else {
+                        let preview = String(data: data.prefix(500), encoding: .utf8) ?? "N/A"
+                        print("[SkillsMP] Decode error: \(decodingError)")
+                        print("[SkillsMP] Response preview: \(preview)")
+                        errorMessage = "Failed to parse response: \(Self.describeDecodingError(decodingError))"
+                    }
+                }
             case 401:
                 errorMessage = "Invalid API Key"
             case 429:
                 errorMessage = "Rate limited. Please try again later."
             default:
+                let body = String(data: data.prefix(300), encoding: .utf8) ?? ""
+                print("[SkillsMP] Server error \(httpResponse.statusCode): \(body)")
                 errorMessage = "Server error (\(httpResponse.statusCode))"
             }
-        } catch is DecodingError {
-            errorMessage = "Failed to parse response"
         } catch {
             errorMessage = error.localizedDescription
         }
 
         isLoading = false
+    }
+
+    private static func describeDecodingError(_ error: Error) -> String {
+        guard let decodingError = error as? DecodingError else {
+            return error.localizedDescription
+        }
+        switch decodingError {
+        case .keyNotFound(let key, let context):
+            return "Missing key '\(key.stringValue)' at \(context.codingPath.map(\.stringValue).joined(separator: "."))"
+        case .typeMismatch(let type, let context):
+            return "Type mismatch for \(type) at \(context.codingPath.map(\.stringValue).joined(separator: "."))"
+        case .valueNotFound(let type, let context):
+            return "Null value for \(type) at \(context.codingPath.map(\.stringValue).joined(separator: "."))"
+        case .dataCorrupted(let context):
+            return "Corrupted data at \(context.codingPath.map(\.stringValue).joined(separator: "."))"
+        @unknown default:
+            return error.localizedDescription
+        }
     }
 }

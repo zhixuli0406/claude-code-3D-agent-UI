@@ -182,6 +182,29 @@ enum L10nKey: String {
     case skillsMPSortByStars, skillsMPSortByDate
     case skillsMPAlreadyImported
     case addManualSkill
+
+    // G3: Git Integration
+    case gitIntegration, helpGitIntegration
+    case gitDiff, gitBranches, gitCommits, gitPullRequest
+    case gitNoRepository, gitRepositoryClean
+    case gitStagedChanges, gitUnstagedChanges
+    case gitCurrentBranch, gitRemoteBranch
+    case gitCreatePR, gitPRTitle, gitPRBody, gitPRPreview
+    case gitSourceBranch, gitTargetBranch
+    case gitShowInScene, gitHideFromScene
+    case gitFilesChanged, gitAdditions, gitDeletions
+    case gitCommitHash, gitCommitAuthor, gitCommitDate
+    case gitNoBranches, gitNoCommits, gitGhNotFound
+
+    // G3: Git Commit & Push
+    case gitCommitAndPush
+    case gitStageAll, gitCommit, gitPush
+    case gitCommitMessage, gitGenerateMessage, gitGeneratingMessage
+    case gitCommitting, gitPushing
+    case gitCommitSuccess, gitPushSuccess
+    case gitCommitFailed, gitPushFailed
+    case gitNothingToCommit, gitNoRemote
+    case gitStageAllFiles, gitStagedCount
 }
 
 struct L10n {
@@ -537,6 +560,56 @@ struct L10n {
         .skillsMPSortByDate: "依更新日期排序",
         .skillsMPAlreadyImported: "此技能已匯入",
         .addManualSkill: "手動新增自訂技能...",
+
+        // G3: Git Integration
+        .gitIntegration: "Git 整合",
+        .helpGitIntegration: "Git 倉庫視覺化",
+        .gitDiff: "差異",
+        .gitBranches: "分支",
+        .gitCommits: "提交",
+        .gitPullRequest: "Pull Request",
+        .gitNoRepository: "目前工作區不是 Git 倉庫",
+        .gitRepositoryClean: "工作目錄乾淨，無變更",
+        .gitStagedChanges: "已暫存變更",
+        .gitUnstagedChanges: "未暫存變更",
+        .gitCurrentBranch: "當前分支",
+        .gitRemoteBranch: "遠端分支",
+        .gitCreatePR: "建立 Pull Request",
+        .gitPRTitle: "PR 標題",
+        .gitPRBody: "PR 描述",
+        .gitPRPreview: "預覽",
+        .gitSourceBranch: "來源分支",
+        .gitTargetBranch: "目標分支",
+        .gitShowInScene: "在 3D 場景中顯示",
+        .gitHideFromScene: "從 3D 場景中隱藏",
+        .gitFilesChanged: "變更檔案",
+        .gitAdditions: "新增行",
+        .gitDeletions: "刪除行",
+        .gitCommitHash: "提交雜湊",
+        .gitCommitAuthor: "作者",
+        .gitCommitDate: "日期",
+        .gitNoBranches: "無分支資訊",
+        .gitNoCommits: "無提交記錄",
+        .gitGhNotFound: "未找到 gh CLI，請安裝 GitHub CLI",
+
+        // G3: Git Commit & Push
+        .gitCommitAndPush: "提交 & 推送",
+        .gitStageAll: "暫存全部",
+        .gitCommit: "提交",
+        .gitPush: "推送",
+        .gitCommitMessage: "提交訊息",
+        .gitGenerateMessage: "AI 生成訊息",
+        .gitGeneratingMessage: "AI 生成中...",
+        .gitCommitting: "提交中...",
+        .gitPushing: "推送中...",
+        .gitCommitSuccess: "提交成功！",
+        .gitPushSuccess: "推送成功！",
+        .gitCommitFailed: "提交失敗",
+        .gitPushFailed: "推送失敗",
+        .gitNothingToCommit: "無變更可提交",
+        .gitNoRemote: "未設定遠端倉庫",
+        .gitStageAllFiles: "暫存所有變更檔案",
+        .gitStagedCount: "已暫存 %d 個檔案",
     ]
 
     // MARK: - English
@@ -882,5 +955,55 @@ struct L10n {
         .skillsMPSortByDate: "Sort by Date",
         .skillsMPAlreadyImported: "Skill already imported",
         .addManualSkill: "Add custom skill manually...",
+
+        // G3: Git Integration
+        .gitIntegration: "Git Integration",
+        .helpGitIntegration: "Git repository visualization",
+        .gitDiff: "Diff",
+        .gitBranches: "Branches",
+        .gitCommits: "Commits",
+        .gitPullRequest: "Pull Request",
+        .gitNoRepository: "Current workspace is not a Git repository",
+        .gitRepositoryClean: "Working directory clean, no changes",
+        .gitStagedChanges: "Staged Changes",
+        .gitUnstagedChanges: "Unstaged Changes",
+        .gitCurrentBranch: "Current Branch",
+        .gitRemoteBranch: "Remote Branch",
+        .gitCreatePR: "Create Pull Request",
+        .gitPRTitle: "PR Title",
+        .gitPRBody: "PR Description",
+        .gitPRPreview: "Preview",
+        .gitSourceBranch: "Source Branch",
+        .gitTargetBranch: "Target Branch",
+        .gitShowInScene: "Show in 3D Scene",
+        .gitHideFromScene: "Hide from 3D Scene",
+        .gitFilesChanged: "Files Changed",
+        .gitAdditions: "Additions",
+        .gitDeletions: "Deletions",
+        .gitCommitHash: "Commit Hash",
+        .gitCommitAuthor: "Author",
+        .gitCommitDate: "Date",
+        .gitNoBranches: "No branch information",
+        .gitNoCommits: "No commit history",
+        .gitGhNotFound: "gh CLI not found. Install GitHub CLI",
+
+        // G3: Git Commit & Push
+        .gitCommitAndPush: "Commit & Push",
+        .gitStageAll: "Stage All",
+        .gitCommit: "Commit",
+        .gitPush: "Push",
+        .gitCommitMessage: "Commit Message",
+        .gitGenerateMessage: "AI Generate Message",
+        .gitGeneratingMessage: "AI Generating...",
+        .gitCommitting: "Committing...",
+        .gitPushing: "Pushing...",
+        .gitCommitSuccess: "Commit successful!",
+        .gitPushSuccess: "Push successful!",
+        .gitCommitFailed: "Commit failed",
+        .gitPushFailed: "Push failed",
+        .gitNothingToCommit: "Nothing to commit",
+        .gitNoRemote: "No remote configured",
+        .gitStageAllFiles: "Stage all changed files",
+        .gitStagedCount: "%d files staged",
     ]
 }

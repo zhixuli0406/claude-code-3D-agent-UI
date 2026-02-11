@@ -1191,4 +1191,73 @@ class ThemeableScene: ObservableObject {
         }
         return false
     }
+
+    // MARK: - Git Visualization (G3)
+
+    func showGitDiffPanels(_ files: [GitDiffFile]) {
+        removeGitDiffPanels()
+        let group = SCNNode()
+        group.name = "gitDiffVisualization"
+        group.position = SCNVector3(0, 3.0, -3.0)
+        for (i, file) in files.prefix(8).enumerated() {
+            let panel = GitVisualizationBuilder.buildDiffPanel(file: file, index: i, total: min(files.count, 8))
+            group.addChildNode(panel)
+        }
+        group.opacity = 0
+        scene.rootNode.addChildNode(group)
+        group.runAction(.fadeIn(duration: 0.4))
+    }
+
+    func removeGitDiffPanels() {
+        if let node = scene.rootNode.childNode(withName: "gitDiffVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    func showGitBranchTree(_ branches: [GitBranch], currentBranch: String) {
+        removeGitBranchTree()
+        let tree = GitVisualizationBuilder.buildBranchTree(branches: branches, currentBranch: currentBranch)
+        let roomWidth = currentSceneConfig?.roomSize.width ?? 20
+        tree.position = SCNVector3(roomWidth / 2 - 2.0, 0.5, 0)
+        tree.opacity = 0
+        scene.rootNode.addChildNode(tree)
+        tree.runAction(.fadeIn(duration: 0.4))
+    }
+
+    func removeGitBranchTree() {
+        if let node = scene.rootNode.childNode(withName: "gitBranchTree", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    func showGitCommitTimeline(_ commits: [GitCommit], agents: [Agent]) {
+        removeGitCommitTimeline()
+        let timeline = GitVisualizationBuilder.buildCommitTimeline(commits: commits, agents: agents)
+        let roomDepth = currentSceneConfig?.roomSize.depth ?? 15
+        timeline.position = SCNVector3(0, 2.5, -roomDepth / 2 + 1.5)
+        timeline.opacity = 0
+        scene.rootNode.addChildNode(timeline)
+        timeline.runAction(.fadeIn(duration: 0.4))
+    }
+
+    func removeGitCommitTimeline() {
+        if let node = scene.rootNode.childNode(withName: "gitCommitTimeline", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    func showGitPRPreview(_ pr: PRPreviewData) {
+        removeGitPRPreview()
+        let card = GitVisualizationBuilder.buildPRPreviewCard(pr: pr)
+        card.position = SCNVector3(0, 3.5, -2.0)
+        card.opacity = 0
+        scene.rootNode.addChildNode(card)
+        card.runAction(.fadeIn(duration: 0.4))
+    }
+
+    func removeGitPRPreview() {
+        if let node = scene.rootNode.childNode(withName: "gitPRPreview", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
 }

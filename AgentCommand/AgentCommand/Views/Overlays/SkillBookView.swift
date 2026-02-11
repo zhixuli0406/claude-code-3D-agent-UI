@@ -563,7 +563,7 @@ struct SkillBookView: View {
 
                     // Action buttons
                     HStack(spacing: 10) {
-                        if let agentName = selectedAgentName {
+                        if selectedAgentName != nil {
                             if inst != nil {
                                 // Toggle active
                                 Button(action: { toggleActive(skill) }) {

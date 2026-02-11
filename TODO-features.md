@@ -211,10 +211,10 @@
 - [ ] Template variables for dynamic content
 
 ### G3. Git Integration Visualization (Git 整合視覺化)
-- [ ] Show git diff in 3D space as floating code blocks
-- [ ] Branch visualization as tree structure in scene
-- [ ] Commit history timeline with agent avatars
-- [ ] PR creation workflow with visual preview
+- [x] Show git diff in 3D space as floating code blocks
+- [x] Branch visualization as tree structure in scene
+- [x] Commit history timeline with agent avatars
+- [x] PR creation workflow with visual preview
 
 ---
 

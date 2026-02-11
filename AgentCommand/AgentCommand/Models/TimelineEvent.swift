@@ -22,6 +22,9 @@ enum TimelineEventKind: String, CaseIterable, Codable {
     case permissionRequest
     case userQuestion
     case planReview
+    case gitCommit
+    case gitBranchSwitch
+    case gitPRCreated
 
     var icon: String {
         switch self {
@@ -35,6 +38,9 @@ enum TimelineEventKind: String, CaseIterable, Codable {
         case .permissionRequest: return "lock.shield"
         case .userQuestion: return "questionmark.circle"
         case .planReview: return "doc.text"
+        case .gitCommit: return "arrow.triangle.branch"
+        case .gitBranchSwitch: return "arrow.triangle.swap"
+        case .gitPRCreated: return "arrow.triangle.pull"
         }
     }
 
@@ -50,6 +56,9 @@ enum TimelineEventKind: String, CaseIterable, Codable {
         case .permissionRequest: return "#FF9800"
         case .userQuestion: return "#2196F3"
         case .planReview: return "#9C27B0"
+        case .gitCommit: return "#8BC34A"
+        case .gitBranchSwitch: return "#FF9800"
+        case .gitPRCreated: return "#9C27B0"
         }
     }
 
@@ -65,6 +74,9 @@ enum TimelineEventKind: String, CaseIterable, Codable {
         case .permissionRequest: return "Permission"
         case .userQuestion: return "Question"
         case .planReview: return "Plan"
+        case .gitCommit: return "Git Commit"
+        case .gitBranchSwitch: return "Branch Switch"
+        case .gitPRCreated: return "PR Created"
         }
     }
 }

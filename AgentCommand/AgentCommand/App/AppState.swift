@@ -56,6 +56,11 @@ class AppState: ObservableObject {
     // Session History & Replay state (D4)
     @Published var isInReplayMode: Bool = false
 
+    // Git Integration state (G3)
+    @Published var isGitDiffVisible: Bool = false
+    @Published var isGitBranchTreeVisible: Bool = false
+    @Published var isGitCommitTimelineVisible: Bool = false
+
     // Multi-Window Support (D2)
     let windowManager = WindowManager()
 
@@ -75,6 +80,7 @@ class AppState: ObservableObject {
     let explorationManager = ExplorationManager()
     let metricsManager = PerformanceMetricsManager()
     let sessionHistoryManager = SessionHistoryManager()
+    let gitManager = GitIntegrationManager()
     private let dayNightController = DayNightCycleController()
 
     /// Tracks teams that are currently being disbanded (animation in progress)
@@ -84,6 +90,18 @@ class AppState: ObservableObject {
     private let disbandDelay: TimeInterval = 8.0
     /// Pending disband work items, keyed by commander agent ID
     private var disbandTimers: [UUID: DispatchWorkItem] = [:]
+
+    /// Cancellable for observing workspace changes
+    private var workspaceCancellable: AnyCancellable?
+    /// Forward gitManager changes so views observing AppState re-render
+    private var gitManagerCancellable: AnyCancellable?
+
+    /// Snapshot of state before replay, restored when replay stops
+    private var preReplayAgents: [Agent]?
+    private var preReplayTasks: [AgentTask]?
+    private var preReplayTimelineEvents: [TimelineEvent]?
+    private var preReplaySceneConfig: SceneConfiguration?
+    private var preReplayTheme: SceneTheme?
 
     private static let themeKey = "selectedTheme"
 
@@ -105,6 +123,25 @@ class AppState: ObservableObject {
             isTaskQueueVisible = UserDefaults.standard.bool(forKey: Self.taskQueueKey)
         }
         isMetricsVisible = UserDefaults.standard.bool(forKey: Self.metricsKey)
+
+        // Observe workspace changes and restart Git monitoring automatically
+        workspaceCancellable = workspaceManager.$activeWorkspace
+            .dropFirst() // skip initial value to avoid double-init
+            .sink { [weak self] _ in
+                guard let self else { return }
+                if self.gitManager.isGitRepository || self.gitManager.repositoryState != nil {
+                    // Git was previously monitoring — restart with new workspace
+                    self.gitManager.startMonitoring(directory: self.workspaceManager.activeDirectory)
+                }
+            }
+
+        // Forward gitManager's @Published changes so views observing AppState re-render.
+        // Without this, nested ObservableObject changes are invisible to SwiftUI.
+        gitManagerCancellable = gitManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
     }
 
     func setTheme(_ theme: SceneTheme) {
@@ -468,6 +505,8 @@ class AppState: ObservableObject {
         // Reset commander to idle (sub-agents will be propagated automatically)
         if let leadId = tasks[idx].assignedAgentId {
             handleAgentStatusChange(leadId, to: .idle)
+            // Trigger team disband since cancelled teams should be dismissed
+            scheduleDisbandIfNeeded(commanderId: leadId)
         }
     }
 
@@ -1366,6 +1405,13 @@ class AppState: ObservableObject {
     func startSessionReplay(_ session: SessionRecord) {
         isInReplayMode = true
 
+        // Save current state so we can restore it when replay stops
+        preReplayAgents = agents
+        preReplayTasks = tasks
+        preReplayTimelineEvents = timelineManager.events
+        preReplaySceneConfig = sceneConfig
+        preReplayTheme = currentTheme
+
         // Restore agents and tasks from session snapshot
         agents = session.agents
         tasks = session.tasks
@@ -1401,10 +1447,24 @@ class AppState: ObservableObject {
         isInReplayMode = false
         sessionHistoryManager.stopReplay()
 
-        // Clear replay state
-        agents = []
-        tasks = []
-        timelineManager.events = []
+        // Restore pre-replay state
+        agents = preReplayAgents ?? []
+        tasks = preReplayTasks ?? []
+        timelineManager.events = preReplayTimelineEvents ?? []
+        if let config = preReplaySceneConfig {
+            sceneConfig = config
+        }
+        if let theme = preReplayTheme {
+            currentTheme = theme
+        }
+
+        // Clear saved snapshots
+        preReplayAgents = nil
+        preReplayTasks = nil
+        preReplayTimelineEvents = nil
+        preReplaySceneConfig = nil
+        preReplayTheme = nil
+
         rebuildScene()
     }
 
@@ -1468,6 +1528,52 @@ class AppState: ObservableObject {
         guard parts.count >= 2 else { return .idle }
         let statusRaw = parts.last!.trimmingCharacters(in: .whitespaces)
         return AgentStatus(rawValue: statusRaw) ?? .idle
+    }
+
+    // MARK: - Git Integration (G3)
+
+    func startGitMonitoring() {
+        gitManager.startMonitoring(directory: workspaceManager.activeDirectory)
+    }
+
+    func toggleGitDiff() {
+        isGitDiffVisible.toggle()
+        if isGitDiffVisible {
+            guard let state = gitManager.repositoryState else { return }
+            let allDiffs = state.stagedFiles + state.unstagedFiles
+            sceneManager.showGitDiffPanels(allDiffs)
+        } else {
+            sceneManager.removeGitDiffPanels()
+        }
+    }
+
+    func toggleGitBranchTree() {
+        isGitBranchTreeVisible.toggle()
+        if isGitBranchTreeVisible {
+            guard let state = gitManager.repositoryState else { return }
+            sceneManager.showGitBranchTree(state.branches, currentBranch: state.currentBranch)
+        } else {
+            sceneManager.removeGitBranchTree()
+        }
+    }
+
+    func toggleGitCommitTimeline() {
+        isGitCommitTimelineVisible.toggle()
+        if isGitCommitTimelineVisible {
+            guard let state = gitManager.repositoryState else { return }
+            sceneManager.showGitCommitTimeline(state.recentCommits, agents: agents)
+        } else {
+            sceneManager.removeGitCommitTimeline()
+        }
+    }
+
+    func showGitPRPreviewInScene() {
+        guard let pr = gitManager.prPreview else { return }
+        sceneManager.showGitPRPreview(pr)
+    }
+
+    func hideGitPRPreviewFromScene() {
+        sceneManager.removeGitPRPreview()
     }
 
     private func defaultSceneConfig() -> SceneConfiguration {
