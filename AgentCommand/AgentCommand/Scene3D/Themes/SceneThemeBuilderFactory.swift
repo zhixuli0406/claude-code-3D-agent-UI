@@ -7,6 +7,11 @@ struct SceneThemeBuilderFactory {
         case .floatingIslands: return FloatingIslandsThemeBuilder()
         case .dungeon: return DungeonThemeBuilder()
         case .spaceStation: return SpaceStationThemeBuilder()
+        case .cyberpunkCity: return CyberpunkCityThemeBuilder()
+        case .medievalCastle: return MedievalCastleThemeBuilder()
+        case .underwaterLab: return UnderwaterLabThemeBuilder()
+        case .japaneseGarden: return JapaneseGardenThemeBuilder()
+        case .minecraftOverworld: return MinecraftOverworldThemeBuilder()
         }
     }
 }
