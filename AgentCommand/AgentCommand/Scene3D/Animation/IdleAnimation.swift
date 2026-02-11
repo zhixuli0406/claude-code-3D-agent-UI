@@ -14,7 +14,7 @@ struct IdleAnimation {
             forKey: key + "_breathe"
         )
 
-        // Occasional head turn
+        // Head turn with occasional glance down
         let wait1 = SCNAction.wait(duration: 3.0, withRange: 2.0)
         let lookLeft = SCNAction.rotateTo(x: 0, y: 0.25, z: 0, duration: 1.5)
         lookLeft.timingMode = .easeInEaseOut
@@ -27,9 +27,20 @@ struct IdleAnimation {
         let wait4 = SCNAction.wait(duration: 2.0, withRange: 1.0)
         let backCenter = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 1.0)
         backCenter.timingMode = .easeInEaseOut
+        // Glance downward
+        let wait5 = SCNAction.wait(duration: 4.0, withRange: 2.0)
+        let lookDown = SCNAction.rotateTo(x: 0.2, y: 0, z: 0, duration: 1.0)
+        lookDown.timingMode = .easeInEaseOut
+        let wait6 = SCNAction.wait(duration: 1.5, withRange: 0.5)
+        let lookUpAgain = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 0.8)
+        lookUpAgain.timingMode = .easeInEaseOut
 
         character.headNode.runAction(
-            .repeatForever(.sequence([wait1, lookLeft, wait2, lookCenter, wait3, lookRight, wait4, backCenter])),
+            .repeatForever(.sequence([
+                wait1, lookLeft, wait2, lookCenter,
+                wait3, lookRight, wait4, backCenter,
+                wait5, lookDown, wait6, lookUpAgain
+            ])),
             forKey: key + "_head"
         )
 
@@ -46,6 +57,26 @@ struct IdleAnimation {
             .repeatForever(.sequence([armSway2, armSway1])),
             forKey: key + "_rightArm"
         )
+
+        // Legs - weight shifting (alternate slight lift)
+        let leftLegUp = SCNAction.moveBy(x: 0, y: 0.015, z: 0, duration: 3.0)
+        leftLegUp.timingMode = .easeInEaseOut
+        let leftLegDown = SCNAction.moveBy(x: 0, y: -0.015, z: 0, duration: 3.0)
+        leftLegDown.timingMode = .easeInEaseOut
+        character.leftLegNode.runAction(
+            .repeatForever(.sequence([leftLegUp, leftLegDown])),
+            forKey: key + "_leftLeg"
+        )
+
+        // Right leg shifts opposite
+        let rightLegDown = SCNAction.moveBy(x: 0, y: -0.01, z: 0, duration: 3.0)
+        rightLegDown.timingMode = .easeInEaseOut
+        let rightLegUp = SCNAction.moveBy(x: 0, y: 0.01, z: 0, duration: 3.0)
+        rightLegUp.timingMode = .easeInEaseOut
+        character.rightLegNode.runAction(
+            .repeatForever(.sequence([rightLegDown, rightLegUp])),
+            forKey: key + "_rightLeg"
+        )
     }
 
     static func remove(from character: VoxelCharacterNode) {
@@ -53,5 +84,7 @@ struct IdleAnimation {
         character.headNode.removeAction(forKey: key + "_head")
         character.leftArmNode.removeAction(forKey: key + "_leftArm")
         character.rightArmNode.removeAction(forKey: key + "_rightArm")
+        character.leftLegNode.removeAction(forKey: key + "_leftLeg")
+        character.rightLegNode.removeAction(forKey: key + "_rightLeg")
     }
 }

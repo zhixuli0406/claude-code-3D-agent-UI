@@ -17,8 +17,7 @@
       "parentAgentId": null,
       "subAgentIds": [
         "550E8400-E29B-41D4-A716-446655440002",
-        "550E8400-E29B-41D4-A716-446655440003",
-        "550E8400-E29B-41D4-A716-446655440004"
+        "550E8400-E29B-41D4-A716-446655440003"
       ],
       "assignedTaskIds": ["550E8400-E29B-41D4-A716-446655440010"]
     },
@@ -35,7 +34,7 @@
         "hairStyle": "mohawk",
         "accessory": "glasses"
       },
-      "position": { "x": -4.0, "y": 0.0, "z": 2.0, "rotation": 0.3 },
+      "position": { "x": -4.0, "y": 0.0, "z": 2.0, "rotation": -0.3 },
       "parentAgentId": "550E8400-E29B-41D4-A716-446655440001",
       "subAgentIds": [],
       "assignedTaskIds": [
@@ -56,28 +55,10 @@
         "hairStyle": "long",
         "accessory": "glasses"
       },
-      "position": { "x": 4.0, "y": 0.0, "z": 2.0, "rotation": -0.3 },
+      "position": { "x": 4.0, "y": 0.0, "z": 2.0, "rotation": 0.3 },
       "parentAgentId": "550E8400-E29B-41D4-A716-446655440001",
       "subAgentIds": [],
       "assignedTaskIds": ["550E8400-E29B-41D4-A716-446655440013"]
-    },
-    {
-      "id": "550E8400-E29B-41D4-A716-446655440004",
-      "name": "Test Runner",
-      "role": "tester",
-      "status": "idle",
-      "appearance": {
-        "skinColor": "#FFE0BD",
-        "shirtColor": "#BF360C",
-        "pantsColor": "#3E2723",
-        "hairColor": "#FF6F00",
-        "hairStyle": "short",
-        "accessory": null
-      },
-      "position": { "x": -4.0, "y": 0.0, "z": 5.0, "rotation": 0.3 },
-      "parentAgentId": "550E8400-E29B-41D4-A716-446655440001",
-      "subAgentIds": [],
-      "assignedTaskIds": ["550E8400-E29B-41D4-A716-446655440014"]
     }
   ]
 }

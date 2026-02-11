@@ -8,6 +8,8 @@ enum AgentStatus: String, Codable, CaseIterable {
     case completed
     case error
     case requestingPermission
+    case waitingForAnswer
+    case reviewingPlan
 
     var displayName: String {
         switch self {
@@ -17,6 +19,8 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .completed: return "Completed"
         case .error: return "Error"
         case .requestingPermission: return "Requesting Permission"
+        case .waitingForAnswer: return "Waiting for Answer"
+        case .reviewingPlan: return "Reviewing Plan"
         }
     }
 
@@ -28,6 +32,8 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .completed: return l.localized(.statusCompleted)
         case .error: return l.localized(.statusError)
         case .requestingPermission: return l.localized(.statusRequestingPermission)
+        case .waitingForAnswer: return l.localized(.statusWaitingForAnswer)
+        case .reviewingPlan: return l.localized(.statusReviewingPlan)
         }
     }
 
@@ -39,6 +45,8 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .completed: return "#2196F3"
         case .error: return "#F44336"
         case .requestingPermission: return "#FF9800"
+        case .waitingForAnswer: return "#2196F3"
+        case .reviewingPlan: return "#9C27B0"
         }
     }
 }

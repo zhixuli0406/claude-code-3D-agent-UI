@@ -10,39 +10,6 @@ struct FloatingIslandsThemeBuilder: SceneThemeBuilder {
     func buildEnvironment(dimensions: RoomDimensions) -> SCNNode {
         let env = SCNNode()
         env.name = "floatingIslands_environment"
-
-        // Main island (grass + dirt + stone layers)
-        let mainIsland = buildIsland(width: 4.0, depth: 3.0, grassHeight: 0.3, dirtHeight: 0.5, stoneHeight: 0.4)
-        mainIsland.position = SCNVector3(0, -0.6, 0)
-        mainIsland.name = "mainIsland"
-        env.addChildNode(mainIsland)
-
-        // Workstation islands
-        let positions: [(Float, Float, Float)] = [
-            (-4.0, -0.8, 2.0),
-            (4.0, -0.8, 2.0),
-            (-4.0, -1.0, 5.0),
-            (4.0, -1.0, 5.0)
-        ]
-        for (i, pos) in positions.enumerated() {
-            let island = buildIsland(width: 2.5, depth: 2.0, grassHeight: 0.25, dirtHeight: 0.4, stoneHeight: 0.3)
-            island.position = SCNVector3(pos.0, pos.1, pos.2)
-            island.name = "workIsland_\(i)"
-            addFloatingAnimation(to: island, delay: Double(i) * 0.5)
-            env.addChildNode(island)
-        }
-
-        // Bridges between main island and workstation islands
-        for pos in positions {
-            let bridge = buildBridge(
-                from: SCNVector3(0, -0.3, 0),
-                to: SCNVector3(pos.0, pos.1 + 0.3, pos.2)
-            )
-            env.addChildNode(bridge)
-        }
-
-        addFloatingAnimation(to: mainIsland, delay: 0)
-
         return env
     }
 
@@ -218,27 +185,75 @@ struct FloatingIslandsThemeBuilder: SceneThemeBuilder {
             decorations.addChildNode(cloud)
         }
 
-        // Small trees on main island
-        let treePositions: [(Float, Float)] = [(-1.5, -0.5), (1.5, -0.8), (-1.0, 1.0)]
-        for (i, pos) in treePositions.enumerated() {
-            let tree = buildBlockTree()
-            tree.position = SCNVector3(pos.0, 0, pos.1)
-            tree.name = "tree_\(i)"
-            decorations.addChildNode(tree)
-        }
-
-        // Grass tufts
-        for _ in 0..<12 {
-            let grass = buildGrassTuft()
-            grass.position = SCNVector3(
-                Float.random(in: -1.8...1.8),
-                0.01,
-                Float.random(in: -1.2...1.2)
-            )
-            decorations.addChildNode(grass)
-        }
-
         return decorations
+    }
+
+    // MARK: - Agent Floor Tile
+
+    func buildAgentFloorTile(isLeader: Bool) -> SCNNode {
+        let island = SCNNode()
+        island.name = "agentFloorTile"
+
+        let grassW: CGFloat = isLeader ? 2.4 : 1.4
+        let grassD: CGFloat = isLeader ? 2.4 : 1.4
+        let grassH: CGFloat = isLeader ? 0.2 : 0.15
+        let dirtH: CGFloat = isLeader ? 0.35 : 0.2
+        let stoneH: CGFloat = isLeader ? 0.25 : 0.15
+
+        // Grass layer
+        let grass = SCNBox(width: grassW, height: grassH, length: grassD, chamferRadius: 0.05)
+        let grassMaterial = SCNMaterial()
+        grassMaterial.diffuse.contents = NSColor(hex: "#4CAF50")
+        grassMaterial.roughness.contents = 0.9
+        grass.materials = [grassMaterial]
+        let grassNode = SCNNode(geometry: grass)
+        grassNode.position = SCNVector3(0, 0, 0)
+        island.addChildNode(grassNode)
+
+        // Dirt layer
+        let dirt = SCNBox(width: grassW * 0.93, height: dirtH, length: grassD * 0.93, chamferRadius: 0.03)
+        let dirtMaterial = SCNMaterial()
+        dirtMaterial.diffuse.contents = NSColor(hex: "#8B4513")
+        dirtMaterial.roughness.contents = 0.95
+        dirt.materials = [dirtMaterial]
+        let dirtNode = SCNNode(geometry: dirt)
+        dirtNode.position = SCNVector3(0, -Float(grassH / 2 + dirtH / 2), 0)
+        island.addChildNode(dirtNode)
+
+        // Stone layer
+        let stone = SCNBox(width: grassW * 0.8, height: stoneH, length: grassD * 0.8, chamferRadius: 0.08)
+        let stoneMaterial = SCNMaterial()
+        stoneMaterial.diffuse.contents = NSColor(hex: "#696969")
+        stoneMaterial.roughness.contents = 0.9
+        stone.materials = [stoneMaterial]
+        let stoneNode = SCNNode(geometry: stone)
+        stoneNode.position = SCNVector3(0, -Float(grassH / 2 + dirtH + stoneH / 2), 0)
+        island.addChildNode(stoneNode)
+
+        // Leader island gets a tree and grass tufts
+        if isLeader {
+            let tree = buildBlockTree()
+            tree.position = SCNVector3(-0.8, Float(grassH / 2), -0.7)
+            island.addChildNode(tree)
+
+            let tree2 = buildSmallTree()
+            tree2.position = SCNVector3(0.7, Float(grassH / 2), -0.9)
+            island.addChildNode(tree2)
+
+            for _ in 0..<6 {
+                let tuft = buildGrassTuft()
+                tuft.position = SCNVector3(
+                    Float.random(in: -0.9...0.9),
+                    Float(grassH / 2) + 0.01,
+                    Float.random(in: -0.9...0.9)
+                )
+                island.addChildNode(tuft)
+            }
+        }
+
+        addFloatingAnimation(to: island, delay: Double.random(in: 0...2))
+
+        return island
     }
 
     func cameraConfigOverride() -> CameraConfig? {
@@ -250,99 +265,6 @@ struct FloatingIslandsThemeBuilder: SceneThemeBuilder {
     }
 
     // MARK: - Private Helpers
-
-    private func buildIsland(width: CGFloat, depth: CGFloat, grassHeight: CGFloat, dirtHeight: CGFloat, stoneHeight: CGFloat) -> SCNNode {
-        let island = SCNNode()
-
-        // Grass layer (top)
-        let grass = SCNBox(width: width, height: grassHeight, length: depth, chamferRadius: 0.05)
-        let grassMaterial = SCNMaterial()
-        grassMaterial.diffuse.contents = NSColor(hex: "#4CAF50")
-        grassMaterial.roughness.contents = 0.9
-        grass.materials = [grassMaterial]
-        let grassNode = SCNNode(geometry: grass)
-        grassNode.position = SCNVector3(0, 0, 0)
-        island.addChildNode(grassNode)
-
-        // Dirt layer (middle)
-        let dirt = SCNBox(width: width * 0.95, height: dirtHeight, length: depth * 0.95, chamferRadius: 0.03)
-        let dirtMaterial = SCNMaterial()
-        dirtMaterial.diffuse.contents = NSColor(hex: "#8B4513")
-        dirtMaterial.roughness.contents = 0.95
-        dirt.materials = [dirtMaterial]
-        let dirtNode = SCNNode(geometry: dirt)
-        dirtNode.position = SCNVector3(0, -Float(grassHeight / 2 + dirtHeight / 2), 0)
-        island.addChildNode(dirtNode)
-
-        // Stone layer (bottom) - slightly narrower for natural look
-        let stone = SCNBox(width: width * 0.85, height: stoneHeight, length: depth * 0.85, chamferRadius: 0.08)
-        let stoneMaterial = SCNMaterial()
-        stoneMaterial.diffuse.contents = NSColor(hex: "#696969")
-        stoneMaterial.roughness.contents = 0.9
-        stone.materials = [stoneMaterial]
-        let stoneNode = SCNNode(geometry: stone)
-        stoneNode.position = SCNVector3(0, -Float(grassHeight / 2 + dirtHeight + stoneHeight / 2), 0)
-        island.addChildNode(stoneNode)
-
-        return island
-    }
-
-    private func buildBridge(from: SCNVector3, to: SCNVector3) -> SCNNode {
-        let bridge = SCNNode()
-        bridge.name = "bridge"
-
-        let direction = to - from
-        let distance = direction.length
-        let normalized = direction.normalized
-        let plankCount = max(8, Int(distance / 0.3))
-
-        let plankMaterial = SCNMaterial()
-        plankMaterial.diffuse.contents = NSColor(hex: "#8B6914")
-        plankMaterial.roughness.contents = 0.9
-
-        let ropeMaterial = SCNMaterial()
-        ropeMaterial.diffuse.contents = NSColor(hex: "#6B4226")
-
-        for i in 0..<plankCount {
-            let t = Float(i) / Float(plankCount - 1)
-            let pos = from + normalized * (t * distance)
-
-            // Plank
-            let plank = SCNBox(width: 0.3, height: 0.03, length: 0.12, chamferRadius: 0)
-            plank.materials = [plankMaterial]
-            let plankNode = SCNNode(geometry: plank)
-
-            // Sag curve
-            let sag = CGFloat(sin(Float.pi * t) * 0.3)
-            plankNode.position = SCNVector3(pos.x, pos.y - sag, pos.z)
-            plankNode.look(at: to)
-            bridge.addChildNode(plankNode)
-        }
-
-        // Rope on left side
-        for side: CGFloat in [-0.15, 0.15] {
-            for i in 0..<(plankCount - 1) {
-                let t0 = Float(i) / Float(plankCount - 1)
-                let t1 = Float(i + 1) / Float(plankCount - 1)
-                let p0 = from + normalized * (t0 * distance)
-                let p1 = from + normalized * (t1 * distance)
-                let sag0 = CGFloat(sin(Float.pi * t0) * 0.3)
-                let sag1 = CGFloat(sin(Float.pi * t1) * 0.3)
-
-                let ropeLen = CGFloat(0.3 / Float(plankCount - 1) * distance)
-                let rope = SCNCylinder(radius: 0.01, height: max(0.05, ropeLen))
-                rope.materials = [ropeMaterial]
-                let ropeNode = SCNNode(geometry: rope)
-                let rx = (p0.x + p1.x) / 2 + side
-                let ry = ((p0.y - sag0) + (p1.y - sag1)) / 2
-                let rz = (p0.z + p1.z) / 2
-                ropeNode.position = SCNVector3(rx, ry, rz)
-                bridge.addChildNode(ropeNode)
-            }
-        }
-
-        return bridge
-    }
 
     private func buildCloud() -> SCNNode {
         let cloud = SCNNode()
@@ -394,6 +316,28 @@ struct FloatingIslandsThemeBuilder: SceneThemeBuilder {
         let topNode = SCNNode(geometry: topCanopy)
         topNode.position = SCNVector3(0, 1.0, 0)
         tree.addChildNode(topNode)
+
+        return tree
+    }
+
+    private func buildSmallTree() -> SCNNode {
+        let tree = SCNNode()
+
+        let trunk = SCNBox(width: 0.1, height: 0.35, length: 0.1, chamferRadius: 0)
+        let trunkMaterial = SCNMaterial()
+        trunkMaterial.diffuse.contents = NSColor(hex: "#6D4C41")
+        trunk.materials = [trunkMaterial]
+        let trunkNode = SCNNode(geometry: trunk)
+        trunkNode.position = SCNVector3(0, 0.175, 0)
+        tree.addChildNode(trunkNode)
+
+        let canopy = SCNBox(width: 0.3, height: 0.25, length: 0.3, chamferRadius: 0)
+        let canopyMaterial = SCNMaterial()
+        canopyMaterial.diffuse.contents = NSColor(hex: "#388E3C")
+        canopy.materials = [canopyMaterial]
+        let canopyNode = SCNNode(geometry: canopy)
+        canopyNode.position = SCNVector3(0, 0.45, 0)
+        tree.addChildNode(canopyNode)
 
         return tree
     }

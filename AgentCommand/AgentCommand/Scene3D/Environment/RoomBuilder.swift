@@ -6,7 +6,6 @@ struct RoomBuilder {
         room.name = "room"
 
         let w = CGFloat(dimensions.width)
-        let h = CGFloat(dimensions.height)
         let d = CGFloat(dimensions.depth)
 
         // Floor
@@ -22,40 +21,6 @@ struct RoomBuilder {
 
         // Floor grid lines
         addFloorGrid(to: room, dimensions: dimensions, palette: palette)
-
-        // Back wall
-        let backWall = SCNBox(width: w, height: h, length: 0.1, chamferRadius: 0)
-        let wallMaterial = SCNMaterial()
-        wallMaterial.diffuse.contents = NSColor(hex: palette.wallColor)
-        wallMaterial.roughness.contents = 0.8
-        wallMaterial.transparency = 0.9
-        backWall.materials = [wallMaterial]
-        let backWallNode = SCNNode(geometry: backWall)
-        backWallNode.position = SCNVector3(0, Float(h) / 2.0, -2.0)
-        backWallNode.name = "backWall"
-        room.addChildNode(backWallNode)
-
-        // Side walls
-        let sideWall = SCNBox(width: 0.1, height: h, length: d, chamferRadius: 0)
-        let sideWallMaterial = SCNMaterial()
-        sideWallMaterial.diffuse.contents = NSColor(hex: palette.wallColor)
-        sideWallMaterial.roughness.contents = 0.8
-        sideWallMaterial.transparency = 0.7
-        sideWall.materials = [sideWallMaterial]
-
-        let leftWallNode = SCNNode(geometry: sideWall)
-        leftWallNode.position = SCNVector3(-Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        leftWallNode.name = "leftWall"
-        room.addChildNode(leftWallNode)
-
-        let rightWallGeo = sideWall.copy() as? SCNGeometry ?? sideWall
-        let rightWallNode = SCNNode(geometry: rightWallGeo)
-        rightWallNode.position = SCNVector3(Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        rightWallNode.name = "rightWall"
-        room.addChildNode(rightWallNode)
-
-        // Ceiling accent strips
-        addCeilingAccents(to: room, dimensions: dimensions, palette: palette)
 
         return room
     }
@@ -91,18 +56,4 @@ struct RoomBuilder {
         }
     }
 
-    private static func addCeilingAccents(to room: SCNNode, dimensions: RoomDimensions, palette: ThemeColorPalette) {
-        let accentColor = NSColor(hex: palette.accentColor)
-        let accentMaterial = SCNMaterial()
-        accentMaterial.diffuse.contents = accentColor
-        accentMaterial.emission.contents = accentColor
-
-        for xOffset: Float in [-3.0, 3.0] {
-            let strip = SCNBox(width: 0.1, height: 0.05, length: CGFloat(dimensions.depth * 0.8), chamferRadius: 0)
-            strip.materials = [accentMaterial]
-            let stripNode = SCNNode(geometry: strip)
-            stripNode.position = SCNVector3(xOffset, dimensions.height - 0.05, dimensions.depth / 2.0 - 2.0)
-            room.addChildNode(stripNode)
-        }
-    }
 }

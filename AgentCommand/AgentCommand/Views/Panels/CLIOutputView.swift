@@ -122,6 +122,8 @@ struct CLIOutputEntryRow: View {
         case .error:            return "!"
         case .systemInfo:       return "#"
         case .dangerousWarning: return "\u{26A0}"
+        case .askQuestion:      return "?"
+        case .planMode:         return "\u{1F4CB}"
         }
     }
 
@@ -134,6 +136,8 @@ struct CLIOutputEntryRow: View {
         case .error:            return Color(hex: "#F44336")
         case .systemInfo:       return Color.white.opacity(0.4)
         case .dangerousWarning: return Color(hex: "#FF9800")
+        case .askQuestion:      return Color(hex: "#2196F3")
+        case .planMode:         return Color(hex: "#9C27B0")
         }
     }
 }

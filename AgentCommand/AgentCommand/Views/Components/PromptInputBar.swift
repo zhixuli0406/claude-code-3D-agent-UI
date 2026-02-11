@@ -20,25 +20,19 @@ struct PromptInputBar: View {
             .background(Color.green.opacity(0.1))
             .cornerRadius(4)
 
-            // Target agent indicator
-            if let agent = appState.bestAvailableAgent() {
-                HStack(spacing: 4) {
-                    Text(agent.role.emoji)
-                        .font(.caption)
-                    Text("\(localization.localized(.assignedTo)): \(agent.name)")
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundColor(Color(hex: "#00BCD4"))
-                        .lineLimit(1)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.white.opacity(0.05))
-                .cornerRadius(4)
-            } else {
-                Text(localization.localized(.noAgentsAvailable))
+            // New team indicator
+            HStack(spacing: 4) {
+                Image(systemName: "person.3.fill")
+                    .font(.caption)
+                Text(localization.localized(.newTeamAutoCreated))
                     .font(.system(size: 10, design: .monospaced))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Color(hex: "#00BCD4"))
+                    .lineLimit(1)
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(4)
 
             // Terminal icon
             Image(systemName: "terminal")
@@ -71,7 +65,7 @@ struct PromptInputBar: View {
                 )
             }
             .buttonStyle(.plain)
-            .disabled(promptText.isEmpty || appState.agents.isEmpty)
+            .disabled(promptText.isEmpty)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
@@ -105,9 +99,8 @@ struct PromptInputBar: View {
     private func submitTask() {
         let trimmed = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        guard let agent = appState.bestAvailableAgent() else { return }
 
-        appState.submitPromptTask(title: trimmed, assignTo: agent.id)
+        appState.submitPromptWithNewTeam(title: trimmed)
         promptText = ""
 
         withAnimation(.easeInOut(duration: 0.3)) {

@@ -4,9 +4,24 @@ struct SceneConfiguration: Codable {
     var roomSize: RoomDimensions
     var commandDeskPosition: ScenePosition
     var workstationPositions: [WorkstationConfig]
+    var teamLayouts: [TeamLayout]?
     var cameraDefaults: CameraConfig
     var ambientLightIntensity: Float
     var accentColor: String
+
+    /// Build a configuration from multi-team layout result, preserving first team as the legacy commandDeskPosition
+    static func fromMultiTeam(_ result: MultiTeamLayoutResult, intensity: Float = 500, accent: String = "#00BCD4") -> SceneConfiguration {
+        let firstTeam = result.teamLayouts.first
+        return SceneConfiguration(
+            roomSize: result.roomSize,
+            commandDeskPosition: firstTeam?.commandDeskPosition ?? ScenePosition(x: 0, y: 0, z: -2, rotation: 0),
+            workstationPositions: firstTeam?.workstationPositions ?? [],
+            teamLayouts: result.teamLayouts,
+            cameraDefaults: result.camera,
+            ambientLightIntensity: intensity,
+            accentColor: accent
+        )
+    }
 }
 
 struct RoomDimensions: Codable {

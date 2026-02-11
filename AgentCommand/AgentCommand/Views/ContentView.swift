@@ -59,7 +59,7 @@ struct ContentView: View {
         .background(Color(nsColor: appState.sceneManager.sceneBackgroundColor))
         .onAppear {
             if appState.agents.isEmpty {
-                appState.loadSampleConfig()
+                appState.rebuildScene()
             }
         }
         .alert(
@@ -79,6 +79,30 @@ struct ContentView: View {
             if let alert = appState.dangerousCommandAlert {
                 Text(alert.reason)
             }
+        }
+        .sheet(item: $appState.askUserQuestionData) { questionData in
+            AskUserQuestionSheet(
+                data: questionData,
+                onSubmit: { answers in
+                    appState.submitAskUserAnswer(answers)
+                },
+                onCancel: {
+                    appState.cancelAskUserQuestion()
+                }
+            )
+            .environmentObject(localization)
+        }
+        .sheet(item: $appState.planReviewData) { reviewData in
+            PlanReviewSheet(
+                data: reviewData,
+                onApprove: {
+                    appState.approvePlan()
+                },
+                onReject: { feedback in
+                    appState.rejectPlan(feedback: feedback)
+                }
+            )
+            .environmentObject(localization)
         }
     }
 }

@@ -64,7 +64,6 @@ struct SceneSelectionView: View {
                 // Enter button
                 Button(action: {
                     appState.setTheme(selectedTheme)
-                    appState.loadSampleConfig()
                 }) {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.right.circle.fill")

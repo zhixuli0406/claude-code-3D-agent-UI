@@ -31,6 +31,10 @@ class AgentAnimationController {
                 ErrorAnimation.apply(to: character)
             case .requestingPermission:
                 RequestingPermissionAnimation.apply(to: character)
+            case .waitingForAnswer:
+                WaitingForAnswerAnimation.apply(to: character)
+            case .reviewingPlan:
+                ReviewingPlanAnimation.apply(to: character)
             }
 
             // Update status indicator color
@@ -54,6 +58,10 @@ class AgentAnimationController {
             ErrorAnimation.remove(from: character)
         case .requestingPermission:
             RequestingPermissionAnimation.remove(from: character)
+        case .waitingForAnswer:
+            WaitingForAnswerAnimation.remove(from: character)
+        case .reviewingPlan:
+            ReviewingPlanAnimation.remove(from: character)
         }
     }
 
@@ -69,6 +77,8 @@ class AgentAnimationController {
         character.bodyNode.position = character.bodyNode.position  // Keep position
         character.leftArmNode.eulerAngles = SCNVector3Zero
         character.rightArmNode.eulerAngles = SCNVector3Zero
+        character.leftLegNode.eulerAngles = SCNVector3Zero
+        character.rightLegNode.eulerAngles = SCNVector3Zero
 
         SCNTransaction.commit()
     }

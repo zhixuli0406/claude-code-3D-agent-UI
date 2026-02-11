@@ -12,45 +12,12 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         room.name = "dungeon_environment"
 
         let w = CGFloat(dimensions.width)
-        let h = CGFloat(dimensions.height)
         let d = CGFloat(dimensions.depth)
 
         // Stone floor with checker pattern
         let floorNode = buildStoneFloor(width: w, depth: d)
         floorNode.position = SCNVector3(0, -0.05, Float(d) / 2.0 - 2.0)
         room.addChildNode(floorNode)
-
-        // Thick stone walls
-        let wallThickness: CGFloat = 0.3
-
-        // Back wall with brick grooves
-        let backWall = buildStoneWall(width: w, height: h, thickness: wallThickness)
-        backWall.position = SCNVector3(0, Float(h) / 2.0, -2.0)
-        backWall.name = "backWall"
-        room.addChildNode(backWall)
-
-        // Side walls
-        let leftWall = buildStoneWall(width: d, height: h, thickness: wallThickness)
-        leftWall.eulerAngles.y = CGFloat.pi / 2
-        leftWall.position = SCNVector3(-Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        leftWall.name = "leftWall"
-        room.addChildNode(leftWall)
-
-        let rightWall = buildStoneWall(width: d, height: h, thickness: wallThickness)
-        rightWall.eulerAngles.y = CGFloat.pi / 2
-        rightWall.position = SCNVector3(Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        rightWall.name = "rightWall"
-        room.addChildNode(rightWall)
-
-        // Ceiling
-        let ceiling = SCNBox(width: w, height: 0.2, length: d, chamferRadius: 0)
-        let ceilingMaterial = SCNMaterial()
-        ceilingMaterial.diffuse.contents = NSColor(hex: "#2C2C2C")
-        ceilingMaterial.roughness.contents = 0.95
-        ceiling.materials = [ceilingMaterial]
-        let ceilingNode = SCNNode(geometry: ceiling)
-        ceilingNode.position = SCNVector3(0, Float(h), Float(d) / 2.0 - 2.0)
-        room.addChildNode(ceilingNode)
 
         return room
     }
@@ -109,9 +76,9 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         let glowLight = SCNLight()
         glowLight.type = .omni
         glowLight.color = NSColor(hex: "#FFD700")
-        glowLight.intensity = 80
+        glowLight.intensity = 150
         glowLight.attenuationStartDistance = 0
-        glowLight.attenuationEndDistance = 1.0
+        glowLight.attenuationEndDistance = 1.5
         let glowNode = SCNNode()
         glowNode.light = glowLight
         glowNode.position = SCNVector3(0, Float(chestHeight) * 0.7, 0)
@@ -236,11 +203,11 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
     // MARK: - Lighting
 
     func applyLighting(to scene: SCNScene, intensity: Float) {
-        // Very dim ambient
+        // Warm ambient light
         let ambient = SCNLight()
         ambient.type = .ambient
-        ambient.color = NSColor(hex: "#1A0F0A")
-        ambient.intensity = CGFloat(intensity * 0.1)
+        ambient.color = NSColor(hex: "#3D2B1F")
+        ambient.intensity = CGFloat(intensity * 0.35)
         let ambientNode = SCNNode()
         ambientNode.light = ambient
         ambientNode.name = "ambientLight"
@@ -300,6 +267,19 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         return decorations
     }
 
+    // MARK: - Agent Floor Tile
+
+    func buildAgentFloorTile(isLeader: Bool) -> SCNNode {
+        let tile = SCNBox(width: 1.2, height: 0.1, length: 1.2, chamferRadius: 0)
+        let stoneMaterial = SCNMaterial()
+        stoneMaterial.diffuse.contents = NSColor(hex: "#5A5A5A")
+        stoneMaterial.roughness.contents = 0.95
+        tile.materials = [stoneMaterial]
+        let node = SCNNode(geometry: tile)
+        node.name = "agentFloorTile"
+        return node
+    }
+
     // MARK: - Private Helpers
 
     private func buildStoneFloor(width: CGFloat, depth: CGFloat) -> SCNNode {
@@ -335,34 +315,6 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         return floor
     }
 
-    private func buildStoneWall(width: CGFloat, height: CGFloat, thickness: CGFloat) -> SCNNode {
-        let wall = SCNNode()
-
-        // Main wall body
-        let wallBox = SCNBox(width: width, height: height, length: thickness, chamferRadius: 0)
-        let wallMaterial = SCNMaterial()
-        wallMaterial.diffuse.contents = NSColor(hex: palette.wallColor)
-        wallMaterial.roughness.contents = 0.95
-        wallBox.materials = [wallMaterial]
-        let wallNode = SCNNode(geometry: wallBox)
-        wall.addChildNode(wallNode)
-
-        // Brick groove lines (horizontal)
-        let grooveMaterial = SCNMaterial()
-        grooveMaterial.diffuse.contents = NSColor(hex: "#2A2A2A")
-
-        let brickHeight: CGFloat = 0.3
-        let grooveCount = Int(height / brickHeight)
-        for i in 1..<grooveCount {
-            let groove = SCNBox(width: width + 0.01, height: 0.015, length: thickness + 0.01, chamferRadius: 0)
-            groove.materials = [grooveMaterial]
-            let grooveNode = SCNNode(geometry: groove)
-            grooveNode.position = SCNVector3(0, Float(CGFloat(i) * brickHeight - height / 2.0), 0)
-            wall.addChildNode(grooveNode)
-        }
-
-        return wall
-    }
 
     private func buildTorch() -> SCNNode {
         let torch = SCNNode()
@@ -409,9 +361,9 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         let torchLight = SCNLight()
         torchLight.type = .omni
         torchLight.color = NSColor(hex: "#FF8C00")
-        torchLight.intensity = 200
+        torchLight.intensity = 400
         torchLight.attenuationStartDistance = 0
-        torchLight.attenuationEndDistance = 5.0
+        torchLight.attenuationEndDistance = 8.0
         torchLight.castsShadow = true
         let lightNode = SCNNode()
         lightNode.light = torchLight
@@ -422,7 +374,7 @@ struct DungeonThemeBuilder: SceneThemeBuilder {
         let flicker = SCNAction.repeatForever(
             SCNAction.sequence([
                 SCNAction.run { node in
-                    node.light?.intensity = CGFloat(Float.random(in: 150...250))
+                    node.light?.intensity = CGFloat(Float.random(in: 300...500))
                 },
                 SCNAction.wait(duration: 0.1)
             ])

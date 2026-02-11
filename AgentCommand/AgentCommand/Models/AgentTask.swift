@@ -20,6 +20,7 @@ struct AgentTask: Identifiable, Codable, Hashable {
     var isRealExecution: Bool = false
     var cliResult: String?
     var outputLogCount: Int = 0
+    var sessionId: String?
 }
 
 struct SubTask: Identifiable, Codable, Hashable {

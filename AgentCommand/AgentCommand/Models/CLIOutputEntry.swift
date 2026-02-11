@@ -15,5 +15,7 @@ struct CLIOutputEntry: Identifiable {
         case error
         case systemInfo
         case dangerousWarning
+        case askQuestion
+        case planMode
     }
 }

@@ -76,6 +76,18 @@ enum L10nKey: String {
 
     // Dangerous command
     case dangerousCommandDetected, continueExecution, cancelTask
+
+    // AskUserQuestion
+    case statusWaitingForAnswer
+    case askUserQuestion, submitAnswer, customAnswer, skipQuestion
+
+    // Plan review
+    case statusReviewingPlan
+    case planReview, approvePlan, rejectPlan, planActions, planRejectionFeedback
+
+    // Multi-team
+    case teamLabel, selectTeam, allTeams
+    case newTeamAutoCreated, noAgentsYet
 }
 
 struct L10n {
@@ -206,6 +218,28 @@ struct L10n {
         .dangerousCommandDetected: "偵測到危險指令",
         .continueExecution: "繼續執行",
         .cancelTask: "取消任務",
+
+        // AskUserQuestion
+        .statusWaitingForAnswer: "等待回答",
+        .askUserQuestion: "代理提問",
+        .submitAnswer: "提交回答",
+        .customAnswer: "自訂回答",
+        .skipQuestion: "跳過",
+
+        // Plan review
+        .statusReviewingPlan: "審核計畫",
+        .planReview: "計畫審核",
+        .approvePlan: "批准計畫",
+        .rejectPlan: "拒絕",
+        .planActions: "計畫行動",
+        .planRejectionFeedback: "拒絕原因（選填）",
+
+        // Multi-team
+        .teamLabel: "團隊",
+        .selectTeam: "選擇團隊",
+        .allTeams: "所有團隊",
+        .newTeamAutoCreated: "新團隊將自動建立",
+        .noAgentsYet: "尚無代理團隊",
     ]
 
     // MARK: - English
@@ -326,5 +360,27 @@ struct L10n {
         .dangerousCommandDetected: "Dangerous Command Detected",
         .continueExecution: "Continue",
         .cancelTask: "Cancel Task",
+
+        // AskUserQuestion
+        .statusWaitingForAnswer: "Waiting for Answer",
+        .askUserQuestion: "Agent Question",
+        .submitAnswer: "Submit",
+        .customAnswer: "Custom Answer",
+        .skipQuestion: "Skip",
+
+        // Plan review
+        .statusReviewingPlan: "Reviewing Plan",
+        .planReview: "Plan Review",
+        .approvePlan: "Approve Plan",
+        .rejectPlan: "Reject",
+        .planActions: "Planned Actions",
+        .planRejectionFeedback: "Rejection reason (optional)",
+
+        // Multi-team
+        .teamLabel: "Team",
+        .selectTeam: "Select Team",
+        .allTeams: "All Teams",
+        .newTeamAutoCreated: "New team will be created",
+        .noAgentsYet: "No agent teams yet",
     ]
 }

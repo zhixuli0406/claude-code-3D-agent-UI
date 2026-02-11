@@ -11,19 +11,136 @@ struct AgentHierarchyView: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
 
-            ForEach(appState.mainAgents()) { agent in
-                AgentTreeNode(
-                    agent: agent,
-                    isSelected: appState.selectedAgentId == agent.id,
-                    onSelect: { appState.selectAgent(agent.id) },
-                    children: appState.subAgents(of: agent.id),
-                    selectedAgentId: appState.selectedAgentId,
-                    onSelectChild: { appState.selectAgent($0) }
-                )
+            if appState.agents.isEmpty {
+                Text(localization.localized(.noAgentsYet))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.vertical, 8)
+            } else {
+                ForEach(appState.mainAgents()) { commander in
+                    let isDisbanding = appState.disbandingTeamIds.contains(commander.id)
+                    TeamSection(
+                        commander: commander,
+                        children: appState.subAgents(of: commander.id),
+                        selectedAgentId: appState.selectedAgentId,
+                        onSelectAgent: { appState.selectAgent($0) },
+                        teamLabel: localization.localized(.teamLabel),
+                        isDisbanding: isDisbanding
+                    )
+                    .opacity(isDisbanding ? 0.4 : 1.0)
+                    .animation(.easeInOut(duration: 0.5), value: isDisbanding)
+                }
             }
         }
     }
 }
+
+// MARK: - Multi-team section
+
+struct TeamSection: View {
+    let commander: Agent
+    let children: [Agent]
+    let selectedAgentId: UUID?
+    let onSelectAgent: (UUID) -> Void
+    let teamLabel: String
+    var isDisbanding: Bool = false
+
+    @State private var isExpanded = true
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            // Team header (expand/collapse only)
+            Button(action: {
+                withAnimation { isExpanded.toggle() }
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.caption2)
+                        .foregroundColor(Color(hex: "#00BCD4"))
+                        .frame(width: 12)
+
+                    Image(systemName: "person.3.fill")
+                        .font(.caption2)
+                        .foregroundColor(Color(hex: "#00BCD4"))
+
+                    Text("\(teamLabel): \(commander.name)")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color(hex: "#00BCD4"))
+
+                    Spacer()
+
+                    StatusIndicator(status: commander.status, size: 8)
+                }
+                .padding(.vertical, 5)
+                .padding(.horizontal, 6)
+                .cornerRadius(4)
+            }
+            .buttonStyle(.plain)
+
+            if isExpanded {
+                // Commander row
+                Button(action: { onSelectAgent(commander.id) }) {
+                    HStack(spacing: 8) {
+                        Spacer().frame(width: 16)
+
+                        Text(commander.role.emoji)
+                            .font(.caption)
+
+                        Text(commander.name)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+
+                        Spacer()
+
+                        StatusIndicator(status: commander.status, size: 8)
+                    }
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 6)
+                    .background(selectedAgentId == commander.id ? Color.blue.opacity(0.2) : Color.clear)
+                    .cornerRadius(4)
+                }
+                .buttonStyle(.plain)
+
+                // Sub-agents
+                ForEach(children) { child in
+                    Button(action: { onSelectAgent(child.id) }) {
+                        HStack(spacing: 8) {
+                            Spacer().frame(width: 28)
+
+                            Image(systemName: "arrow.turn.down.right")
+                                .font(.caption2)
+                                .foregroundColor(Color(hex: "#00BCD4").opacity(0.5))
+
+                            Text(child.role.emoji)
+                                .font(.caption)
+
+                            Text(child.name)
+                                .font(.caption)
+                                .foregroundColor(.white)
+
+                            Spacer()
+
+                            StatusIndicator(status: child.status, size: 8)
+                        }
+                        .padding(.vertical, 3)
+                        .padding(.horizontal, 6)
+                        .background(selectedAgentId == child.id ? Color.blue.opacity(0.2) : Color.clear)
+                        .cornerRadius(4)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Divider()
+                    .background(Color.white.opacity(0.05))
+                    .padding(.vertical, 2)
+            }
+        }
+    }
+}
+
+// MARK: - Single-team tree node
 
 struct AgentTreeNode: View {
     let agent: Agent

@@ -9,11 +9,17 @@ class CLIProcess: ObservableObject, Identifiable {
     let prompt: String
     let workingDirectory: String
 
+    let resumeSessionId: String?
+
     @Published var isRunning = false
     @Published var outputEntries: [CLIOutputEntry] = []
     @Published var toolCallCount: Int = 0
+    @Published var sessionId: String?
 
     private var process: Process?
+    private var hasPendingQuestion = false
+    private var hasPendingPlanReview = false
+    private var isInPlanMode = false
 
     // Callbacks
     var onStatusChange: ((AgentStatus) -> Void)?
@@ -21,6 +27,8 @@ class CLIProcess: ObservableObject, Identifiable {
     var onCompleted: ((String) -> Void)?
     var onFailed: ((String) -> Void)?
     var onDangerousCommand: ((String, String, String) -> Void)?  // (tool, input, reason)
+    var onAskUserQuestion: ((String, String) -> Void)?  // (sessionId, inputJSON)
+    var onPlanReview: ((String, String) -> Void)?  // (sessionId, inputJSON)
 
     private static let maxOutputEntries = 500
 
@@ -28,12 +36,13 @@ class CLIProcess: ObservableObject, Identifiable {
     private let stdoutBuffer = LineBuffer()
     private let stderrBuffer = LineBuffer()
 
-    init(id: UUID = UUID(), taskId: UUID, agentId: UUID, prompt: String, workingDirectory: String) {
+    init(id: UUID = UUID(), taskId: UUID, agentId: UUID, prompt: String, workingDirectory: String, resumeSessionId: String? = nil) {
         self.id = id
         self.taskId = taskId
         self.agentId = agentId
         self.prompt = prompt
         self.workingDirectory = workingDirectory
+        self.resumeSessionId = resumeSessionId
     }
 
     func start() {
@@ -45,7 +54,12 @@ class CLIProcess: ObservableObject, Identifiable {
 
         let (execURL, extraArgs) = Self.resolveExecutable()
         process.executableURL = execURL
-        process.arguments = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions"]
+
+        var args = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions"]
+        if let resumeId = resumeSessionId {
+            args.append(contentsOf: ["--resume", resumeId])
+        }
+        process.arguments = args
         process.currentDirectoryURL = URL(fileURLWithPath: workingDirectory)
         process.standardOutput = outputPipe
         process.standardError = errorPipe
@@ -165,6 +179,12 @@ class CLIProcess: ObservableObject, Identifiable {
 
     private func handleEvent(_ event: CLIStreamEvent) {
         switch event {
+        case .system(let sid):
+            if let sid = sid, sessionId == nil {
+                sessionId = sid
+                appendEntry(.systemInfo, "Session: \(sid)")
+            }
+
         case .assistantText(let text):
             let preview = String(text.prefix(300))
             appendEntry(.assistantThinking, preview)
@@ -177,6 +197,34 @@ class CLIProcess: ObservableObject, Identifiable {
             let estimatedProgress = min(Double(toolCallCount) / 20.0, 0.9)
             onProgressEstimate?(estimatedProgress)
 
+            // Check for AskUserQuestion
+            if tool == "AskUserQuestion" {
+                appendEntry(.askQuestion, "Agent is asking a question...")
+                if let sid = sessionId {
+                    hasPendingQuestion = true
+                    onAskUserQuestion?(sid, input)
+                } else {
+                    appendEntry(.error, "Cannot show question: no session ID available")
+                }
+            }
+
+            // Check for plan mode
+            if tool == "EnterPlanMode" {
+                isInPlanMode = true
+                appendEntry(.planMode, "Entering plan mode...")
+                onStatusChange?(.thinking)
+            }
+            if tool == "ExitPlanMode" {
+                isInPlanMode = false
+                appendEntry(.planMode, "Plan ready for review")
+                if let sid = sessionId {
+                    hasPendingPlanReview = true
+                    onPlanReview?(sid, input)
+                } else {
+                    appendEntry(.error, "Cannot show plan: no session ID available")
+                }
+            }
+
             // Check for dangerous commands
             let level = DangerousCommandClassifier.classify(tool: tool, input: input)
             if case .dangerous(let reason) = level {
@@ -188,7 +236,10 @@ class CLIProcess: ObservableObject, Identifiable {
             let preview = String(output.prefix(200))
             appendEntry(.toolOutput, preview)
 
-        case .resultSuccess(let result, let costUSD, let durationMs, _):
+        case .resultSuccess(let result, let costUSD, let durationMs, let sid):
+            if let sid = sid, sessionId == nil {
+                sessionId = sid
+            }
             let preview = String(result.prefix(500))
             appendEntry(.finalResult, preview)
             if let cost = costUSD {
@@ -217,6 +268,12 @@ class CLIProcess: ObservableObject, Identifiable {
         } else if exitCode == 15 || exitCode == 9 {
             appendEntry(.systemInfo, "Process was cancelled")
             onStatusChange?(.idle)
+        } else if hasPendingQuestion {
+            // Process ended because AskUserQuestion can't get input in -p mode
+            appendEntry(.systemInfo, "Process paused for user question")
+        } else if hasPendingPlanReview {
+            // Process ended because ExitPlanMode can't get approval in -p mode
+            appendEntry(.systemInfo, "Process paused for plan review")
         } else {
             appendEntry(.error, "Process exited with code: \(exitCode)")
             onStatusChange?(.error)
@@ -293,17 +350,21 @@ class CLIProcessManager: ObservableObject {
         agentId: UUID,
         prompt: String,
         workingDirectory: String,
+        resumeSessionId: String? = nil,
         onStatusChange: @escaping (UUID, AgentStatus) -> Void,
         onProgress: @escaping (UUID, Double) -> Void,
         onCompleted: @escaping (UUID, String) -> Void,
         onFailed: @escaping (UUID, String) -> Void,
-        onDangerousCommand: ((UUID, UUID, String, String, String) -> Void)? = nil
+        onDangerousCommand: ((UUID, UUID, String, String, String) -> Void)? = nil,
+        onAskUserQuestion: ((UUID, UUID, String, String) -> Void)? = nil,
+        onPlanReview: ((UUID, UUID, String, String) -> Void)? = nil
     ) -> CLIProcess {
         let cliProcess = CLIProcess(
             taskId: taskId,
             agentId: agentId,
             prompt: prompt,
-            workingDirectory: workingDirectory
+            workingDirectory: workingDirectory,
+            resumeSessionId: resumeSessionId
         )
 
         cliProcess.onStatusChange = { status in
@@ -320,6 +381,12 @@ class CLIProcessManager: ObservableObject {
         }
         cliProcess.onDangerousCommand = { tool, input, reason in
             onDangerousCommand?(taskId, agentId, tool, input, reason)
+        }
+        cliProcess.onAskUserQuestion = { sessionId, inputJSON in
+            onAskUserQuestion?(taskId, agentId, sessionId, inputJSON)
+        }
+        cliProcess.onPlanReview = { sessionId, inputJSON in
+            onPlanReview?(taskId, agentId, sessionId, inputJSON)
         }
 
         processes[taskId] = cliProcess

@@ -1,5 +1,4 @@
 import SceneKit
-import SpriteKit
 
 struct SpaceStationThemeBuilder: SceneThemeBuilder {
     let theme: SceneTheme = .spaceStation
@@ -12,7 +11,6 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         room.name = "spaceStation_environment"
 
         let w = CGFloat(dimensions.width)
-        let h = CGFloat(dimensions.height)
         let d = CGFloat(dimensions.depth)
 
         // Metallic floor
@@ -29,56 +27,6 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
 
         // Floor glow grid
         addFloorGlowGrid(to: room, dimensions: dimensions)
-
-        // Metal wall panels
-        let wallMaterial = SCNMaterial()
-        wallMaterial.diffuse.contents = NSColor(hex: palette.wallColor)
-        wallMaterial.metalness.contents = 0.5
-        wallMaterial.roughness.contents = 0.3
-
-        // Back wall with window cutouts
-        let backWall = SCNBox(width: w, height: h, length: 0.15, chamferRadius: 0)
-        backWall.materials = [wallMaterial]
-        let backWallNode = SCNNode(geometry: backWall)
-        backWallNode.position = SCNVector3(0, Float(h) / 2.0, -2.0)
-        backWallNode.name = "backWall"
-        room.addChildNode(backWallNode)
-
-        // Windows on back wall (starfield views)
-        let windowPositions: [Float] = [-4.0, 0.0, 4.0]
-        for (i, xPos) in windowPositions.enumerated() {
-            let window = buildStarfieldWindow(width: 2.0, height: 1.5)
-            window.position = SCNVector3(xPos, Float(h) * 0.55, -1.9)
-            window.name = "window_\(i)"
-            room.addChildNode(window)
-        }
-
-        // Side walls
-        let sideWall = SCNBox(width: 0.15, height: h, length: d, chamferRadius: 0)
-        sideWall.materials = [wallMaterial]
-
-        let leftWall = SCNNode(geometry: sideWall)
-        leftWall.position = SCNVector3(-Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        leftWall.name = "leftWall"
-        room.addChildNode(leftWall)
-
-        let rightWall = SCNNode(geometry: sideWall.copy() as? SCNGeometry ?? sideWall)
-        rightWall.position = SCNVector3(Float(w) / 2.0, Float(h) / 2.0, Float(d) / 2.0 - 2.0)
-        rightWall.name = "rightWall"
-        room.addChildNode(rightWall)
-
-        // Ceiling with visible panels
-        let ceiling = SCNBox(width: w, height: 0.15, length: d, chamferRadius: 0)
-        let ceilingMaterial = SCNMaterial()
-        ceilingMaterial.diffuse.contents = NSColor(hex: "#1E1E3E")
-        ceilingMaterial.metalness.contents = 0.4
-        ceiling.materials = [ceilingMaterial]
-        let ceilingNode = SCNNode(geometry: ceiling)
-        ceilingNode.position = SCNVector3(0, Float(h), Float(d) / 2.0 - 2.0)
-        room.addChildNode(ceilingNode)
-
-        // Wall seam lines
-        addWallSeams(to: room, dimensions: dimensions)
 
         return room
     }
@@ -274,14 +222,40 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         return display
     }
 
+    // MARK: - Agent Floor Tile
+
+    func buildAgentFloorTile(isLeader: Bool) -> SCNNode {
+        let tile = SCNBox(width: 1.2, height: 0.1, length: 1.2, chamferRadius: 0)
+        let material = SCNMaterial()
+        material.diffuse.contents = NSColor(hex: palette.floorColor)
+        material.metalness.contents = 0.6
+        material.roughness.contents = 0.4
+        tile.materials = [material]
+        let node = SCNNode(geometry: tile)
+        node.name = "agentFloorTile"
+
+        // Glow edge ring
+        let ring = SCNBox(width: 1.22, height: 0.02, length: 1.22, chamferRadius: 0)
+        let ringMaterial = SCNMaterial()
+        ringMaterial.diffuse.contents = NSColor(hex: palette.accentColorSecondary).withAlphaComponent(0.3)
+        ringMaterial.emission.contents = NSColor(hex: palette.accentColorSecondary)
+        ringMaterial.emission.intensity = 0.4
+        ring.materials = [ringMaterial]
+        let ringNode = SCNNode(geometry: ring)
+        ringNode.position = SCNVector3(0, 0.06, 0)
+        node.addChildNode(ringNode)
+
+        return node
+    }
+
     // MARK: - Lighting
 
     func applyLighting(to scene: SCNScene, intensity: Float) {
         // Cold blue-purple ambient
         let ambient = SCNLight()
         ambient.type = .ambient
-        ambient.color = NSColor(hex: "#1A1A3E")
-        ambient.intensity = CGFloat(intensity * 0.25)
+        ambient.color = NSColor(hex: "#2A2A5E")
+        ambient.intensity = CGFloat(intensity * 0.5)
         let ambientNode = SCNNode()
         ambientNode.light = ambient
         ambientNode.name = "ambientLight"
@@ -291,7 +265,7 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         let mainSpot = SCNLight()
         mainSpot.type = .spot
         mainSpot.color = NSColor(hex: "#E0E8FF")
-        mainSpot.intensity = CGFloat(intensity * 0.8)
+        mainSpot.intensity = CGFloat(intensity * 1.2)
         mainSpot.spotInnerAngle = 30
         mainSpot.spotOuterAngle = 60
         mainSpot.castsShadow = true
@@ -307,7 +281,7 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         let leftAccent = SCNLight()
         leftAccent.type = .spot
         leftAccent.color = NSColor(hex: palette.accentColor)
-        leftAccent.intensity = CGFloat(intensity * 0.3)
+        leftAccent.intensity = CGFloat(intensity * 0.5)
         leftAccent.spotInnerAngle = 40
         leftAccent.spotOuterAngle = 70
         let leftNode = SCNNode()
@@ -321,7 +295,7 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         let rightAccent = SCNLight()
         rightAccent.type = .spot
         rightAccent.color = NSColor(hex: palette.accentColorSecondary)
-        rightAccent.intensity = CGFloat(intensity * 0.3)
+        rightAccent.intensity = CGFloat(intensity * 0.5)
         rightAccent.spotInnerAngle = 40
         rightAccent.spotOuterAngle = 70
         let rightNode = SCNNode()
@@ -336,7 +310,7 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
             let stripLight = SCNLight()
             stripLight.type = .omni
             stripLight.color = NSColor(hex: palette.accentColor)
-            stripLight.intensity = CGFloat(intensity * 0.15)
+            stripLight.intensity = CGFloat(intensity * 0.3)
             stripLight.attenuationStartDistance = 0
             stripLight.attenuationEndDistance = 4.0
             let stripNode = SCNNode()
@@ -361,15 +335,6 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
             symbol.position = SCNVector3(pos.0, pos.1, pos.2)
             symbol.name = "holoSymbol_\(i)"
             decorations.addChildNode(symbol)
-        }
-
-        // Ceiling pipes
-        let pipePositions: [(Float, Float)] = [(-3, 0), (3, 0), (-3, 6), (3, 6)]
-        for (i, pos) in pipePositions.enumerated() {
-            let pipe = buildCeilingPipe(length: CGFloat(dimensions.depth) * 0.7)
-            pipe.position = SCNVector3(pos.0, dimensions.height - 0.3, pos.1)
-            pipe.name = "pipe_\(i)"
-            decorations.addChildNode(pipe)
         }
 
         return decorations
@@ -408,93 +373,6 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         }
     }
 
-    private func addWallSeams(to room: SCNNode, dimensions: RoomDimensions) {
-        let seamMaterial = SCNMaterial()
-        seamMaterial.diffuse.contents = NSColor(hex: "#0A0A1E")
-        seamMaterial.emission.contents = NSColor(hex: palette.accentColor)
-        seamMaterial.emission.intensity = 0.2
-
-        // Horizontal seams on back wall
-        let panelHeight: Float = 1.5
-        let seamCount = Int(dimensions.height / panelHeight)
-        for i in 1..<seamCount {
-            let seam = SCNBox(width: CGFloat(dimensions.width) + 0.01, height: 0.01, length: 0.16, chamferRadius: 0)
-            seam.materials = [seamMaterial]
-            let seamNode = SCNNode(geometry: seam)
-            seamNode.position = SCNVector3(0, Float(i) * panelHeight, -2.0)
-            room.addChildNode(seamNode)
-        }
-    }
-
-    private func buildStarfieldWindow(width: CGFloat, height: CGFloat) -> SCNNode {
-        let window = SCNNode()
-
-        // Window frame (recessed)
-        let frame = SCNBox(width: width + 0.1, height: height + 0.1, length: 0.05, chamferRadius: 0.02)
-        let frameMaterial = SCNMaterial()
-        frameMaterial.diffuse.contents = NSColor(hex: "#1A1A3E")
-        frameMaterial.metalness.contents = 0.5
-        frame.materials = [frameMaterial]
-        let frameNode = SCNNode(geometry: frame)
-        window.addChildNode(frameNode)
-
-        // Starfield content (SpriteKit)
-        let starPlane = SCNPlane(width: width, height: height)
-        let starMaterial = SCNMaterial()
-        let starScene = createStarfieldScene(width: 512, height: 384)
-        starMaterial.diffuse.contents = starScene
-        starMaterial.emission.contents = starScene
-        starMaterial.emission.intensity = 0.3
-        starPlane.materials = [starMaterial]
-        let starNode = SCNNode(geometry: starPlane)
-        starNode.position = SCNVector3(0, 0, 0.03)
-        window.addChildNode(starNode)
-
-        return window
-    }
-
-    private func createStarfieldScene(width: CGFloat, height: CGFloat) -> SKScene {
-        let scene = SKScene(size: CGSize(width: width, height: height))
-        scene.backgroundColor = NSColor(hex: "#000005")
-
-        // Stars
-        for _ in 0..<80 {
-            let star = SKShapeNode(circleOfRadius: CGFloat.random(in: 0.5...2.0))
-            star.fillColor = .white
-            star.strokeColor = .clear
-            star.position = CGPoint(
-                x: CGFloat.random(in: 0...width),
-                y: CGFloat.random(in: 0...height)
-            )
-            star.alpha = CGFloat.random(in: 0.3...1.0)
-
-            let twinkle = SKAction.repeatForever(
-                SKAction.sequence([
-                    SKAction.fadeAlpha(to: CGFloat.random(in: 0.2...0.5), duration: Double.random(in: 0.5...2)),
-                    SKAction.fadeAlpha(to: CGFloat.random(in: 0.7...1.0), duration: Double.random(in: 0.5...2))
-                ])
-            )
-            star.run(twinkle)
-            scene.addChild(star)
-        }
-
-        // Distant nebula (colored glow)
-        let nebula = SKShapeNode(circleOfRadius: 40)
-        nebula.fillColor = NSColor(hex: "#4A0E8F").withAlphaComponent(0.3)
-        nebula.strokeColor = .clear
-        nebula.position = CGPoint(x: width * 0.7, y: height * 0.4)
-        nebula.setScale(2.0)
-        scene.addChild(nebula)
-
-        let nebula2 = SKShapeNode(circleOfRadius: 30)
-        nebula2.fillColor = NSColor(hex: "#00BCD4").withAlphaComponent(0.15)
-        nebula2.strokeColor = .clear
-        nebula2.position = CGPoint(x: width * 0.3, y: height * 0.7)
-        nebula2.setScale(1.5)
-        scene.addChild(nebula2)
-
-        return scene
-    }
 
     private func buildHoloSymbol() -> SCNNode {
         let symbol = SCNNode()
@@ -527,15 +405,4 @@ struct SpaceStationThemeBuilder: SceneThemeBuilder {
         return symbol
     }
 
-    private func buildCeilingPipe(length: CGFloat) -> SCNNode {
-        let pipe = SCNCylinder(radius: 0.05, height: length)
-        let pipeMaterial = SCNMaterial()
-        pipeMaterial.diffuse.contents = NSColor(hex: palette.structuralColor)
-        pipeMaterial.metalness.contents = 0.7
-        pipeMaterial.roughness.contents = 0.3
-        pipe.materials = [pipeMaterial]
-        let pipeNode = SCNNode(geometry: pipe)
-        pipeNode.eulerAngles.x = CGFloat.pi / 2
-        return pipeNode
-    }
 }

@@ -2,6 +2,7 @@ import Foundation
 
 /// Represents a single JSON event from `claude -p --output-format stream-json`
 enum CLIStreamEvent {
+    case system(sessionId: String?)
     case assistantText(text: String)
     case assistantToolUse(tool: String, input: String)
     case toolResult(tool: String, output: String)
@@ -20,7 +21,8 @@ enum CLIStreamEvent {
 
         switch (type, subtype) {
         case ("system", _):
-            return .unknown(type: "system")
+            let sessionId = json["session_id"] as? String
+            return .system(sessionId: sessionId)
 
         case ("assistant", _):
             // assistant messages contain content blocks
