@@ -1,5 +1,14 @@
 import Foundation
 import Combine
+import SceneKit
+import AppKit
+import UniformTypeIdentifiers
+
+/// Info about a streak that was just broken, used to trigger overlay animation
+struct StreakBreakInfo {
+    let lostStreak: Int
+    let agentName: String
+}
 
 @MainActor
 class AppState: ObservableObject {
@@ -14,11 +23,42 @@ class AppState: ObservableObject {
     @Published var askUserQuestionData: AskUserQuestionData?
     @Published var planReviewData: PlanReviewData?
 
+    // Hover tooltip state
+    @Published var hoveredAgentId: UUID?
+    @Published var hoveredAgentScreenPos: CGPoint?
+
+    // Right-click context menu state
+    @Published var rightClickedAgentId: UUID?
+    @Published var rightClickScreenPos: CGPoint?
+
+    // Drag & Drop state
+    @Published var dragHoveredAgentId: UUID?
+
+    // Streak break state
+    @Published var streakBreakInfo: StreakBreakInfo?
+
+    // Camera state
+    @Published var isPiPEnabled: Bool = false
+    @Published var isFirstPersonMode: Bool = false
+    @Published var firstPersonAgentId: UUID?
+
+    // Mini-map & Exploration state (B6)
+    @Published var isMiniMapVisible: Bool = false
+    @Published var discoveryPopupItem: ExplorationItem?
+
     var localizationManager: LocalizationManager?
     let configLoader = ConfigurationLoader()
     let sceneManager = ThemeableScene()
     let cliProcessManager = CLIProcessManager()
     let workspaceManager = WorkspaceManager()
+    let soundManager = SoundManager()
+    let notificationManager = NotificationManager()
+    let statsManager = AgentStatsManager()
+    let achievementManager = AchievementManager()
+    let timelineManager = TimelineManager()
+    let coinManager = CoinManager()
+    let explorationManager = ExplorationManager()
+    private let dayNightController = DayNightCycleController()
 
     /// Tracks teams that are currently being disbanded (animation in progress)
     @Published var disbandingTeamIds: Set<UUID> = []
@@ -30,19 +70,29 @@ class AppState: ObservableObject {
 
     private static let themeKey = "selectedTheme"
 
+    private static let miniMapKey = "miniMapVisible"
+
     init() {
         if let saved = UserDefaults.standard.string(forKey: Self.themeKey),
            let theme = SceneTheme(rawValue: saved) {
             currentTheme = theme
             showSceneSelection = false
         }
+        isMiniMapVisible = UserDefaults.standard.bool(forKey: Self.miniMapKey)
     }
 
     func setTheme(_ theme: SceneTheme) {
         currentTheme = theme
         UserDefaults.standard.set(theme.rawValue, forKey: Self.themeKey)
         showSceneSelection = false
-        rebuildScene()
+        achievementManager.onThemeUsed(theme.rawValue)
+
+        // Play transition animation, then rebuild
+        sceneManager.playSceneTransition { [weak self] in
+            Task { @MainActor in
+                self?.rebuildScene()
+            }
+        }
     }
 
     func showThemeSelection() {
@@ -52,6 +102,18 @@ class AppState: ObservableObject {
     var selectedAgent: Agent? {
         guard let id = selectedAgentId else { return nil }
         return agents.first { $0.id == id }
+    }
+
+    var hoveredAgent: Agent? {
+        guard let id = hoveredAgentId else { return nil }
+        return agents.first { $0.id == id }
+    }
+
+    var hoveredAgentTask: AgentTask? {
+        guard let agent = hoveredAgent else { return nil }
+        // Prefer in-progress task, fallback to latest assigned task
+        return tasks.first { $0.assignedAgentId == agent.id && $0.status == .inProgress }
+            ?? tasks.last { agent.assignedTaskIds.contains($0.id) }
     }
 
     var tasksForSelectedAgent: [AgentTask] {
@@ -169,10 +231,66 @@ class AppState: ObservableObject {
             sceneConfig = config
             sceneManager.buildScene(config: config, agents: agents, themeBuilder: themeBuilder)
         }
+
+        // Start day/night cycle
+        dayNightController.start(in: sceneManager.scene)
+
+        // Apply level badges for existing agents
+        for agent in agents {
+            let stats = statsManager.statsFor(agentName: agent.name)
+            if stats.level > 1 {
+                sceneManager.updateLevelBadge(agentId: agent.id, level: stats.level)
+            }
+        }
+
+        // Apply weather based on success rate
+        applyWeatherEffect()
+
+        // Apply cosmetics from shop
+        applyAllCosmetics()
+
+        // Place exploration items and initialize fog (B6)
+        let themeId = currentTheme.rawValue
+        let roomSize = (sceneConfig ?? defaultSceneConfig()).roomSize
+        explorationManager.initializeDefaultFog(theme: themeId, roomSize: roomSize)
+        let explorationItems = explorationManager.items(for: themeId)
+        sceneManager.placeExplorationItems(explorationItems, discoveredIds: explorationManager.discoveredItemIds)
+    }
+
+    private func applyWeatherEffect() {
+        // Remove existing weather
+        sceneManager.scene.rootNode.childNode(withName: "weatherEffect", recursively: false)?.removeFromParentNode()
+
+        // Calculate success rate from recent tasks
+        let recentTasks = tasks.suffix(10)
+        let completed = recentTasks.filter { $0.status == .completed }.count
+        let failed = recentTasks.filter { $0.status == .failed }.count
+        let total = completed + failed
+        let rate = total > 0 ? Double(completed) / Double(total) : 0.8
+
+        let weather = WeatherEffectBuilder.weatherForSuccessRate(rate)
+        let config = sceneConfig ?? defaultSceneConfig()
+        let weatherNode = WeatherEffectBuilder.buildWeather(weather, dimensions: config.roomSize)
+        sceneManager.scene.rootNode.addChildNode(weatherNode)
     }
 
     func selectAgent(_ id: UUID) {
+        // Clear previous highlight
+        if let prevId = selectedAgentId, prevId != id {
+            sceneManager.unhighlightAgent(prevId)
+        }
         selectedAgentId = id
+        sceneManager.highlightAgent(id)
+    }
+
+    func doubleClickAgent(_ id: UUID) {
+        selectAgent(id)
+        sceneManager.zoomToAgent(id)
+    }
+
+    func rightClickAgent(_ id: UUID, at screenPos: CGPoint) {
+        rightClickedAgentId = id
+        rightClickScreenPos = screenPos
     }
 
     // MARK: - Prompt Task Submission
@@ -188,8 +306,30 @@ class AppState: ObservableObject {
         // 3. Rebuild 3D scene with new layout
         rebuildScene()
 
-        // 4. Submit the task to the new commander
-        submitPromptTask(title: title, assignTo: commander.id)
+        // 4. Walk agents to their desks, then wave
+        let agentIds = newTeamAgents.map(\.id)
+        let walkGroup = DispatchGroup()
+
+        for agent in newTeamAgents {
+            walkGroup.enter()
+            sceneManager.walkAgentToDesk(agent.id) {
+                walkGroup.leave()
+            }
+        }
+
+        walkGroup.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+
+            // Play waving animation after walking to desk
+            for agentId in agentIds {
+                self.sceneManager.playWaveForAgent(agentId)
+            }
+
+            // Submit the task after wave animation completes
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+                self?.submitPromptTask(title: title, assignTo: commander.id)
+            }
+        }
     }
 
     func submitPromptTask(title: String, assignTo agentId: UUID) {
@@ -222,7 +362,61 @@ class AppState: ObservableObject {
         // Auto-select the new task
         selectedTaskId = taskId
 
+        // Record timeline event
+        timelineManager.recordEvent(kind: .taskCreated, taskId: taskId, agentId: agentId, title: "Task created: \(title)")
+
         startCLIProcess(taskId: taskId, agentId: agentId, prompt: title)
+    }
+
+    // MARK: - Drag & Drop Task Assignment
+
+    func assignPendingTaskToAgent(taskId: UUID, agentId: UUID) {
+        guard let taskIdx = tasks.firstIndex(where: { $0.id == taskId }),
+              tasks[taskIdx].status == .pending else { return }
+        guard let agent = agents.first(where: { $0.id == agentId }),
+              agent.status == .idle else { return }
+
+        let descendants = AgentCoordinator.allDescendants(of: agentId, in: agents)
+        let teamIds = [agentId] + descendants.map(\.id)
+
+        tasks[taskIdx].status = .inProgress
+        tasks[taskIdx].assignedAgentId = agentId
+        tasks[taskIdx].teamAgentIds = teamIds
+        tasks[taskIdx].isRealExecution = true
+
+        if let agentIdx = agents.firstIndex(where: { $0.id == agentId }) {
+            agents[agentIdx].assignedTaskIds.append(taskId)
+        }
+        handleAgentStatusChange(agentId, to: .working)
+        selectedTaskId = taskId
+
+        startCLIProcess(taskId: taskId, agentId: agentId, prompt: tasks[taskIdx].title)
+    }
+
+    func reassignAgentToTeam(agentId: UUID, newCommanderId: UUID) {
+        guard let agentIdx = agents.firstIndex(where: { $0.id == agentId }),
+              agents[agentIdx].status == .idle,
+              !agents[agentIdx].isMainAgent,
+              agentId != newCommanderId else { return }
+
+        let oldParentId = agents[agentIdx].parentAgentId
+
+        // Don't reassign to the same team
+        guard oldParentId != newCommanderId else { return }
+
+        // Remove from old parent
+        if let oldParent = oldParentId,
+           let oldParentIdx = agents.firstIndex(where: { $0.id == oldParent }) {
+            agents[oldParentIdx].subAgentIds.removeAll { $0 == agentId }
+        }
+
+        // Add to new parent
+        agents[agentIdx].parentAgentId = newCommanderId
+        if let newParentIdx = agents.firstIndex(where: { $0.id == newCommanderId }) {
+            agents[newParentIdx].subAgentIds.append(agentId)
+        }
+
+        rebuildScene()
     }
 
     func cancelTask(_ taskId: UUID) {
@@ -231,6 +425,9 @@ class AppState: ObservableObject {
             cliProcessManager.cancelProcess(taskId: taskId)
         }
         tasks[idx].status = .failed
+
+        timelineManager.recordEvent(kind: .taskCancelled, taskId: taskId, agentId: tasks[idx].assignedAgentId, title: "Task cancelled: \(tasks[idx].title)")
+
         // Reset commander to idle (sub-agents will be propagated automatically)
         if let leadId = tasks[idx].assignedAgentId {
             handleAgentStatusChange(leadId, to: .idle)
@@ -280,6 +477,11 @@ class AppState: ObservableObject {
                 Task { @MainActor in
                     self?.handlePlanReview(taskId: taskId, agentId: agentId, sessionId: sessionId, inputJSON: inputJSON)
                 }
+            },
+            onOutput: { [weak self] agentId, entry in
+                Task { @MainActor in
+                    self?.handleCLIOutput(agentId: agentId, entry: entry)
+                }
             }
         )
     }
@@ -291,9 +493,79 @@ class AppState: ObservableObject {
         tasks[idx].completedAt = Date()
         tasks[idx].cliResult = result
 
+        timelineManager.recordEvent(kind: .taskCompleted, taskId: taskId, agentId: tasks[idx].assignedAgentId, title: "Task completed: \(tasks[idx].title)")
+
         // Update all team agents to completed
         for agentId in tasks[idx].teamAgentIds {
             handleAgentStatusChange(agentId, to: .completed)
+        }
+
+        // Track stats and achievements
+        let duration = tasks[idx].completedAt.map { $0.timeIntervalSince(tasks[idx].createdAt) } ?? 0
+        let teamSize = tasks[idx].teamAgentIds.count
+        if let leadId = tasks[idx].assignedAgentId,
+           let agent = agents.first(where: { $0.id == leadId }) {
+            let result = statsManager.recordCompletion(agentName: agent.name, duration: duration)
+            if result.leveledUp {
+                soundManager.play(.levelUp)
+                // Show level up particle effect
+                let levelUp = ParticleEffectBuilder.buildLevelUpEffect()
+                levelUp.position = SCNVector3(0, 1.0, 0)
+                if let charPos = sceneManager.agentWorldPosition(leadId) {
+                    levelUp.position = SCNVector3(charPos.x, charPos.y + 1.0, charPos.z)
+                    sceneManager.scene.rootNode.addChildNode(levelUp)
+                }
+
+                // Update level badge
+                let newLevel = statsManager.statsFor(agentName: agent.name).level
+                sceneManager.updateLevelBadge(agentId: leadId, level: newLevel)
+
+                // Apply newly unlocked accessory
+                if let newAccessory = result.unlockedAccessory {
+                    if let agentIdx = agents.firstIndex(where: { $0.id == leadId }) {
+                        agents[agentIdx].appearance.accessory = newAccessory
+                        sceneManager.replaceAccessory(agentId: leadId, accessory: newAccessory, appearance: agents[agentIdx].appearance)
+                    }
+                }
+            }
+            notificationManager.notifyTaskCompleted(taskTitle: tasks[idx].title, agentName: agent.name)
+
+            // Award coins
+            let streak = statsManager.statsFor(agentName: agent.name).currentStreak
+            let coinReward = coinManager.earnCoins(agentName: agent.name, duration: duration, streak: streak)
+            if coinReward.total > 0 {
+                soundManager.play(.coinEarned)
+            }
+        }
+        let beforeCount = achievementManager.unlockedAchievements.count
+        achievementManager.onTaskCompleted(teamSize: teamSize, duration: duration)
+        if achievementManager.unlockedAchievements.count > beforeCount {
+            soundManager.play(.achievement)
+        }
+
+        // B6: Reveal fog and check for discoveries
+        if let leadId = tasks[idx].assignedAgentId,
+           let worldPos = sceneManager.agentWorldPosition(leadId) {
+            let roomSize = (sceneConfig ?? defaultSceneConfig()).roomSize
+            let themeId = currentTheme.rawValue
+            explorationManager.revealFog(around: worldPos, radius: 3.0, theme: themeId, roomSize: roomSize)
+
+            if let discovery = explorationManager.checkAndDiscover(near: worldPos, theme: themeId) {
+                soundManager.play(.discovery)
+                coinManager.awardBonus(discovery.coinReward)
+                sceneManager.removeExplorationItem(itemId: discovery.id)
+                discoveryPopupItem = discovery
+
+                // Check exploration achievements
+                let beforeAch = achievementManager.unlockedAchievements.count
+                achievementManager.onItemDiscovered(
+                    totalDiscovered: explorationManager.totalDiscovered,
+                    fogPercentage: explorationManager.fogRevealPercentage(theme: themeId, roomSize: roomSize)
+                )
+                if achievementManager.unlockedAchievements.count > beforeAch {
+                    soundManager.play(.achievement)
+                }
+            }
         }
     }
 
@@ -302,10 +574,30 @@ class AppState: ObservableObject {
         tasks[idx].status = .failed
         tasks[idx].cliResult = "Error: \(error)"
 
+        timelineManager.recordEvent(kind: .taskFailed, taskId: taskId, agentId: tasks[idx].assignedAgentId, title: "Task failed: \(tasks[idx].title)", detail: String(error.prefix(100)))
+
         // Update lead to error (sub-agents will be propagated to idle automatically)
         if let leadId = tasks[idx].assignedAgentId {
             handleAgentStatusChange(leadId, to: .error)
+
+            // Track failure and check for streak break
+            if let agent = agents.first(where: { $0.id == leadId }) {
+                let lostStreak = statsManager.recordFailure(agentName: agent.name)
+                notificationManager.notifyTaskFailed(taskTitle: tasks[idx].title, agentName: agent.name)
+
+                // Trigger streak-break effects if a streak was lost
+                if lostStreak >= 2 {
+                    soundManager.play(.streakBreak)
+                    sceneManager.playStreakBreakEffect(agentId: leadId, lostStreak: lostStreak)
+                    streakBreakInfo = StreakBreakInfo(lostStreak: lostStreak, agentName: agent.name)
+                    // Auto-dismiss after animation
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                        self?.streakBreakInfo = nil
+                    }
+                }
+            }
         }
+        achievementManager.onTaskFailed()
     }
 
     // MARK: - Dangerous Command Handling
@@ -313,6 +605,13 @@ class AppState: ObservableObject {
     private func handleDangerousCommand(taskId: UUID, agentId: UUID, tool: String, input: String, reason: String) {
         // Set agent to requesting permission animation
         handleAgentStatusChange(agentId, to: .requestingPermission)
+
+        timelineManager.recordEvent(kind: .permissionRequest, taskId: taskId, agentId: agentId, title: "Permission request: \(tool)", detail: reason)
+
+        // Send native notification
+        if let agent = agents.first(where: { $0.id == agentId }) {
+            notificationManager.notifyPermissionRequest(agentName: agent.name, tool: tool)
+        }
 
         // Show alert
         dangerousCommandAlert = DangerousCommandAlertData(
@@ -359,6 +658,8 @@ class AppState: ObservableObject {
 
         // Set agent to waiting animation
         handleAgentStatusChange(agentId, to: .waitingForAnswer)
+
+        timelineManager.recordEvent(kind: .userQuestion, taskId: taskId, agentId: agentId, title: "User question requested")
 
         // Show the question sheet
         askUserQuestionData = parsed
@@ -417,6 +718,8 @@ class AppState: ObservableObject {
         // Set agent to reviewing plan animation
         handleAgentStatusChange(agentId, to: .reviewingPlan)
 
+        timelineManager.recordEvent(kind: .planReview, taskId: taskId, agentId: agentId, title: "Plan review requested")
+
         // Show the plan review sheet
         planReviewData = parsed
     }
@@ -429,6 +732,9 @@ class AppState: ObservableObject {
 
         // Resume agent to working
         handleAgentStatusChange(data.agentId, to: .working)
+
+        // Track achievement
+        achievementManager.onPlanApproved()
 
         // Start a new CLI process with --resume, approving the plan
         startCLIProcess(
@@ -568,6 +874,50 @@ class AppState: ObservableObject {
         rebuildScene()
     }
 
+    // MARK: - Chat Bubble Output
+
+    private func handleCLIOutput(agentId: UUID, entry: CLIOutputEntry) {
+        switch entry.kind {
+        case .assistantThinking:
+            sceneManager.updateChatBubble(
+                agentId: agentId,
+                text: String(entry.text.prefix(60)),
+                style: .thought,
+                toolIcon: nil
+            )
+        case .toolInvocation:
+            // Extract tool name from "Using tool: ToolName"
+            let toolName = entry.text.replacingOccurrences(of: "Using tool: ", with: "")
+            sceneManager.updateChatBubble(
+                agentId: agentId,
+                text: String(entry.text.prefix(50)),
+                style: .speech,
+                toolIcon: ToolIcon.from(toolName: toolName)
+            )
+            // Find associated task for this agent
+            let taskId = tasks.first(where: { $0.assignedAgentId == agentId && $0.status == .inProgress })?.id
+            timelineManager.recordEvent(kind: .toolInvocation, taskId: taskId, agentId: agentId, title: "Tool: \(toolName)", cliEntryId: entry.id)
+        case .toolOutput:
+            sceneManager.updateChatBubble(
+                agentId: agentId,
+                text: String(entry.text.prefix(50)),
+                style: .speech,
+                toolIcon: nil
+            )
+        case .error:
+            sceneManager.updateChatBubble(
+                agentId: agentId,
+                text: "Error: " + String(entry.text.prefix(40)),
+                style: .speech,
+                toolIcon: nil
+            )
+        case .finalResult:
+            sceneManager.hideChatBubble(agentId: agentId)
+        default:
+            break
+        }
+    }
+
     // MARK: - Private
 
     private func handleAgentStatusChange(_ agentId: UUID, to status: AgentStatus) {
@@ -575,6 +925,36 @@ class AppState: ObservableObject {
             agents[idx].status = status
         }
         sceneManager.updateAgentStatus(agentId, to: status)
+
+        // Record significant status changes to timeline
+        switch status {
+        case .working, .completed, .error, .requestingPermission:
+            let taskId = tasks.first(where: { $0.assignedAgentId == agentId && $0.status == .inProgress })?.id
+            timelineManager.recordEvent(kind: .agentStatusChange, taskId: taskId, agentId: agentId, title: "Agent → \(status.rawValue)")
+        default:
+            break
+        }
+
+        // Sound effects
+        switch status {
+        case .completed:
+            soundManager.play(.taskComplete)
+            soundManager.stopTypingSounds()
+            sceneManager.hideChatBubble(agentId: agentId)
+        case .error:
+            soundManager.play(.error)
+            soundManager.stopTypingSounds()
+        case .requestingPermission:
+            soundManager.play(.permissionRequest)
+            soundManager.stopTypingSounds()
+        case .working:
+            soundManager.startTypingSounds()
+        case .idle:
+            soundManager.stopTypingSounds()
+            sceneManager.hideChatBubble(agentId: agentId)
+        default:
+            soundManager.stopTypingSounds()
+        }
 
         // If this is a commander (main agent), propagate status to sub-agents
         if let agent = agents.first(where: { $0.id == agentId }), agent.isMainAgent {
@@ -585,6 +965,11 @@ class AppState: ObservableObject {
                 }
                 sceneManager.updateAgentStatus(sub.id, to: subAgentStatus)
             }
+
+            // Trigger collaboration visit: a sub-agent walks to the commander occasionally
+            if status == .working {
+                triggerCollaborationVisit(commanderId: agentId)
+            }
         }
 
         // If agent completed, check if the whole team is done
@@ -592,6 +977,7 @@ class AppState: ObservableObject {
             if let agent = agents.first(where: { $0.id == agentId }) {
                 let commanderId = agent.isMainAgent ? agent.id : agent.parentAgentId
                 if let commanderId = commanderId {
+                    cancelCollaborationTimer(commanderId: commanderId)
                     scheduleDisbandIfNeeded(commanderId: commanderId)
                 }
             }
@@ -604,6 +990,13 @@ class AppState: ObservableObject {
                 if let commanderId = commanderId {
                     cancelDisbandTimer(commanderId: commanderId)
                 }
+            }
+        }
+
+        // Cancel collaboration timer on error/idle
+        if status == .error || status == .idle {
+            if let agent = agents.first(where: { $0.id == agentId }), agent.isMainAgent {
+                cancelCollaborationTimer(commanderId: agentId)
             }
         }
     }
@@ -665,6 +1058,155 @@ class AppState: ObservableObject {
         if FileManager.default.fileExists(atPath: configDir.path) {
             loadFromDirectory(configDir)
         }
+    }
+
+    // MARK: - Mini-map (B6)
+
+    func toggleMiniMap() {
+        isMiniMapVisible.toggle()
+        UserDefaults.standard.set(isMiniMapVisible, forKey: Self.miniMapKey)
+    }
+
+    func dismissDiscoveryPopup() {
+        discoveryPopupItem = nil
+    }
+
+    // MARK: - Camera Controls
+
+    func togglePiP() {
+        isPiPEnabled.toggle()
+        if !isPiPEnabled {
+            sceneManager.removePiPCamera()
+        }
+    }
+
+    func toggleFirstPerson() {
+        guard let agentId = selectedAgentId else { return }
+        if isFirstPersonMode {
+            exitFirstPerson()
+        } else {
+            isFirstPersonMode = true
+            firstPersonAgentId = agentId
+            sceneManager.enterFirstPerson(agentId: agentId)
+        }
+    }
+
+    func exitFirstPerson() {
+        guard isFirstPersonMode else { return }
+        isFirstPersonMode = false
+        firstPersonAgentId = nil
+        sceneManager.exitFirstPerson()
+    }
+
+    // MARK: - Timeline Export
+
+    func exportTimeline() {
+        let markdown = timelineManager.exportMarkdown(agents: agents, tasks: tasks)
+        let savePanel = NSSavePanel()
+        savePanel.allowedContentTypes = [.plainText]
+        savePanel.nameFieldStringValue = "timeline-report.md"
+        savePanel.begin { response in
+            if response == .OK, let url = savePanel.url {
+                try? markdown.write(to: url, atomically: true, encoding: .utf8)
+            }
+        }
+    }
+
+    // MARK: - Cosmetic System
+
+    /// Apply all equipped cosmetics to an agent's 3D character
+    func applyCosmeticsToAgent(agentName: String) {
+        guard let agent = agents.first(where: { $0.name == agentName }) else { return }
+        let loadout = coinManager.loadout(forAgent: agentName)
+
+        // Apply cosmetic hat
+        if let hatId = loadout.equippedHatId,
+           let item = CosmeticCatalog.item(byId: hatId),
+           let hatStyle = item.hatStyle {
+            sceneManager.applyCosmeticHat(agentId: agent.id, hatStyle: hatStyle, appearance: agent.appearance)
+        } else {
+            sceneManager.removeCosmeticHat(agentId: agent.id)
+            // Restore level-based accessory if any
+            if let accessory = agent.appearance.accessory {
+                sceneManager.replaceAccessory(agentId: agent.id, accessory: accessory, appearance: agent.appearance)
+            }
+        }
+
+        // Apply cosmetic particle
+        if let particleId = loadout.equippedParticleId,
+           let item = CosmeticCatalog.item(byId: particleId),
+           let colorHex = item.particleColorHex {
+            sceneManager.applyCosmeticParticle(agentId: agent.id, colorHex: colorHex, itemId: item.id)
+        } else {
+            sceneManager.removeCosmeticParticle(agentId: agent.id)
+        }
+
+        // Apply name tag with title
+        let title = coinManager.equippedTitle(forAgent: agentName)
+        if title != nil {
+            sceneManager.applyNameTag(agentId: agent.id, agentName: agentName, title: title)
+        } else {
+            sceneManager.removeNameTag(agentId: agent.id)
+        }
+
+        // Apply cosmetic skin
+        if let skinId = loadout.equippedSkinId,
+           let item = CosmeticCatalog.item(byId: skinId),
+           let skinColors = item.skinColors {
+            sceneManager.applyCosmeticSkin(agentId: agent.id, skinColors: skinColors, role: agent.role, hairStyle: agent.appearance.hairStyle)
+        }
+    }
+
+    /// Apply cosmetics for all agents after scene rebuild
+    func applyAllCosmetics() {
+        for agent in agents {
+            applyCosmeticsToAgent(agentName: agent.name)
+        }
+    }
+
+    // MARK: - Collaboration Visit
+
+    /// Periodically trigger a sub-agent to walk over and visit the commander
+    private var collaborationTimers: [UUID: DispatchWorkItem] = [:]
+
+    private func triggerCollaborationVisit(commanderId: UUID) {
+        // Don't schedule if already scheduled
+        guard collaborationTimers[commanderId] == nil else { return }
+
+        let subs = subAgents(of: commanderId)
+        guard !subs.isEmpty else { return }
+
+        // Schedule a visit after a random delay (10-25 seconds)
+        let delay = Double.random(in: 10...25)
+        let workItem = DispatchWorkItem { [weak self] in
+            Task { @MainActor in
+                guard let self = self else { return }
+                self.collaborationTimers.removeValue(forKey: commanderId)
+
+                // Check commander is still working
+                guard let commander = self.agents.first(where: { $0.id == commanderId }),
+                      commander.status == .working else { return }
+
+                // Pick a random sub-agent that isn't already walking
+                let availableSubs = self.subAgents(of: commanderId).filter { !self.sceneManager.isAgentWalking($0.id) }
+                guard let visitor = availableSubs.randomElement() else { return }
+
+                self.sceneManager.visitAgent(visitorId: visitor.id, targetId: commanderId) { [weak self] in
+                    // After visit completes, schedule another if still working
+                    guard let self = self else { return }
+                    if let cmd = self.agents.first(where: { $0.id == commanderId }), cmd.status == .working {
+                        self.triggerCollaborationVisit(commanderId: commanderId)
+                    }
+                }
+            }
+        }
+        collaborationTimers[commanderId] = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+    }
+
+    private func cancelCollaborationTimer(commanderId: UUID) {
+        collaborationTimers[commanderId]?.cancel()
+        collaborationTimers.removeValue(forKey: commanderId)
     }
 
     private func defaultSceneConfig() -> SceneConfiguration {

@@ -56,9 +56,21 @@ struct TaskCompactRow: View {
         appState.selectedTaskId == task.id
     }
 
+    private var isDraggable: Bool {
+        task.status == .pending
+    }
+
     var body: some View {
-        Button(action: { appState.selectTask(task.id) }) {
+        let rowContent = Button(action: { appState.selectTask(task.id) }) {
             HStack(spacing: 8) {
+                // Drag handle for pending tasks
+                if isDraggable {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.caption2)
+                        .foregroundColor(.secondary.opacity(0.6))
+                        .frame(width: 12)
+                }
+
                 // Status icon
                 Image(systemName: statusIcon)
                     .foregroundColor(Color(hex: task.status.hexColor))
@@ -107,6 +119,15 @@ struct TaskCompactRow: View {
             )
         }
         .buttonStyle(.plain)
+
+        if isDraggable {
+            rowContent
+                .onDrag {
+                    NSItemProvider(object: "task:\(task.id.uuidString)" as NSString)
+                }
+        } else {
+            rowContent
+        }
     }
 
     private var statusIcon: String {

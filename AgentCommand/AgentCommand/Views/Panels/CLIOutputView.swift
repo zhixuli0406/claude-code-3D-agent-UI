@@ -3,6 +3,7 @@ import AppKit
 
 struct CLIOutputView: View {
     let entries: [CLIOutputEntry]
+    var scrollToEntryId: UUID?
     @EnvironmentObject var localization: LocalizationManager
     @State private var showCopied = false
 
@@ -58,6 +59,13 @@ struct CLIOutputView: View {
                     if let last = entries.last {
                         withAnimation {
                             proxy.scrollTo(last.id, anchor: .bottom)
+                        }
+                    }
+                }
+                .onChange(of: scrollToEntryId) { _, newId in
+                    if let id = newId {
+                        withAnimation {
+                            proxy.scrollTo(id, anchor: .center)
                         }
                     }
                 }

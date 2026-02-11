@@ -62,18 +62,36 @@ enum CLIStreamEvent {
             }
             return .unknown(type: "user")
 
-        case ("result", "success"),
-             ("result", _) where json["is_error"] as? Bool == false:
-            let result = json["result"] as? String ?? ""
-            let cost = json["cost_usd"] as? Double
-            let duration = json["duration_ms"] as? Int
-            let session = json["session_id"] as? String
-            return .resultSuccess(result: result, costUSD: cost, durationMs: duration, sessionId: session)
+        case ("result", _):
+            // Determine if this is an error result:
+            // - subtype == "error"
+            // - is_error == true (Bool or Int/Number)
+            let isError: Bool = {
+                if subtype == "error" { return true }
+                if let boolVal = json["is_error"] as? Bool { return boolVal }
+                if let numVal = json["is_error"] as? NSNumber { return numVal.boolValue }
+                return false
+            }()
 
-        case ("result", "error"),
-             ("result", _) where json["is_error"] as? Bool == true:
-            let error = json["error"] as? String ?? json["result"] as? String ?? "Unknown error"
-            return .resultError(error: error)
+            if isError {
+                let error = json["error"] as? String
+                    ?? json["error_message"] as? String
+                    ?? json["result"] as? String
+                    ?? json["message"] as? String
+                if error == nil {
+                    // Log the raw JSON so we can diagnose unexpected error formats
+                    if let rawStr = String(data: data, encoding: .utf8) {
+                        print("[CLIStreamEvent] Error result with no recognized error field. Raw JSON: \(String(rawStr.prefix(1000)))")
+                    }
+                }
+                return .resultError(error: error ?? "Unknown error")
+            } else {
+                let result = json["result"] as? String ?? ""
+                let cost = json["cost_usd"] as? Double
+                let duration = json["duration_ms"] as? Int
+                let session = json["session_id"] as? String
+                return .resultSuccess(result: result, costUSD: cost, durationMs: duration, sessionId: session)
+            }
 
         default:
             return .unknown(type: type)

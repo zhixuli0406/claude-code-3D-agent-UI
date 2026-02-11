@@ -77,6 +77,31 @@ enum Accessory: String, Codable, CaseIterable {
     case glasses
     case headphones
     case hat
+    case crown       // Unlocked at level 5
+    case cape        // Unlocked at level 3
+    case aura        // Unlocked at level 10
+
+    /// Minimum agent level required to unlock this accessory
+    var unlockLevel: Int {
+        switch self {
+        case .glasses, .headphones, .hat: return 1
+        case .cape: return 3
+        case .crown: return 5
+        case .aura: return 10
+        }
+    }
+
+    /// Accessories unlocked at or above the given level
+    static func unlockedAccessories(forLevel level: Int) -> [Accessory] {
+        allCases.filter { $0.unlockLevel <= level }
+    }
+
+    /// The next accessory that will be unlocked after the given level
+    static func nextUnlock(forLevel level: Int) -> Accessory? {
+        allCases
+            .filter { $0.unlockLevel > level }
+            .min(by: { $0.unlockLevel < $1.unlockLevel })
+    }
 }
 
 struct ScenePosition: Codable, Hashable {

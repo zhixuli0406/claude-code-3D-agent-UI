@@ -25,7 +25,10 @@ struct AgentHierarchyView: View {
                         selectedAgentId: appState.selectedAgentId,
                         onSelectAgent: { appState.selectAgent($0) },
                         teamLabel: localization.localized(.teamLabel),
-                        isDisbanding: isDisbanding
+                        isDisbanding: isDisbanding,
+                        onReassignAgent: { agentId, newCommanderId in
+                            appState.reassignAgentToTeam(agentId: agentId, newCommanderId: newCommanderId)
+                        }
                     )
                     .opacity(isDisbanding ? 0.4 : 1.0)
                     .animation(.easeInOut(duration: 0.5), value: isDisbanding)
@@ -44,12 +47,14 @@ struct TeamSection: View {
     let onSelectAgent: (UUID) -> Void
     let teamLabel: String
     var isDisbanding: Bool = false
+    var onReassignAgent: ((UUID, UUID) -> Void)?
 
     @State private var isExpanded = true
+    @State private var isDropTargeted = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            // Team header (expand/collapse only)
+            // Team header (expand/collapse + drop target for agent reassignment)
             Button(action: {
                 withAnimation { isExpanded.toggle() }
             }) {
@@ -74,9 +79,30 @@ struct TeamSection: View {
                 }
                 .padding(.vertical, 5)
                 .padding(.horizontal, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(isDropTargeted ? Color(hex: "#4CAF50").opacity(0.2) : Color.clear)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(isDropTargeted ? Color(hex: "#4CAF50").opacity(0.6) : Color.clear, lineWidth: 1.5)
+                )
                 .cornerRadius(4)
             }
             .buttonStyle(.plain)
+            .onDrop(of: [.plainText], isTargeted: $isDropTargeted) { providers in
+                guard let provider = providers.first else { return false }
+                provider.loadObject(ofClass: NSString.self) { object, _ in
+                    guard let payload = object as? String,
+                          payload.hasPrefix("agent:") else { return }
+                    let agentIdString = String(payload.dropFirst("agent:".count))
+                    guard let agentId = UUID(uuidString: agentIdString) else { return }
+                    DispatchQueue.main.async {
+                        onReassignAgent?(agentId, commander.id)
+                    }
+                }
+                return true
+            }
 
             if isExpanded {
                 // Commander row
@@ -103,9 +129,9 @@ struct TeamSection: View {
                 }
                 .buttonStyle(.plain)
 
-                // Sub-agents
+                // Sub-agents (draggable when idle)
                 ForEach(children) { child in
-                    Button(action: { onSelectAgent(child.id) }) {
+                    let childRow = Button(action: { onSelectAgent(child.id) }) {
                         HStack(spacing: 8) {
                             Spacer().frame(width: 28)
 
@@ -130,6 +156,15 @@ struct TeamSection: View {
                         .cornerRadius(4)
                     }
                     .buttonStyle(.plain)
+
+                    if child.status == .idle {
+                        childRow
+                            .onDrag {
+                                NSItemProvider(object: "agent:\(child.id.uuidString)" as NSString)
+                            }
+                    } else {
+                        childRow
+                    }
                 }
 
                 Divider()

@@ -21,7 +21,7 @@ struct SceneSelectionView: View {
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 40) {
+            VStack(spacing: 24) {
                 Spacer()
 
                 // Title
@@ -38,26 +38,33 @@ struct SceneSelectionView: View {
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : -20)
 
-                // Theme cards
-                HStack(spacing: 24) {
-                    ForEach(SceneTheme.allCases) { theme in
-                        ThemeCard(
-                            theme: theme,
-                            isSelected: selectedTheme == theme,
-                            isHovered: hoveredTheme == theme
-                        )
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                selectedTheme = theme
+                // Theme cards in scrollable grid
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVGrid(
+                        columns: Array(repeating: GridItem(.fixed(160), spacing: 16), count: 5),
+                        spacing: 16
+                    ) {
+                        ForEach(SceneTheme.allCases) { theme in
+                            ThemeCard(
+                                theme: theme,
+                                isSelected: selectedTheme == theme,
+                                isHovered: hoveredTheme == theme
+                            )
+                            .onTapGesture {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                    selectedTheme = theme
+                                }
                             }
-                        }
-                        .onHover { hovering in
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                hoveredTheme = hovering ? theme : nil
+                            .onHover { hovering in
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    hoveredTheme = hovering ? theme : nil
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal, 20)
                 }
+                .frame(maxHeight: 500)
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : 30)
 
@@ -125,10 +132,10 @@ struct ThemeCard: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             // Gradient preview area
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 10)
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
@@ -139,30 +146,31 @@ struct ThemeCard: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(height: 120)
+                    .frame(height: 80)
 
                 // Icon
                 Image(systemName: theme.iconSystemName)
-                    .font(.system(size: 36, weight: .medium))
+                    .font(.system(size: 28, weight: .medium))
                     .foregroundColor(.white)
                     .shadow(color: .black.opacity(0.3), radius: 4)
             }
 
             // Title
             Text(theme.localizedName(localization))
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
                 .foregroundColor(.white)
+                .lineLimit(1)
 
             // Description
             Text(theme.localizedDescription(localization))
-                .font(.system(size: 10, design: .monospaced))
+                .font(.system(size: 9, design: .monospaced))
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
-                .lineLimit(3)
-                .frame(height: 40)
+                .lineLimit(2)
+                .frame(height: 28)
         }
-        .padding(12)
-        .frame(width: 200)
+        .padding(10)
+        .frame(width: 160)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(hex: "#1A1A2E").opacity(0.8))

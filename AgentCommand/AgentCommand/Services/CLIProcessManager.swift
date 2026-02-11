@@ -20,6 +20,7 @@ class CLIProcess: ObservableObject, Identifiable {
     private var hasPendingQuestion = false
     private var hasPendingPlanReview = false
     private var isInPlanMode = false
+    private var hasReportedResult = false
 
     // Callbacks
     var onStatusChange: ((AgentStatus) -> Void)?
@@ -29,6 +30,7 @@ class CLIProcess: ObservableObject, Identifiable {
     var onDangerousCommand: ((String, String, String) -> Void)?  // (tool, input, reason)
     var onAskUserQuestion: ((String, String) -> Void)?  // (sessionId, inputJSON)
     var onPlanReview: ((String, String) -> Void)?  // (sessionId, inputJSON)
+    var onOutput: ((CLIOutputEntry) -> Void)?
 
     private static let maxOutputEntries = 500
 
@@ -122,8 +124,16 @@ class CLIProcess: ObservableObject, Identifiable {
                 if let text = String(data: lineData, encoding: .utf8)?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
                    !text.isEmpty {
+                    // Filter out verbose debug noise from --verbose flag
+                    let lower = text.lowercased()
+                    let isDebugNoise = lower.hasPrefix("debug:")
+                        || lower.hasPrefix("[debug]")
+                        || lower.hasPrefix("trace:")
+                        || lower.contains("loading config")
+                        || lower.contains("resolving")
+                    let kind: CLIOutputEntry.Kind = isDebugNoise ? .systemInfo : .error
                     Task { @MainActor in
-                        self.appendEntry(.error, text)
+                        self.appendEntry(kind, text)
                     }
                 }
             }
@@ -173,6 +183,10 @@ class CLIProcess: ObservableObject, Identifiable {
             handleEvent(event)
         } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines),
                   !text.isEmpty {
+            // Log unparsed JSON for debugging
+            if text.hasPrefix("{") {
+                print("[CLIProcess] Unparsed JSON line: \(String(text.prefix(500)))")
+            }
             appendEntry(.systemInfo, text)
         }
     }
@@ -248,14 +262,18 @@ class CLIProcess: ObservableObject, Identifiable {
             if let duration = durationMs {
                 appendEntry(.systemInfo, "Duration: \(duration)ms")
             }
+            hasReportedResult = true
             onProgressEstimate?(1.0)
             onCompleted?(result)
 
         case .resultError(let error):
+            print("[CLIProcess] Result error for agent \(agentId): \(error)")
             appendEntry(.error, error)
+            hasReportedResult = true
             onFailed?(error)
 
-        case .unknown:
+        case .unknown(let unknownType):
+            print("[CLIProcess] Unhandled event type: \(unknownType)")
             break
         }
     }
@@ -264,7 +282,10 @@ class CLIProcess: ObservableObject, Identifiable {
         isRunning = false
         if exitCode == 0 {
             appendEntry(.systemInfo, "Process exited successfully")
-            onStatusChange?(.completed)
+            // Only set completed if we haven't already reported a result
+            if !hasReportedResult {
+                onStatusChange?(.completed)
+            }
         } else if exitCode == 15 || exitCode == 9 {
             appendEntry(.systemInfo, "Process was cancelled")
             onStatusChange?(.idle)
@@ -274,18 +295,32 @@ class CLIProcess: ObservableObject, Identifiable {
         } else if hasPendingPlanReview {
             // Process ended because ExitPlanMode can't get approval in -p mode
             appendEntry(.systemInfo, "Process paused for plan review")
+        } else if hasReportedResult {
+            // Already reported error via resultError event, don't duplicate
+            appendEntry(.systemInfo, "Process exited with code: \(exitCode)")
         } else {
-            appendEntry(.error, "Process exited with code: \(exitCode)")
+            // Collect any stderr content to provide a more meaningful error message
+            let stderrErrors = outputEntries
+                .filter { $0.kind == .error }
+                .map(\.text)
+                .suffix(3)
+                .joined(separator: "; ")
+            let errorMsg = stderrErrors.isEmpty
+                ? "Process exited with code: \(exitCode)"
+                : "Process exited with code \(exitCode): \(stderrErrors)"
+            appendEntry(.error, errorMsg)
             onStatusChange?(.error)
-            onFailed?("Process exited with code: \(exitCode)")
+            onFailed?(errorMsg)
         }
     }
 
     private func appendEntry(_ kind: CLIOutputEntry.Kind, _ text: String) {
-        outputEntries.append(CLIOutputEntry(timestamp: Date(), kind: kind, text: text))
+        let entry = CLIOutputEntry(timestamp: Date(), kind: kind, text: text)
+        outputEntries.append(entry)
         if outputEntries.count > Self.maxOutputEntries {
             outputEntries.removeFirst(outputEntries.count - Self.maxOutputEntries)
         }
+        onOutput?(entry)
     }
 
     private static func resolveExecutable() -> (url: URL, extraArgs: [String]) {
@@ -357,7 +392,8 @@ class CLIProcessManager: ObservableObject {
         onFailed: @escaping (UUID, String) -> Void,
         onDangerousCommand: ((UUID, UUID, String, String, String) -> Void)? = nil,
         onAskUserQuestion: ((UUID, UUID, String, String) -> Void)? = nil,
-        onPlanReview: ((UUID, UUID, String, String) -> Void)? = nil
+        onPlanReview: ((UUID, UUID, String, String) -> Void)? = nil,
+        onOutput: ((UUID, CLIOutputEntry) -> Void)? = nil
     ) -> CLIProcess {
         let cliProcess = CLIProcess(
             taskId: taskId,
@@ -387,6 +423,9 @@ class CLIProcessManager: ObservableObject {
         }
         cliProcess.onPlanReview = { sessionId, inputJSON in
             onPlanReview?(taskId, agentId, sessionId, inputJSON)
+        }
+        cliProcess.onOutput = { entry in
+            onOutput?(agentId, entry)
         }
 
         processes[taskId] = cliProcess

@@ -16,4 +16,12 @@ extension SCNNode {
         material.diffuse.contents = color
         geometry.materials = [material]
     }
+
+    /// Walk up the node hierarchy to find an InteractiveObjectNode ancestor
+    func findParentInteractiveObject() -> InteractiveObjectNode? {
+        if let interactive = self as? InteractiveObjectNode {
+            return interactive
+        }
+        return parent?.findParentInteractiveObject()
+    }
 }

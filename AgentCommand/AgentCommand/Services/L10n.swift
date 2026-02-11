@@ -56,6 +56,11 @@ enum L10nKey: String {
     case themeFloatingIslands, themeFloatingIslandsDesc
     case themeDungeon, themeDungeonDesc
     case themeSpaceStation, themeSpaceStationDesc
+    case themeCyberpunkCity, themeCyberpunkCityDesc
+    case themeMedievalCastle, themeMedievalCastleDesc
+    case themeUnderwaterLab, themeUnderwaterLabDesc
+    case themeJapaneseGarden, themeJapaneseGardenDesc
+    case themeMinecraftOverworld, themeMinecraftOverworldDesc
 
     // TaskPriority
     case priorityLow, priorityMedium, priorityHigh, priorityCritical
@@ -88,6 +93,34 @@ enum L10nKey: String {
     // Multi-team
     case teamLabel, selectTeam, allTeams
     case newTeamAutoCreated, noAgentsYet
+
+    // Sound
+    case sound, helpToggleSound
+
+    // Achievements & Stats
+    case achievements, helpAchievements
+    case achievementGallery, achievementUnlocked
+    case agentStats, noStatsYet
+    case level, nextUnlock
+
+    // B3: Stats Dashboard
+    case statsDashboard, helpStatsDashboard
+    case totalCompleted, successRateLabel, avgTime, totalXPLabel
+    case dailyTasks, dailyXP, noChartData
+    case activeHoursTitle, activeHoursDesc
+
+    // B4: Cosmetic Shop
+    case cosmeticShop, helpCosmeticShop
+    case coins, totalEarned, owned
+    case purchase, equip, unequip, equipped
+    case insufficientFunds, alreadyOwned, notAvailable
+    case selectAgent
+    case seasonalEvent, seasonalNotActive
+
+    // B6: Mini-map & Exploration
+    case miniMap, helpMiniMap
+    case explorationProgress
+    case easterEggFound, loreDiscovered
 }
 
 struct L10n {
@@ -178,6 +211,16 @@ struct L10n {
         .themeDungeonDesc: "地下石造地牢，配備火把照明與寶箱。",
         .themeSpaceStation: "太空站",
         .themeSpaceStationDesc: "金屬軌道站，配備全息顯示器及星空景觀。",
+        .themeCyberpunkCity: "賽博龐克城市",
+        .themeCyberpunkCityDesc: "霓虹燈照亮的街道，配備全息廣告牌與雨水浸潤的巷弄。",
+        .themeMedievalCastle: "中世紀城堡",
+        .themeMedievalCastleDesc: "宏偉的王座大廳，配備石牆、旗幟與騎士代理。",
+        .themeUnderwaterLab: "水下實驗室",
+        .themeUnderwaterLabDesc: "潛水艇研究基地，配備氣泡、魚群與生物發光效果。",
+        .themeJapaneseGarden: "日式庭園",
+        .themeJapaneseGardenDesc: "寧靜的禪園，配備櫻花、石燈籠與錦鯉池。",
+        .themeMinecraftOverworld: "像素世界",
+        .themeMinecraftOverworldDesc: "經典體素地形，配備草方塊、樹木與像素化天空。",
 
         // TaskPriority
         .priorityLow: "低",
@@ -240,6 +283,57 @@ struct L10n {
         .allTeams: "所有團隊",
         .newTeamAutoCreated: "新團隊將自動建立",
         .noAgentsYet: "尚無代理團隊",
+
+        // Sound
+        .sound: "音效",
+        .helpToggleSound: "開啟/關閉音效",
+
+        // Achievements & Stats
+        .achievements: "成就",
+        .helpAchievements: "查看成就展覽",
+        .achievementGallery: "成就展覽",
+        .achievementUnlocked: "成就解鎖！",
+        .agentStats: "代理統計",
+        .noStatsYet: "尚無統計資料。完成任務以獲取經驗值！",
+        .level: "等級",
+        .nextUnlock: "下次解鎖",
+
+        // B3: Stats Dashboard
+        .statsDashboard: "統計儀表板",
+        .helpStatsDashboard: "查看代理統計儀表板",
+        .totalCompleted: "已完成",
+        .successRateLabel: "成功率",
+        .avgTime: "平均時間",
+        .totalXPLabel: "總經驗值",
+        .dailyTasks: "每日任務",
+        .dailyXP: "每日經驗值",
+        .noChartData: "尚無圖表資料。完成任務以生成統計圖表。",
+        .activeHoursTitle: "活躍時段熱力圖",
+        .activeHoursDesc: "顯示您在一天中哪些時段最活躍",
+
+        // B4: Cosmetic Shop
+        .cosmeticShop: "外觀商店",
+        .helpCosmeticShop: "購買與裝備外觀物品",
+        .coins: "金幣",
+        .totalEarned: "總計獲得",
+        .owned: "已擁有",
+        .purchase: "購買",
+        .equip: "裝備",
+        .unequip: "卸下",
+        .equipped: "已裝備",
+        .insufficientFunds: "金幣不足！完成任務以獲取更多金幣。",
+        .alreadyOwned: "您已擁有此物品。",
+        .notAvailable: "此物品目前不可用。",
+        .selectAgent: "選擇代理",
+        .seasonalEvent: "季節活動",
+        .seasonalNotActive: "目前無季節活動。在節日期間再來查看！",
+
+        // B6: Mini-map & Exploration
+        .miniMap: "小地圖",
+        .helpMiniMap: "顯示/隱藏小地圖",
+        .explorationProgress: "探索進度",
+        .easterEggFound: "發現彩蛋！",
+        .loreDiscovered: "發現傳說！",
     ]
 
     // MARK: - English
@@ -320,6 +414,16 @@ struct L10n {
         .themeDungeonDesc: "An underground stone dungeon with torch lighting and treasure chests.",
         .themeSpaceStation: "Space Station",
         .themeSpaceStationDesc: "A metallic orbital station with holographic displays and starfield views.",
+        .themeCyberpunkCity: "Cyberpunk City",
+        .themeCyberpunkCityDesc: "Neon-lit streets with holographic billboards and rain-soaked alleys.",
+        .themeMedievalCastle: "Medieval Castle",
+        .themeMedievalCastleDesc: "A grand throne room with stone walls, banners, and knight agents.",
+        .themeUnderwaterLab: "Underwater Lab",
+        .themeUnderwaterLabDesc: "A submarine research base with bubbles, fish, and bioluminescent glow.",
+        .themeJapaneseGarden: "Japanese Garden",
+        .themeJapaneseGardenDesc: "A serene zen garden with cherry blossoms, stone lanterns, and koi ponds.",
+        .themeMinecraftOverworld: "Minecraft Overworld",
+        .themeMinecraftOverworldDesc: "A classic voxel terrain with grass blocks, trees, and pixelated skies.",
 
         // TaskPriority
         .priorityLow: "Low",
@@ -382,5 +486,56 @@ struct L10n {
         .allTeams: "All Teams",
         .newTeamAutoCreated: "New team will be created",
         .noAgentsYet: "No agent teams yet",
+
+        // Sound
+        .sound: "Sound",
+        .helpToggleSound: "Toggle sound effects",
+
+        // Achievements & Stats
+        .achievements: "Achievements",
+        .helpAchievements: "View achievement gallery",
+        .achievementGallery: "Achievement Gallery",
+        .achievementUnlocked: "Achievement Unlocked!",
+        .agentStats: "Agent Stats",
+        .noStatsYet: "No stats yet. Complete tasks to earn XP!",
+        .level: "Level",
+        .nextUnlock: "Next Unlock",
+
+        // B3: Stats Dashboard
+        .statsDashboard: "Stats Dashboard",
+        .helpStatsDashboard: "View agent stats dashboard",
+        .totalCompleted: "Completed",
+        .successRateLabel: "Success Rate",
+        .avgTime: "Avg Time",
+        .totalXPLabel: "Total XP",
+        .dailyTasks: "Daily Tasks",
+        .dailyXP: "Daily XP",
+        .noChartData: "No chart data yet. Complete tasks to generate charts.",
+        .activeHoursTitle: "Active Hours Heatmap",
+        .activeHoursDesc: "Shows when you're most active throughout the day",
+
+        // B4: Cosmetic Shop
+        .cosmeticShop: "Cosmetic Shop",
+        .helpCosmeticShop: "Purchase and equip cosmetic items",
+        .coins: "Coins",
+        .totalEarned: "Total Earned",
+        .owned: "Owned",
+        .purchase: "Purchase",
+        .equip: "Equip",
+        .unequip: "Unequip",
+        .equipped: "Equipped",
+        .insufficientFunds: "Not enough coins! Earn more by completing tasks.",
+        .alreadyOwned: "You already own this item.",
+        .notAvailable: "This item is not currently available.",
+        .selectAgent: "Select Agent",
+        .seasonalEvent: "Seasonal Event",
+        .seasonalNotActive: "No seasonal events active. Check back during holidays!",
+
+        // B6: Mini-map & Exploration
+        .miniMap: "Mini-Map",
+        .helpMiniMap: "Toggle mini-map",
+        .explorationProgress: "Exploration",
+        .easterEggFound: "Easter Egg Found!",
+        .loreDiscovered: "Lore Discovered!",
     ]
 }

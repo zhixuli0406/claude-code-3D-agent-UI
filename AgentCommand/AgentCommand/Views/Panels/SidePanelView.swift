@@ -81,7 +81,8 @@ struct SidePanelView: View {
                             .padding(.horizontal)
 
                         CLIOutputView(
-                            entries: appState.cliProcessManager.outputEntries(for: taskId)
+                            entries: appState.cliProcessManager.outputEntries(for: taskId),
+                            scrollToEntryId: appState.timelineManager.scrollToEntryId
                         )
                         .padding(.horizontal)
                     }
