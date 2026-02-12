@@ -68,6 +68,7 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - **Notifications** — macOS native notifications with customizable sound effects
 - **Performance Metrics** — Real-time token usage, cost estimation, task duration tracking
 - **Sound Effects** — Completion chimes, error alerts, keyboard sounds, level-up fanfare
+- **Background Music** — Theme-specific procedural ambient music with dynamic intensity that responds to work activity
 
 ### Git Integration Visualization
 
@@ -101,6 +102,11 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 ### Localization
 
 - English and Traditional Chinese (繁體中文) with runtime language switching
+
+### Keyboard Shortcuts
+
+- **F1** — Show/hide help overlay with shortcuts guide
+- **Escape** — Exit first-person view mode
 
 ---
 
@@ -202,9 +208,8 @@ AgentCommand/
 
 See [TODO-features.md](./TODO-features.md) for the full feature backlog. Upcoming items include:
 
-- Agent personality and mood system
 - Spectator mode with live sharing
-- Theme-specific background music
+- Template sharing and community presets
 
 ## License
 

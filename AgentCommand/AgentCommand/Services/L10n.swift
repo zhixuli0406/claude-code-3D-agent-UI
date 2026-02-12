@@ -234,6 +234,26 @@ enum L10nKey: String {
     case useTemplate, browseAllTemplates, noTemplatesFound
     case templateVariablePlaceholder, templateTags
     case searchTemplates
+
+    // F1: Help Overlay
+    case help, helpShowHelp
+    case helpOverlayTitle, helpOKButton
+    case helpKeyboardShortcuts, helpMouseInteractions, helpCameraControls, helpFeatures
+    case helpKeyF1, helpKeyF1Desc
+    case helpKeyEscape, helpKeyEscapeDesc
+    case helpClickAgent, helpClickAgentDesc
+    case helpDoubleClickAgent, helpDoubleClickAgentDesc
+    case helpRightClickAgent, helpRightClickAgentDesc
+    case helpDragTask, helpDragTaskDesc
+    case helpCameraOrbit, helpCameraOrbitDesc
+    case helpCameraZoom, helpCameraZoomDesc
+    case helpCameraPresets, helpCameraPresetsDesc
+    case helpCameraPiP, helpCameraPiPDesc
+    case helpCameraFirstPerson, helpCameraFirstPersonDesc
+
+    // F1: Background Music
+    case backgroundMusic, helpBackgroundMusic
+    case musicVolume, musicIntensity, musicIntensityCalm, musicIntensityActive
 }
 
 struct L10n {
@@ -707,6 +727,46 @@ struct L10n {
         .templateVariablePlaceholder: "輸入數值...",
         .templateTags: "標籤",
         .searchTemplates: "搜尋模板...",
+
+        // F1: Help Overlay
+        .help: "說明",
+        .helpShowHelp: "顯示快捷鍵指南 (F1)",
+        .helpOverlayTitle: "快捷鍵指南",
+        .helpOKButton: "確定",
+        .helpKeyboardShortcuts: "鍵盤快捷鍵",
+        .helpMouseInteractions: "滑鼠互動",
+        .helpCameraControls: "攝影機控制",
+        .helpFeatures: "功能面板",
+        .helpKeyF1: "F1",
+        .helpKeyF1Desc: "顯示/隱藏此快捷鍵指南",
+        .helpKeyEscape: "Escape",
+        .helpKeyEscapeDesc: "退出第一人稱視角模式",
+        .helpClickAgent: "點擊代理",
+        .helpClickAgentDesc: "選擇代理並顯示詳細資訊",
+        .helpDoubleClickAgent: "雙擊代理",
+        .helpDoubleClickAgentDesc: "追蹤與聚焦該代理",
+        .helpRightClickAgent: "右鍵代理",
+        .helpRightClickAgentDesc: "開啟上下文選單（查看日誌、放大、取消任務）",
+        .helpDragTask: "拖曳任務到代理",
+        .helpDragTaskDesc: "將待辦任務拖放到代理上進行指派",
+        .helpCameraOrbit: "滑鼠拖曳",
+        .helpCameraOrbitDesc: "自由環繞 3D 場景",
+        .helpCameraZoom: "雙擊代理",
+        .helpCameraZoomDesc: "平滑縮放至該代理",
+        .helpCameraPresets: "攝影機預設",
+        .helpCameraPresetsDesc: "從工具列選單選擇 Overview、Close-Up 或 Cinematic 視角",
+        .helpCameraPiP: "子母畫面",
+        .helpCameraPiPDesc: "在左下角顯示第二攝影機視角",
+        .helpCameraFirstPerson: "第一人稱視角",
+        .helpCameraFirstPersonDesc: "從代理的視角觀看場景",
+
+        // F1: Background Music
+        .backgroundMusic: "背景音樂",
+        .helpBackgroundMusic: "開啟/關閉背景音樂",
+        .musicVolume: "音樂音量",
+        .musicIntensity: "音樂強度",
+        .musicIntensityCalm: "平靜",
+        .musicIntensityActive: "活躍",
     ]
 
     // MARK: - English
@@ -1170,5 +1230,45 @@ struct L10n {
         .templateVariablePlaceholder: "Enter value...",
         .templateTags: "Tags",
         .searchTemplates: "Search templates...",
+
+        // F1: Help Overlay
+        .help: "Help",
+        .helpShowHelp: "Show keyboard shortcuts guide (F1)",
+        .helpOverlayTitle: "Keyboard Shortcuts Guide",
+        .helpOKButton: "OK",
+        .helpKeyboardShortcuts: "Keyboard Shortcuts",
+        .helpMouseInteractions: "Mouse Interactions",
+        .helpCameraControls: "Camera Controls",
+        .helpFeatures: "Feature Panels",
+        .helpKeyF1: "F1",
+        .helpKeyF1Desc: "Show/hide this shortcuts guide",
+        .helpKeyEscape: "Escape",
+        .helpKeyEscapeDesc: "Exit first-person view mode",
+        .helpClickAgent: "Click Agent",
+        .helpClickAgentDesc: "Select agent and show details",
+        .helpDoubleClickAgent: "Double-Click Agent",
+        .helpDoubleClickAgentDesc: "Track and focus on agent",
+        .helpRightClickAgent: "Right-Click Agent",
+        .helpRightClickAgentDesc: "Open context menu (view logs, zoom, cancel task)",
+        .helpDragTask: "Drag Task to Agent",
+        .helpDragTaskDesc: "Drag pending task onto agent to assign",
+        .helpCameraOrbit: "Mouse Drag",
+        .helpCameraOrbitDesc: "Free orbit around 3D scene",
+        .helpCameraZoom: "Double-Click Agent",
+        .helpCameraZoomDesc: "Smooth zoom to agent",
+        .helpCameraPresets: "Camera Presets",
+        .helpCameraPresetsDesc: "Choose Overview, Close-Up, or Cinematic from toolbar menu",
+        .helpCameraPiP: "Picture-in-Picture",
+        .helpCameraPiPDesc: "Show second camera view in bottom-left corner",
+        .helpCameraFirstPerson: "First-Person View",
+        .helpCameraFirstPersonDesc: "View scene from agent's perspective",
+
+        // F1: Background Music
+        .backgroundMusic: "Background Music",
+        .helpBackgroundMusic: "Toggle background music",
+        .musicVolume: "Music Volume",
+        .musicIntensity: "Music Intensity",
+        .musicIntensityCalm: "Calm",
+        .musicIntensityActive: "Active",
     ]
 }

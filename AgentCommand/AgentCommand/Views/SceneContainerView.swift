@@ -230,8 +230,12 @@ struct SceneContainerView: View {
                 PromptInputBar()
             }
         }
-        // Escape key to exit first-person mode
+        // Escape key to exit first-person mode or close help overlay
         .onKeyPress(.escape) {
+            if appState.isHelpOverlayVisible {
+                appState.isHelpOverlayVisible = false
+                return .handled
+            }
             if appState.isFirstPersonMode {
                 appState.exitFirstPerson()
                 return .handled

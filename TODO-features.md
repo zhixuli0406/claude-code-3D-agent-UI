@@ -179,13 +179,13 @@
 ## F. Audio Features (音效功能)
 
 ### F1. Background Music (背景音樂)
-- [ ] Theme-specific ambient music
+- [x] Theme-specific ambient music
   - Command Center: tech/electronic ambient
   - Floating Islands: peaceful/orchestral
   - Dungeon: dark/mysterious
   - Space Station: sci-fi/synthwave
-- [ ] Dynamic music that intensifies during active work
-- [ ] Volume controls and mute option
+- [x] Dynamic music that intensifies during active work
+- [x] Volume controls and mute option
 
 ### F2. Sound Effects (音效)
 - [x] Task completion chime
@@ -193,7 +193,7 @@
 - [x] Keyboard typing sounds when agent is "coding"
 - [x] Permission request alert
 - [x] Agent level-up fanfare
-- [ ] Ambient environment sounds per theme
+- [x] Ambient environment sounds per theme
 
 ---
 

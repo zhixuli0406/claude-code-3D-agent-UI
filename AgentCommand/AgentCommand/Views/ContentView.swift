@@ -200,6 +200,23 @@ struct ContentView: View {
                 }
                 .help(localization.localized(.helpToggleSound))
 
+                Button(action: { appState.soundManager.isAmbientEnabled.toggle() }) {
+                    Label("Ambient", systemImage: appState.soundManager.isAmbientEnabled ? "music.note" : "music.note.slash")
+                }
+                .help("Toggle ambient environment sounds")
+
+                // Background Music toggle (F1)
+                Button(action: { appState.backgroundMusicManager.isMusicEnabled.toggle() }) {
+                    Label(localization.localized(.backgroundMusic), systemImage: appState.backgroundMusicManager.isMusicEnabled ? "music.quarternote.3" : "music.quarternote.3")
+                }
+                .help(localization.localized(.helpBackgroundMusic))
+
+                // Help overlay (F1)
+                Button(action: { appState.toggleHelpOverlay() }) {
+                    Label(localization.localized(.help), systemImage: "questionmark.circle")
+                }
+                .help(localization.localized(.helpShowHelp))
+
                 WorkspacePicker()
             }
         }
@@ -208,6 +225,13 @@ struct ContentView: View {
             if appState.agents.isEmpty {
                 appState.rebuildScene()
             }
+        }
+        .onKeyPress(phases: .down) { press in
+            if press.key == KeyEquivalent(Character(UnicodeScalar(NSF1FunctionKey)!)) {
+                appState.toggleHelpOverlay()
+                return .handled
+            }
+            return .ignored
         }
         .alert(
             localization.localized(.dangerousCommandDetected),
@@ -287,6 +311,10 @@ struct ContentView: View {
         .sheet(isPresented: $appState.isModelComparisonVisible) {
             ModelComparisonView()
                 .environmentObject(appState)
+                .environmentObject(localization)
+        }
+        .sheet(isPresented: $appState.isHelpOverlayVisible) {
+            HelpOverlayView()
                 .environmentObject(localization)
         }
         .overlay(alignment: .bottom) {

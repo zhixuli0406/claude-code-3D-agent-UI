@@ -92,6 +92,21 @@ enum SceneTheme: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    /// Ambient environment sound identifier for each theme
+    var ambientSound: String {
+        switch self {
+        case .commandCenter: return "commandCenter_ambient"
+        case .floatingIslands: return "floatingIslands_ambient"
+        case .dungeon: return "dungeon_ambient"
+        case .spaceStation: return "spaceStation_ambient"
+        case .cyberpunkCity: return "cyberpunkCity_ambient"
+        case .medievalCastle: return "medievalCastle_ambient"
+        case .underwaterLab: return "underwaterLab_ambient"
+        case .japaneseGarden: return "japaneseGarden_ambient"
+        case .minecraftOverworld: return "minecraftOverworld_ambient"
+        }
+    }
+
     var previewGradientColors: (String, String) {
         switch self {
         case .commandCenter: return ("#1A1A2E", "#0F3460")

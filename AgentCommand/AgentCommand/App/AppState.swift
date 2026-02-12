@@ -68,6 +68,9 @@ class AppState: ObservableObject {
     @Published var selectedModelForNewTeam: ClaudeModel = .sonnet
     @Published var isModelComparisonVisible: Bool = false
 
+    // Help Overlay state (F1 keyboard shortcut)
+    @Published var isHelpOverlayVisible: Bool = false
+
     // Multi-Window Support (D2)
     let windowManager = WindowManager()
 
@@ -90,6 +93,7 @@ class AppState: ObservableObject {
     let gitManager = GitIntegrationManager()
     let promptTemplateManager = PromptTemplateManager()
     let relationshipManager = AgentRelationshipManager()
+    let backgroundMusicManager = BackgroundMusicManager()
     private let dayNightController = DayNightCycleController()
     /// Timer for personality idle behaviors (E1)
     private var idleBehaviorTimer: DispatchWorkItem?
@@ -125,6 +129,14 @@ class AppState: ObservableObject {
            let theme = SceneTheme(rawValue: saved) {
             currentTheme = theme
             showSceneSelection = false
+            // Start ambient environment sound for the restored theme
+            soundManager.playAmbientSound(for: theme)
+            // Start background music for the restored theme
+            backgroundMusicManager.soundManager = soundManager
+            backgroundMusicManager.playThemeMusic(theme)
+        }
+        if backgroundMusicManager.soundManager == nil {
+            backgroundMusicManager.soundManager = soundManager
         }
         isMiniMapVisible = UserDefaults.standard.bool(forKey: Self.miniMapKey)
         // Default to true if key hasn't been set
@@ -160,6 +172,12 @@ class AppState: ObservableObject {
         UserDefaults.standard.set(theme.rawValue, forKey: Self.themeKey)
         showSceneSelection = false
         achievementManager.onThemeUsed(theme.rawValue)
+
+        // Switch ambient environment sound to match the new theme
+        soundManager.playAmbientSound(for: theme)
+
+        // Switch background music to match the new theme
+        backgroundMusicManager.playThemeMusic(theme)
 
         // Play transition animation (agents teleport out, fade, rebuild, agents teleport in)
         sceneManager.playSceneTransition { [weak self] in
@@ -1124,6 +1142,10 @@ class AppState: ObservableObject {
             soundManager.stopTypingSounds()
         }
 
+        // Dynamic background music intensity (F1)
+        let hasWorkingAgents = agents.contains { $0.status == .working }
+        backgroundMusicManager.setIntensity(hasWorkingAgents ? .active : .calm)
+
         // If this is a commander (main agent), propagate status to sub-agents
         if let agent = agents.first(where: { $0.id == agentId }), agent.isMainAgent {
             let subAgentStatus = subAgentStatusFor(commanderStatus: status)
@@ -1255,6 +1277,12 @@ class AppState: ObservableObject {
 
     func toggleTemplateGallery() {
         isTemplateGalleryVisible.toggle()
+    }
+
+    // MARK: - Help Overlay (F1)
+
+    func toggleHelpOverlay() {
+        isHelpOverlayVisible.toggle()
     }
 
     // MARK: - Multi-Model Support (G1)
