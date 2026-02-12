@@ -5,6 +5,8 @@ struct Agent: Identifiable, Codable, Hashable {
     var name: String
     var role: AgentRole
     var status: AgentStatus
+    var selectedModel: ClaudeModel
+    var personality: AgentPersonality
     var appearance: VoxelAppearance
     var position: ScenePosition
     var parentAgentId: UUID?
@@ -12,6 +14,45 @@ struct Agent: Identifiable, Codable, Hashable {
     var assignedTaskIds: [UUID]
 
     var isMainAgent: Bool { parentAgentId == nil }
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, role, status, selectedModel, personality, appearance
+        case position, parentAgentId, subAgentIds, assignedTaskIds
+    }
+
+    init(id: UUID, name: String, role: AgentRole, status: AgentStatus,
+         selectedModel: ClaudeModel = .sonnet,
+         personality: AgentPersonality = AgentPersonality(trait: .calm),
+         appearance: VoxelAppearance,
+         position: ScenePosition, parentAgentId: UUID?,
+         subAgentIds: [UUID], assignedTaskIds: [UUID]) {
+        self.id = id
+        self.name = name
+        self.role = role
+        self.status = status
+        self.selectedModel = selectedModel
+        self.personality = personality
+        self.appearance = appearance
+        self.position = position
+        self.parentAgentId = parentAgentId
+        self.subAgentIds = subAgentIds
+        self.assignedTaskIds = assignedTaskIds
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        role = try container.decode(AgentRole.self, forKey: .role)
+        status = try container.decode(AgentStatus.self, forKey: .status)
+        selectedModel = try container.decodeIfPresent(ClaudeModel.self, forKey: .selectedModel) ?? .sonnet
+        personality = try container.decodeIfPresent(AgentPersonality.self, forKey: .personality) ?? AgentPersonality(trait: .calm)
+        appearance = try container.decode(VoxelAppearance.self, forKey: .appearance)
+        position = try container.decode(ScenePosition.self, forKey: .position)
+        parentAgentId = try container.decodeIfPresent(UUID.self, forKey: .parentAgentId)
+        subAgentIds = try container.decode([UUID].self, forKey: .subAgentIds)
+        assignedTaskIds = try container.decode([UUID].self, forKey: .assignedTaskIds)
+    }
 }
 
 enum AgentRole: String, Codable, CaseIterable {

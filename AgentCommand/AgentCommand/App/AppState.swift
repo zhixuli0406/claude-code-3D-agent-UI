@@ -61,6 +61,13 @@ class AppState: ObservableObject {
     @Published var isGitBranchTreeVisible: Bool = false
     @Published var isGitCommitTimelineVisible: Bool = false
 
+    // Prompt Templates state (G2)
+    @Published var isTemplateGalleryVisible: Bool = false
+
+    // Multi-Model Support state (G1)
+    @Published var selectedModelForNewTeam: ClaudeModel = .sonnet
+    @Published var isModelComparisonVisible: Bool = false
+
     // Multi-Window Support (D2)
     let windowManager = WindowManager()
 
@@ -81,7 +88,11 @@ class AppState: ObservableObject {
     let metricsManager = PerformanceMetricsManager()
     let sessionHistoryManager = SessionHistoryManager()
     let gitManager = GitIntegrationManager()
+    let promptTemplateManager = PromptTemplateManager()
+    let relationshipManager = AgentRelationshipManager()
     private let dayNightController = DayNightCycleController()
+    /// Timer for personality idle behaviors (E1)
+    private var idleBehaviorTimer: DispatchWorkItem?
 
     /// Tracks teams that are currently being disbanded (animation in progress)
     @Published var disbandingTeamIds: Set<UUID> = []
@@ -361,8 +372,8 @@ class AppState: ObservableObject {
     // MARK: - Prompt Task Submission
 
     func submitPromptWithNewTeam(title: String) {
-        // 1. Create a new team
-        let newTeamAgents = AgentFactory.createTeam(subAgentCount: 2)
+        // 1. Create a new team with selected model
+        let newTeamAgents = AgentFactory.createTeam(subAgentCount: 2, model: selectedModelForNewTeam)
         guard let commander = newTeamAgents.first else { return }
 
         // 2. Add new agents
@@ -513,6 +524,9 @@ class AppState: ObservableObject {
     private func startCLIProcess(taskId: UUID, agentId: UUID, prompt: String, resumeSessionId: String? = nil) {
         let workDir = workspaceManager.activeDirectory
 
+        // G1: Look up the agent's selected model
+        let model = agents.first(where: { $0.id == agentId })?.selectedModel ?? .sonnet
+
         // D5: Track task start
         metricsManager.taskStarted(taskId: taskId, agentId: agentId, prompt: prompt)
 
@@ -521,6 +535,7 @@ class AppState: ObservableObject {
             agentId: agentId,
             prompt: prompt,
             workingDirectory: workDir,
+            model: model,
             resumeSessionId: resumeSessionId,
             onStatusChange: { [weak self] agentId, status in
                 Task { @MainActor in
@@ -605,6 +620,10 @@ class AppState: ObservableObject {
                 cliOutputs: gatherCLIOutputs()
             )
         }
+
+        // E1: Update mood and relationships for team agents
+        updateMoodForTeam(teamAgentIds: tasks[idx].teamAgentIds, success: true)
+        recordTeamRelationships(teamAgentIds: tasks[idx].teamAgentIds)
 
         // Update all team agents to completed
         for agentId in tasks[idx].teamAgentIds {
@@ -699,6 +718,9 @@ class AppState: ObservableObject {
                 cliOutputs: gatherCLIOutputs()
             )
         }
+
+        // E1: Update mood for team agents on failure
+        updateMoodForTeam(teamAgentIds: tasks[idx].teamAgentIds, success: false)
 
         // Update lead to error (sub-agents will be propagated to idle automatically)
         if let leadId = tasks[idx].assignedAgentId {
@@ -1145,6 +1167,11 @@ class AppState: ObservableObject {
                 cancelCollaborationTimer(commanderId: agentId)
             }
         }
+
+        // E1: Start/stop idle behavior timer based on status
+        if status == .idle {
+            startIdleBehaviorTimer()
+        }
     }
 
     /// Determine what status sub-agents should have based on their commander's status.
@@ -1222,6 +1249,18 @@ class AppState: ObservableObject {
     func toggleMetrics() {
         isMetricsVisible.toggle()
         UserDefaults.standard.set(isMetricsVisible, forKey: Self.metricsKey)
+    }
+
+    // MARK: - Prompt Templates (G2)
+
+    func toggleTemplateGallery() {
+        isTemplateGalleryVisible.toggle()
+    }
+
+    // MARK: - Multi-Model Support (G1)
+
+    func toggleModelComparison() {
+        isModelComparisonVisible.toggle()
     }
 
     // MARK: - Task Queue (D1)
@@ -1574,6 +1613,104 @@ class AppState: ObservableObject {
 
     func hideGitPRPreviewFromScene() {
         sceneManager.removeGitPRPreview()
+    }
+
+    // MARK: - Agent Personality System (E1)
+
+    /// Update mood for all agents in a team based on task outcome
+    private func updateMoodForTeam(teamAgentIds: [UUID], success: Bool) {
+        for agentId in teamAgentIds {
+            guard let idx = agents.firstIndex(where: { $0.id == agentId }) else { continue }
+
+            if success {
+                let stats = statsManager.statsFor(agentName: agents[idx].name)
+                if stats.currentStreak >= 3 {
+                    agents[idx].personality.mood = .excited
+                } else {
+                    agents[idx].personality.mood = .happy
+                }
+            } else {
+                agents[idx].personality.mood = .stressed
+            }
+
+            // Show mood indicator in 3D scene
+            sceneManager.showMoodIndicator(agentId: agentId, mood: agents[idx].personality.mood)
+
+            // Mood decays back to neutral after some time
+            let capturedMood = agents[idx].personality.mood
+            if capturedMood != .neutral {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { [weak self] in
+                    guard let self = self,
+                          let idx = self.agents.firstIndex(where: { $0.id == agentId }),
+                          self.agents[idx].personality.mood == capturedMood else { return }
+                    self.agents[idx].personality.mood = .neutral
+                }
+            }
+        }
+    }
+
+    /// Record collaboration relationships between team members
+    private func recordTeamRelationships(teamAgentIds: [UUID]) {
+        let names = teamAgentIds.compactMap { id in
+            agents.first { $0.id == id }?.name
+        }
+        // Record pairwise relationships
+        for i in 0..<names.count {
+            for j in (i+1)..<names.count {
+                relationshipManager.recordCollaboration(agentA: names[i], agentB: names[j])
+            }
+        }
+    }
+
+    /// Start a repeating timer that triggers idle behaviors on idle agents
+    private func startIdleBehaviorTimer() {
+        // Don't start if already running
+        guard idleBehaviorTimer == nil else { return }
+
+        scheduleNextIdleBehavior()
+    }
+
+    private func scheduleNextIdleBehavior() {
+        let workItem = DispatchWorkItem { [weak self] in
+            Task { @MainActor in
+                self?.tickIdleBehaviors()
+                self?.scheduleNextIdleBehavior()
+            }
+        }
+        idleBehaviorTimer = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: workItem)
+    }
+
+    /// Stop the idle behavior timer
+    func stopIdleBehaviorTimer() {
+        idleBehaviorTimer?.cancel()
+        idleBehaviorTimer = nil
+    }
+
+    /// Check all idle agents and potentially trigger idle behaviors
+    private func tickIdleBehaviors() {
+        let now = Date()
+        let idleAgents = agents.filter { $0.status == .idle }
+
+        guard !idleAgents.isEmpty else {
+            // No idle agents, stop the timer
+            stopIdleBehaviorTimer()
+            return
+        }
+
+        for agent in idleAgents {
+            guard let idx = agents.firstIndex(where: { $0.id == agent.id }) else { continue }
+            let personality = agents[idx].personality
+            let lastTime = personality.lastIdleBehaviorTime ?? Date.distantPast
+            let elapsed = now.timeIntervalSince(lastTime)
+
+            if elapsed >= personality.idleBehaviorInterval {
+                // Trigger a random idle behavior
+                let behavior = personality.randomIdleBehavior()
+                sceneManager.triggerIdleBehavior(agentId: agent.id, behavior: behavior)
+                agents[idx].personality.lastIdleBehaviorTime = now
+            }
+        }
     }
 
     private func defaultSceneConfig() -> SceneConfiguration {

@@ -205,6 +205,35 @@ enum L10nKey: String {
     case gitCommitFailed, gitPushFailed
     case gitNothingToCommit, gitNoRemote
     case gitStageAllFiles, gitStagedCount
+
+    // G1: Multi-Model Support
+    case modelOpus, modelSonnet, modelHaiku
+    case modelOpusDesc, modelSonnetDesc, modelHaikuDesc
+    case selectModel, helpSelectModel
+    case modelComparison, helpModelComparison
+    case modelSelector, typeComparisonPrompt, compare
+    case modelComparisonResults
+
+    // E1: Agent Personality System
+    case personalityEnergetic, personalityCalm, personalityCurious
+    case personalityFocused, personalitySocial, personalityShy
+    case moodHappy, moodNeutral, moodStressed, moodExcited, moodTired
+    case personality, mood, relationships
+    case relationshipStranger, relationshipAcquaintance, relationshipColleague, relationshipPartner
+    case topCollaborators
+
+    // G2: Prompt Templates
+    case promptTemplates, helpPromptTemplates
+    case templateGallery, addTemplate, editTemplate, deleteTemplate
+    case templateName, templateDescription, templateContent, templateCategory
+    case templateVariables, templatePreview, templateUsageCount
+    case templateSaveSuccess, templateDeleteConfirm
+    case builtInTemplates, customTemplates, recentTemplates
+    case templateCategoryBugFix, templateCategoryFeature
+    case templateCategoryRefactor, templateCategoryReview, templateCategoryCustom
+    case useTemplate, browseAllTemplates, noTemplatesFound
+    case templateVariablePlaceholder, templateTags
+    case searchTemplates
 }
 
 struct L10n {
@@ -610,6 +639,74 @@ struct L10n {
         .gitNoRemote: "未設定遠端倉庫",
         .gitStageAllFiles: "暫存所有變更檔案",
         .gitStagedCount: "已暫存 %d 個檔案",
+
+        // E1: Agent Personality System
+        .personalityEnergetic: "活力充沛",
+        .personalityCalm: "沉穩冷靜",
+        .personalityCurious: "好奇心強",
+        .personalityFocused: "專注認真",
+        .personalitySocial: "善於社交",
+        .personalityShy: "內向害羞",
+        .moodHappy: "開心",
+        .moodNeutral: "平靜",
+        .moodStressed: "壓力大",
+        .moodExcited: "興奮",
+        .moodTired: "疲倦",
+        .personality: "個性",
+        .mood: "心情",
+        .relationships: "關係",
+        .relationshipStranger: "陌生人",
+        .relationshipAcquaintance: "認識",
+        .relationshipColleague: "同事",
+        .relationshipPartner: "夥伴",
+        .topCollaborators: "最佳搭檔",
+
+        // G1: Multi-Model Support
+        .modelOpus: "Opus",
+        .modelSonnet: "Sonnet",
+        .modelHaiku: "Haiku",
+        .modelOpusDesc: "最強大的模型，適用於複雜任務",
+        .modelSonnetDesc: "均衡的模型，兼顧速度與品質",
+        .modelHaikuDesc: "最快速的模型，適用於簡單任務",
+        .selectModel: "選擇模型",
+        .helpSelectModel: "為新團隊選擇 Claude 模型",
+        .modelComparison: "模型比較",
+        .helpModelComparison: "比較不同模型的輸出結果",
+        .modelSelector: "模型選擇器",
+        .typeComparisonPrompt: "輸入比較提示詞...",
+        .compare: "比較",
+        .modelComparisonResults: "比較結果",
+
+        // G2: Prompt Templates
+        .promptTemplates: "提示詞模板",
+        .helpPromptTemplates: "瀏覽與管理提示詞模板",
+        .templateGallery: "模板庫",
+        .addTemplate: "新增模板",
+        .editTemplate: "編輯模板",
+        .deleteTemplate: "刪除模板",
+        .templateName: "模板名稱",
+        .templateDescription: "模板描述",
+        .templateContent: "模板內容",
+        .templateCategory: "模板分類",
+        .templateVariables: "變數",
+        .templatePreview: "預覽",
+        .templateUsageCount: "使用次數",
+        .templateSaveSuccess: "模板已儲存！",
+        .templateDeleteConfirm: "確定要刪除此模板嗎？",
+        .builtInTemplates: "內建模板",
+        .customTemplates: "自訂模板",
+        .recentTemplates: "最近使用",
+        .templateCategoryBugFix: "錯誤修復",
+        .templateCategoryFeature: "新增功能",
+        .templateCategoryRefactor: "程式重構",
+        .templateCategoryReview: "程式碼審查",
+        .templateCategoryCustom: "自訂",
+        .useTemplate: "使用模板",
+        .browseAllTemplates: "瀏覽所有模板",
+        .noTemplatesFound: "找不到符合的模板",
+        .templateVariablePlaceholder: "輸入數值...",
+        .templateTags: "標籤",
+        .searchTemplates: "搜尋模板...",
     ]
 
     // MARK: - English
@@ -1005,5 +1102,73 @@ struct L10n {
         .gitNoRemote: "No remote configured",
         .gitStageAllFiles: "Stage all changed files",
         .gitStagedCount: "%d files staged",
+
+        // E1: Agent Personality System
+        .personalityEnergetic: "Energetic",
+        .personalityCalm: "Calm",
+        .personalityCurious: "Curious",
+        .personalityFocused: "Focused",
+        .personalitySocial: "Social",
+        .personalityShy: "Shy",
+        .moodHappy: "Happy",
+        .moodNeutral: "Neutral",
+        .moodStressed: "Stressed",
+        .moodExcited: "Excited",
+        .moodTired: "Tired",
+        .personality: "Personality",
+        .mood: "Mood",
+        .relationships: "Relationships",
+        .relationshipStranger: "Stranger",
+        .relationshipAcquaintance: "Acquaintance",
+        .relationshipColleague: "Colleague",
+        .relationshipPartner: "Partner",
+        .topCollaborators: "Top Collaborators",
+
+        // G1: Multi-Model Support
+        .modelOpus: "Opus",
+        .modelSonnet: "Sonnet",
+        .modelHaiku: "Haiku",
+        .modelOpusDesc: "Most powerful model for complex tasks",
+        .modelSonnetDesc: "Balanced model for speed and quality",
+        .modelHaikuDesc: "Fastest model for simple tasks",
+        .selectModel: "Select Model",
+        .helpSelectModel: "Choose Claude model for new teams",
+        .modelComparison: "Model Comparison",
+        .helpModelComparison: "Compare outputs from different models",
+        .modelSelector: "Model Selector",
+        .typeComparisonPrompt: "Type comparison prompt...",
+        .compare: "Compare",
+        .modelComparisonResults: "Comparison Results",
+
+        // G2: Prompt Templates
+        .promptTemplates: "Prompt Templates",
+        .helpPromptTemplates: "Browse and manage prompt templates",
+        .templateGallery: "Template Gallery",
+        .addTemplate: "Add Template",
+        .editTemplate: "Edit Template",
+        .deleteTemplate: "Delete Template",
+        .templateName: "Template Name",
+        .templateDescription: "Description",
+        .templateContent: "Template Content",
+        .templateCategory: "Category",
+        .templateVariables: "Variables",
+        .templatePreview: "Preview",
+        .templateUsageCount: "Usage Count",
+        .templateSaveSuccess: "Template Saved!",
+        .templateDeleteConfirm: "Are you sure you want to delete this template?",
+        .builtInTemplates: "Built-in",
+        .customTemplates: "Custom",
+        .recentTemplates: "Recent",
+        .templateCategoryBugFix: "Bug Fix",
+        .templateCategoryFeature: "Feature",
+        .templateCategoryRefactor: "Refactor",
+        .templateCategoryReview: "Review",
+        .templateCategoryCustom: "Custom",
+        .useTemplate: "Use Template",
+        .browseAllTemplates: "Browse All Templates",
+        .noTemplatesFound: "No matching templates found",
+        .templateVariablePlaceholder: "Enter value...",
+        .templateTags: "Tags",
+        .searchTemplates: "Search templates...",
     ]
 }

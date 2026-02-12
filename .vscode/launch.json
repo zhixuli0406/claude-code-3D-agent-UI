@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:claude-code-3D-agent-UI}/AgentCommand",
+            "name": "Debug AgentCommand (AgentCommand)",
+            "target": "AgentCommand",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug AgentCommand (AgentCommand)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:claude-code-3D-agent-UI}/AgentCommand",
+            "name": "Release AgentCommand (AgentCommand)",
+            "target": "AgentCommand",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release AgentCommand (AgentCommand)"
+        }
+    ]
+}

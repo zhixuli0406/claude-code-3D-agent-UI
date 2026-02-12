@@ -25,7 +25,7 @@ struct AgentFactory {
     private static var teamCounter = 0
 
     /// Create a new team: 1 commander + `subAgentCount` sub-agents
-    static func createTeam(subAgentCount: Int = 2) -> [Agent] {
+    static func createTeam(subAgentCount: Int = 2, model: ClaudeModel = .sonnet) -> [Agent] {
         teamCounter += 1
 
         let commanderId = UUID()
@@ -43,6 +43,8 @@ struct AgentFactory {
             name: "\(commanderName) #\(teamCounter)",
             role: .commander,
             status: .idle,
+            selectedModel: model,
+            personality: randomPersonality(for: .commander),
             appearance: randomAppearance(),
             position: ScenePosition(x: 0, y: 0, z: 0, rotation: 0),
             parentAgentId: nil,
@@ -51,7 +53,7 @@ struct AgentFactory {
         )
         agents.append(commander)
 
-        // Sub-agents
+        // Sub-agents inherit the same model from their commander
         let shuffledRoles = subAgentRoles.shuffled()
         let shuffledNames = subAgentNames.shuffled()
         for (i, subId) in subAgentIds.enumerated() {
@@ -62,6 +64,8 @@ struct AgentFactory {
                 name: "\(name) #\(teamCounter)",
                 role: role,
                 status: .idle,
+                selectedModel: model,
+                personality: randomPersonality(for: role),
                 appearance: randomAppearance(),
                 position: ScenePosition(x: 0, y: 0, z: 0, rotation: 0),
                 parentAgentId: commanderId,
@@ -72,6 +76,27 @@ struct AgentFactory {
         }
 
         return agents
+    }
+
+    /// Generate a personality with trait biased by role
+    private static func randomPersonality(for role: AgentRole) -> AgentPersonality {
+        let weightedTraits: [PersonalityTrait]
+        switch role {
+        case .commander:
+            weightedTraits = [.focused, .focused, .calm, .social, .energetic]
+        case .developer:
+            weightedTraits = [.focused, .focused, .calm, .energetic, .curious]
+        case .researcher:
+            weightedTraits = [.curious, .curious, .calm, .focused, .shy]
+        case .reviewer:
+            weightedTraits = [.calm, .calm, .focused, .curious, .shy]
+        case .tester:
+            weightedTraits = [.energetic, .energetic, .curious, .focused, .social]
+        case .designer:
+            weightedTraits = [.curious, .curious, .social, .energetic, .calm]
+        }
+        let trait = weightedTraits.randomElement()!
+        return AgentPersonality(trait: trait)
     }
 
     private static func randomAppearance() -> VoxelAppearance {

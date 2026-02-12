@@ -39,6 +39,24 @@ struct AgentTooltipOverlay: View {
                     .foregroundColor(Color(nsColor: NSColor(hex: agent.status.hexColor)))
             }
 
+            // Model
+            HStack(spacing: 4) {
+                Text(agent.selectedModel.displayName)
+                    .font(.system(size: 10))
+                    .foregroundColor(Color(nsColor: NSColor(hex: agent.selectedModel.hexColor)))
+            }
+
+            // E1: Personality & Mood
+            HStack(spacing: 4) {
+                Text(agent.personality.trait.emoji)
+                    .font(.system(size: 10))
+                Text(agent.personality.trait.displayName)
+                    .font(.system(size: 10))
+                    .foregroundColor(.white.opacity(0.6))
+                Text(agent.personality.mood.emoji)
+                    .font(.system(size: 10))
+            }
+
             // Current task
             if let task = hoveredTask {
                 Divider()

@@ -118,6 +118,18 @@ struct ContentView: View {
                 }
                 .help(localization.localized(.helpSessionHistory))
 
+                // Prompt Templates (G2)
+                Button(action: { appState.isTemplateGalleryVisible = true }) {
+                    Label(localization.localized(.promptTemplates), systemImage: "doc.text.fill")
+                }
+                .help(localization.localized(.helpPromptTemplates))
+
+                // Model Comparison (G1)
+                Button(action: { appState.isModelComparisonVisible = true }) {
+                    Label(localization.localized(.modelComparison), systemImage: "arrow.left.arrow.right")
+                }
+                .help(localization.localized(.helpModelComparison))
+
                 // Git Integration (G3)
                 Button(action: { showGitIntegration = true }) {
                     Label(localization.localized(.gitIntegration), systemImage: "arrow.triangle.branch")
@@ -264,6 +276,16 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showGitIntegration) {
             GitIntegrationView()
+                .environmentObject(appState)
+                .environmentObject(localization)
+        }
+        .sheet(isPresented: $appState.isTemplateGalleryVisible) {
+            PromptTemplateGalleryView()
+                .environmentObject(appState)
+                .environmentObject(localization)
+        }
+        .sheet(isPresented: $appState.isModelComparisonVisible) {
+            ModelComparisonView()
                 .environmentObject(appState)
                 .environmentObject(localization)
         }

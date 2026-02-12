@@ -29,6 +29,16 @@ struct AgentDetailView: View {
                             .font(.caption)
                             .foregroundColor(Color(hex: agent.status.hexColor))
                     }
+
+                    // G1: Model indicator
+                    HStack(spacing: 4) {
+                        Text(agent.selectedModel.localizedName(localization))
+                            .font(.caption)
+                            .foregroundColor(Color(hex: agent.selectedModel.hexColor))
+                        Circle()
+                            .fill(Color(hex: agent.selectedModel.hexColor))
+                            .frame(width: 6, height: 6)
+                    }
                 }
 
                 Spacer()
@@ -36,6 +46,27 @@ struct AgentDetailView: View {
             .padding(10)
             .background(Color.white.opacity(0.05))
             .cornerRadius(8)
+
+            // E1: Personality & Mood
+            HStack(spacing: 8) {
+                // Personality trait
+                HStack(spacing: 4) {
+                    Text(agent.personality.trait.emoji)
+                        .font(.system(size: 10))
+                    Text(agent.personality.trait.localizedName(localization))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                // Mood
+                HStack(spacing: 4) {
+                    Text(agent.personality.mood.emoji)
+                        .font(.system(size: 10))
+                    Text(agent.personality.mood.localizedName(localization))
+                        .font(.caption)
+                        .foregroundColor(Color(hex: agent.personality.mood.hexColor))
+                }
+            }
 
             // Agent info
             if agent.isMainAgent {

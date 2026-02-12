@@ -8,6 +8,7 @@ class CLIProcess: ObservableObject, Identifiable {
     let agentId: UUID
     let prompt: String
     let workingDirectory: String
+    let model: ClaudeModel
 
     let resumeSessionId: String?
 
@@ -39,12 +40,13 @@ class CLIProcess: ObservableObject, Identifiable {
     private let stdoutBuffer = LineBuffer()
     private let stderrBuffer = LineBuffer()
 
-    init(id: UUID = UUID(), taskId: UUID, agentId: UUID, prompt: String, workingDirectory: String, resumeSessionId: String? = nil) {
+    init(id: UUID = UUID(), taskId: UUID, agentId: UUID, prompt: String, workingDirectory: String, model: ClaudeModel = .sonnet, resumeSessionId: String? = nil) {
         self.id = id
         self.taskId = taskId
         self.agentId = agentId
         self.prompt = prompt
         self.workingDirectory = workingDirectory
+        self.model = model
         self.resumeSessionId = resumeSessionId
     }
 
@@ -58,7 +60,7 @@ class CLIProcess: ObservableObject, Identifiable {
         let (execURL, extraArgs) = Self.resolveExecutable()
         process.executableURL = execURL
 
-        var args = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions"]
+        var args = extraArgs + ["-p", prompt, "--output-format", "stream-json", "--verbose", "--dangerously-skip-permissions", "--model", model.cliModelId]
         if let resumeId = resumeSessionId {
             args.append(contentsOf: ["--resume", resumeId])
         }
@@ -92,6 +94,7 @@ class CLIProcess: ObservableObject, Identifiable {
         onStatusChange?(.working)
         appendEntry(.systemInfo, "CLI: \(execURL.path) \(extraArgs.joined(separator: " "))")
         appendEntry(.systemInfo, "Working dir: \(workingDirectory)")
+        appendEntry(.systemInfo, "Model: \(model.displayName) (\(model.cliModelId))")
         appendEntry(.systemInfo, "Process started: \(prompt)")
 
         // Non-blocking stdout reading via readabilityHandler
@@ -387,6 +390,7 @@ class CLIProcessManager: ObservableObject {
         agentId: UUID,
         prompt: String,
         workingDirectory: String,
+        model: ClaudeModel = .opus,
         resumeSessionId: String? = nil,
         onStatusChange: @escaping (UUID, AgentStatus) -> Void,
         onProgress: @escaping (UUID, Double) -> Void,
@@ -402,6 +406,7 @@ class CLIProcessManager: ObservableObject {
             agentId: agentId,
             prompt: prompt,
             workingDirectory: workingDirectory,
+            model: model,
             resumeSessionId: resumeSessionId
         )
 

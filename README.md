@@ -76,6 +76,20 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - **Commit Timeline** — 3D commit history with agent avatar linkage and commit details
 - **PR Workflow** — Create Pull Requests with visual preview card in 3D scene (requires `gh` CLI)
 
+### Multi-Model Support
+
+- **Model Selection** — Choose between Claude Opus, Sonnet, and Haiku models per agent team
+- **Visual Indicators** — Color-coded model badges on 3D characters and agent detail panels
+- **Model Comparison** — Compare outputs from different models side-by-side with parallel execution
+
+### Prompt Templates
+
+- **Template Gallery** — Browse, search, and manage prompt templates with category filtering
+- **Built-in Templates** — 10 pre-built templates for bug fixing, feature development, refactoring, and code review
+- **Custom Templates** — Create, edit, and delete your own reusable prompt templates
+- **Quick-Launch Menu** — Fast template selection directly from the prompt input bar with recent history
+- **Variable Substitution** — Dynamic `{{variable}}` placeholders with live preview and default values
+
 ### CLI Integration
 
 - Spawns and manages Claude Code CLI processes
@@ -191,7 +205,6 @@ See [TODO-features.md](./TODO-features.md) for the full feature backlog. Upcomin
 - Agent personality and mood system
 - Spectator mode with live sharing
 - Theme-specific background music
-- Multi-model support (Opus / Sonnet / Haiku per agent)
 
 ## License
 

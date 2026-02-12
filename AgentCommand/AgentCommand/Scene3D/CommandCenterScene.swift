@@ -111,6 +111,9 @@ class ThemeableScene: ObservableObject {
             floorTile.eulerAngles.y = CGFloat(agent.position.rotation)
             scene.rootNode.addChildNode(floorTile)
 
+            // G1: Set model badge color
+            character.updateModelBadge(agent.selectedModel)
+
             let controller = AgentAnimationController(characterNode: character)
             controller.transitionTo(agent.status)
             animationControllers[agent.id] = controller
@@ -750,6 +753,12 @@ class ThemeableScene: ObservableObject {
         agentNodes[agentId]?.replaceAccessory(accessory, appearance: appearance)
     }
 
+    // MARK: - Model Badge (G1)
+
+    func updateModelBadge(agentId: UUID, model: ClaudeModel) {
+        agentNodes[agentId]?.updateModelBadge(model)
+    }
+
     // MARK: - Wave Animation for New Agents
 
     func playWaveForAgent(_ agentId: UUID) {
@@ -1190,6 +1199,20 @@ class ThemeableScene: ObservableObject {
             }
         }
         return false
+    }
+
+    // MARK: - Personality Idle Behaviors (E1)
+
+    /// Trigger an idle behavior animation on a specific agent
+    func triggerIdleBehavior(agentId: UUID, behavior: IdleBehavior) {
+        guard let character = agentNodes[agentId],
+              !walkingAgents.contains(agentId) else { return }
+        character.playIdleBehavior(behavior)
+    }
+
+    /// Show a mood indicator above an agent
+    func showMoodIndicator(agentId: UUID, mood: AgentMood) {
+        agentNodes[agentId]?.showMoodIndicator(mood)
     }
 
     // MARK: - Git Visualization (G3)

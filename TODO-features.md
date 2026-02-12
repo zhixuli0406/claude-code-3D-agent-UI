@@ -159,10 +159,10 @@
 ## E. Social & Collaboration Features (社交與協作功能)
 
 ### E1. Agent Personality System (代理個性系統)
-- [ ] Each agent has unique personality traits affecting animations
-- [ ] Random idle behaviors (stretching, looking around, coffee break)
-- [ ] Agent mood system influenced by task outcomes
-- [ ] Relationship system between agents (frequent collaborators)
+- [x] Each agent has unique personality traits affecting animations
+- [x] Random idle behaviors (stretching, looking around, coffee break)
+- [x] Agent mood system influenced by task outcomes
+- [x] Relationship system between agents (frequent collaborators)
 
 ### E2. Spectator Mode (觀戰模式)
 - [ ] Share a read-only 3D view link for others to watch
@@ -200,15 +200,15 @@
 ## G. Advanced CLI Integration (進階 CLI 整合)
 
 ### G1. Multi-Model Support (多模型支援)
-- [ ] Select different Claude models per agent (Opus, Sonnet, Haiku)
-- [ ] Visual indicator of which model each agent uses
-- [ ] Compare outputs from different models side-by-side
+- [x] Select different Claude models per agent (Opus, Sonnet, Haiku)
+- [x] Visual indicator of which model each agent uses
+- [x] Compare outputs from different models side-by-side
 
 ### G2. Prompt Templates (提示詞模板)
-- [ ] Save frequently used prompts as templates
-- [ ] Template categories (bug fix, feature, refactor, review)
-- [ ] Quick-launch buttons for common workflows
-- [ ] Template variables for dynamic content
+- [x] Save frequently used prompts as templates
+- [x] Template categories (bug fix, feature, refactor, review)
+- [x] Quick-launch buttons for common workflows
+- [x] Template variables for dynamic content
 
 ### G3. Git Integration Visualization (Git 整合視覺化)
 - [x] Show git diff in 3D space as floating code blocks

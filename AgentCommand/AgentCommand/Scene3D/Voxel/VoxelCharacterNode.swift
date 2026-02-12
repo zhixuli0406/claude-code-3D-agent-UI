@@ -91,6 +91,11 @@ class VoxelCharacterNode: SCNNode {
         let badge = buildRoleBadge(role: role)
         badge.position = SCNVector3(0.3, 0.1, 0.3)
         addChildNode(badge)
+
+        // --- Model badge (small diamond near feet, opposite side) ---
+        let modelBadgeNode = buildModelBadge(model: .sonnet)
+        modelBadgeNode.position = SCNVector3(-0.3, 0.1, 0.3)
+        addChildNode(modelBadgeNode)
     }
 
     private func buildStatusIndicator() -> SCNNode {
@@ -321,6 +326,46 @@ class VoxelCharacterNode: SCNNode {
         return node
     }
 
+    // MARK: - Model Badge
+
+    private func buildModelBadge(model: ClaudeModel) -> SCNNode {
+        let badgeColor = NSColor(hex: model.hexColor)
+
+        let diamond = SCNBox(width: 0.10, height: 0.10, length: 0.10, chamferRadius: 0.01)
+        let material = SCNMaterial()
+        material.diffuse.contents = badgeColor
+        material.emission.contents = badgeColor
+        material.emission.intensity = 0.4
+        diamond.materials = [material]
+
+        let node = SCNNode(geometry: diamond)
+        node.name = "modelBadge"
+
+        // Rotate 45 degrees to create diamond shape
+        node.eulerAngles.y = CGFloat.pi / 4
+        node.eulerAngles.z = CGFloat.pi / 4
+
+        // Slow rotation
+        let rotate = SCNAction.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 6.0)
+        node.runAction(.repeatForever(rotate))
+
+        return node
+    }
+
+    /// Update the model badge color
+    func updateModelBadge(_ model: ClaudeModel) {
+        guard let badgeNode = childNode(withName: "modelBadge", recursively: false),
+              let geometry = badgeNode.geometry as? SCNBox,
+              let material = geometry.materials.first else { return }
+
+        let color = NSColor(hex: model.hexColor)
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.3
+        material.diffuse.contents = color
+        material.emission.contents = color
+        SCNTransaction.commit()
+    }
+
     // MARK: - Selection Highlight
 
     /// Show a glowing selection ring around the character
@@ -539,6 +584,215 @@ class VoxelCharacterNode: SCNNode {
         accessoryNode.opacity = 0
         addChildNode(accessoryNode)
         accessoryNode.runAction(.fadeIn(duration: 0.5))
+    }
+
+    // MARK: - Personality Idle Behaviors (E1)
+
+    /// Play a personality-driven idle behavior animation
+    func playIdleBehavior(_ behavior: IdleBehavior) {
+        // Don't interrupt if already playing an idle behavior
+        guard action(forKey: "idleBehavior") == nil else { return }
+
+        let animation: SCNAction
+        switch behavior {
+        case .stretching:
+            animation = buildStretchAnimation()
+        case .lookingAround:
+            animation = buildLookAroundAnimation()
+        case .coffeeBreak:
+            animation = buildCoffeeBreakAnimation()
+        case .tapping:
+            animation = buildTappingAnimation()
+        case .waving:
+            animation = buildWaveIdleAnimation()
+        case .yawning:
+            animation = buildYawnAnimation()
+        }
+
+        runAction(animation, forKey: "idleBehavior")
+    }
+
+    /// Show a mood indicator emoji above the agent's head
+    func showMoodIndicator(_ mood: AgentMood) {
+        // Remove existing
+        childNode(withName: "moodIndicator", recursively: false)?.removeFromParentNode()
+
+        // Don't show for neutral mood
+        guard mood != .neutral else { return }
+
+        let text = SCNText(string: mood.emoji, extrusionDepth: 0.01)
+        text.font = NSFont.systemFont(ofSize: 0.2)
+        text.flatness = 0.1
+        let textMaterial = SCNMaterial()
+        textMaterial.diffuse.contents = NSColor.white
+        text.materials = [textMaterial]
+
+        let textNode = SCNNode(geometry: text)
+        let (minBound, maxBound) = textNode.boundingBox
+        let textWidth = maxBound.x - minBound.x
+        textNode.position = SCNVector3(-textWidth / 2, 0, 0)
+
+        let container = SCNNode()
+        container.name = "moodIndicator"
+        container.addChildNode(textNode)
+
+        // Position above status indicator
+        let vs = Float(VoxelBuilder.voxelSize)
+        let legHeight = Float(VoxelCharacterTemplate.leg().height) * vs
+        let torsoHeight = Float(VoxelCharacterTemplate.torso().height) * vs
+        let headHeight = Float(VoxelCharacterTemplate.head(hairStyle: .short).height) * vs
+        container.position = SCNVector3(0.2, legHeight + torsoHeight + headHeight + 0.5, 0)
+
+        // Billboard constraint
+        let billboard = SCNBillboardConstraint()
+        billboard.freeAxes = [.X, .Y]
+        container.constraints = [billboard]
+
+        // Fade in, hold, then fade out
+        container.opacity = 0
+        addChildNode(container)
+        container.runAction(.sequence([
+            .fadeIn(duration: 0.3),
+            .wait(duration: 4.0),
+            .fadeOut(duration: 0.5),
+            .removeFromParentNode()
+        ]))
+    }
+
+    // MARK: - Idle Animation Builders
+
+    private func buildStretchAnimation() -> SCNAction {
+        // Arms go up, slight body tilt, then return
+        let duration = 1.8
+        let armUp = SCNAction.customAction(duration: duration * 0.4) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.4))
+            self.leftArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.8 * t)
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.8 * t)
+        }
+        let hold = SCNAction.wait(duration: duration * 0.3)
+        let armDown = SCNAction.customAction(duration: duration * 0.3) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.3))
+            self.leftArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.8 * (1 - t))
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.8 * (1 - t))
+        }
+        return .sequence([armUp, hold, armDown])
+    }
+
+    private func buildLookAroundAnimation() -> SCNAction {
+        let duration = 2.0
+        let lookLeft = SCNAction.customAction(duration: duration * 0.3) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.3))
+            self.headNode?.eulerAngles.y = CGFloat(Float.pi * 0.3 * t)
+        }
+        let holdLeft = SCNAction.wait(duration: duration * 0.15)
+        let lookRight = SCNAction.customAction(duration: duration * 0.3) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.3))
+            self.headNode?.eulerAngles.y = CGFloat(Float.pi * 0.3 * (1 - 2 * t))
+        }
+        let holdRight = SCNAction.wait(duration: duration * 0.1)
+        let returnCenter = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.headNode?.eulerAngles.y = CGFloat(-Float.pi * 0.3 * (1 - t))
+        }
+        return .sequence([lookLeft, holdLeft, lookRight, holdRight, returnCenter])
+    }
+
+    private func buildCoffeeBreakAnimation() -> SCNAction {
+        // Right arm goes up as if holding a cup, slight head tilt
+        let duration = 2.5
+        let armUp = SCNAction.customAction(duration: duration * 0.25) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.25))
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.5 * t)
+            self.rightArmNode?.eulerAngles.z = CGFloat(Float.pi * 0.2 * t)
+        }
+        let sip1 = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.headNode?.eulerAngles.x = CGFloat(-Float.pi * 0.1 * t)
+        }
+        let hold = SCNAction.wait(duration: duration * 0.2)
+        let headBack = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.headNode?.eulerAngles.x = CGFloat(-Float.pi * 0.1 * (1 - t))
+        }
+        let armDown = SCNAction.customAction(duration: duration * 0.25) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.25))
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.5 * (1 - t))
+            self.rightArmNode?.eulerAngles.z = CGFloat(Float.pi * 0.2 * (1 - t))
+        }
+        return .sequence([armUp, sip1, hold, headBack, armDown])
+    }
+
+    private func buildTappingAnimation() -> SCNAction {
+        // Foot tapping - one leg moves up and down repeatedly
+        let tapUp = SCNAction.customAction(duration: 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / 0.15)
+            self.rightLegNode?.eulerAngles.x = CGFloat(-Float.pi * 0.1 * t)
+        }
+        let tapDown = SCNAction.customAction(duration: 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / 0.15)
+            self.rightLegNode?.eulerAngles.x = CGFloat(-Float.pi * 0.1 * (1 - t))
+        }
+        let tap = SCNAction.sequence([tapUp, tapDown])
+        return .sequence([.repeat(tap, count: 4), .wait(duration: 0.2)])
+    }
+
+    private func buildWaveIdleAnimation() -> SCNAction {
+        // Right arm goes up and waves side to side
+        let duration = 2.0
+        let armUp = SCNAction.customAction(duration: duration * 0.2) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.2))
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.7 * t)
+        }
+        let waveLeft = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.rightArmNode?.eulerAngles.z = CGFloat(Float.pi * 0.15 * t)
+        }
+        let waveRight = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.rightArmNode?.eulerAngles.z = CGFloat(Float.pi * 0.15 * (1 - 2 * t))
+        }
+        let waveBack = SCNAction.customAction(duration: duration * 0.15) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.15))
+            self.rightArmNode?.eulerAngles.z = CGFloat(-Float.pi * 0.15 * (1 - t))
+        }
+        let armDown = SCNAction.customAction(duration: duration * 0.2) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.2))
+            self.rightArmNode?.eulerAngles.x = CGFloat(-Float.pi * 0.7 * (1 - t))
+        }
+        return .sequence([armUp, waveLeft, waveRight, waveBack, armDown])
+    }
+
+    private func buildYawnAnimation() -> SCNAction {
+        // Head tilts back, mouth opens (simulated by slight scale)
+        let duration = 2.2
+        let tiltBack = SCNAction.customAction(duration: duration * 0.3) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.3))
+            self.headNode?.eulerAngles.x = CGFloat(-Float.pi * 0.15 * t)
+        }
+        let hold = SCNAction.wait(duration: duration * 0.4)
+        let tiltForward = SCNAction.customAction(duration: duration * 0.3) { [weak self] _, elapsed in
+            guard let self = self else { return }
+            let t = Float(elapsed / (duration * 0.3))
+            self.headNode?.eulerAngles.x = CGFloat(-Float.pi * 0.15 * (1 - t))
+        }
+        return .sequence([tiltBack, hold, tiltForward])
     }
 
     /// Update the status indicator color
