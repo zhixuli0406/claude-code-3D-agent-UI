@@ -965,7 +965,14 @@ class AppState: ObservableObject {
     /// Schedule a completed or failed team to disband after a delay.
     private func scheduleDisbandIfNeeded(commanderId: UUID) {
         // Only schedule if the entire team is finished (completed or failed/error+idle)
+        // Never schedule if any agent is waiting for user input
         let teamAgents = [commanderId] + subAgents(of: commanderId).map(\.id)
+        let anyWaitingForUser = teamAgents.contains { agentId in
+            guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
+            return status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan
+        }
+        guard !anyWaitingForUser else { return }
+
         let allFinished = teamAgents.allSatisfy { agentId in
             guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
             return status == .completed || status == .error || status == .idle
@@ -996,6 +1003,13 @@ class AppState: ObservableObject {
         disbandTimers.removeValue(forKey: commanderId)
 
         let teamAgentIds = [commanderId] + subAgents(of: commanderId).map(\.id)
+
+        // Verify no agent is waiting for user input
+        let anyWaitingForUser = teamAgentIds.contains { agentId in
+            guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
+            return status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan
+        }
+        guard !anyWaitingForUser else { return }
 
         // Verify team is still finished (might have been reactivated)
         let allFinished = teamAgentIds.allSatisfy { agentId in
@@ -1173,8 +1187,9 @@ class AppState: ObservableObject {
             }
         }
 
-        // If team resumes work, cancel any pending disband
-        if status == .working || status == .thinking {
+        // If team resumes work or enters a waiting-for-user state, cancel any pending disband
+        if status == .working || status == .thinking
+            || status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan {
             if let agent = agents.first(where: { $0.id == agentId }) {
                 let commanderId = agent.isMainAgent ? agent.id : agent.parentAgentId
                 if let commanderId = commanderId {
@@ -1210,9 +1225,9 @@ class AppState: ObservableObject {
         case .idle:
             return .idle
         case .requestingPermission:
-            return .idle
+            return .thinking  // Keep sub-agents visually alive while waiting for user
         case .waitingForAnswer:
-            return .idle
+            return .thinking  // Keep sub-agents visually alive while waiting for user
         case .reviewingPlan:
             return .thinking
         }
