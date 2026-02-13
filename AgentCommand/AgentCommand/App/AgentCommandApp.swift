@@ -17,6 +17,9 @@ struct AgentCommandApp: App {
                 .onAppear {
                     appState.localizationManager = localization
                 }
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)) { _ in
+                    appState.shutdown()
+                }
         }
         .windowStyle(.titleBar)
         .defaultSize(width: 1280, height: 800)

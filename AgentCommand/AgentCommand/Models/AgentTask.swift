@@ -21,6 +21,10 @@ struct AgentTask: Identifiable, Codable, Hashable {
     var cliResult: String?
     var outputLogCount: Int = 0
     var sessionId: String?
+
+    // Retry tracking
+    var retryCount: Int = 0
+    var lastError: String?
 }
 
 struct SubTask: Identifiable, Codable, Hashable {

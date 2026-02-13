@@ -70,6 +70,8 @@ class AgentAnimationController {
                 WaitingForAnswerAnimation.apply(to: character)
             case .reviewingPlan:
                 ReviewingPlanAnimation.apply(to: character)
+            case .suspended:
+                WaitingForAnswerAnimation.apply(to: character)
             }
 
             // Update status indicator color
@@ -102,6 +104,7 @@ class AgentAnimationController {
         case .requestingPermission: RequestingPermissionAnimation.apply(to: character)
         case .waitingForAnswer: WaitingForAnswerAnimation.apply(to: character)
         case .reviewingPlan: ReviewingPlanAnimation.apply(to: character)
+        case .suspended: WaitingForAnswerAnimation.apply(to: character)
         }
     }
 
@@ -154,6 +157,8 @@ class AgentAnimationController {
             WaitingForAnswerAnimation.remove(from: character)
         case .reviewingPlan:
             ReviewingPlanAnimation.remove(from: character)
+        case .suspended:
+            WaitingForAnswerAnimation.remove(from: character)
         }
     }
 

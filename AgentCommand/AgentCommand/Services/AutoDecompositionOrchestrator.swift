@@ -11,6 +11,35 @@ class AutoDecompositionOrchestrator: ObservableObject {
     /// Back-reference to AppState (set during init)
     weak var appState: AppState?
 
+    // MARK: - Integrated Managers
+
+    let concurrencyController = ConcurrencyController()
+    let scheduler = TaskPriorityScheduler()
+    let poolManager = SubAgentPoolManager()
+    let monitor = SubAgentMonitor()
+
+    /// Task queue manager for persistent, interruptible task execution
+    weak var taskQueueManager: SubAgentTaskQueueManager?
+
+    // MARK: - Init
+
+    func configureManagers(lifecycleManager: AgentLifecycleManager?) {
+        concurrencyController.lifecycleManager = lifecycleManager
+        concurrencyController.cleanupManager = lifecycleManager?.cleanupManager
+        poolManager.lifecycleManager = lifecycleManager
+        monitor.lifecycleManager = lifecycleManager
+        monitor.poolManager = poolManager
+        monitor.concurrencyController = concurrencyController
+        monitor.scheduler = scheduler
+
+        // Wire concurrency controller callback to actually start sub-agent CLI
+        concurrencyController.onStartSubAgent = { [weak self] commanderId, taskIndex, model in
+            self?.doStartSubAgentCLI(commanderId: commanderId, taskIndex: taskIndex, model: model)
+        }
+
+        monitor.startMonitoring()
+    }
+
     // MARK: - Public Entry Point
 
     /// Determine if the prompt should be auto-decomposed
@@ -55,6 +84,13 @@ class AutoDecompositionOrchestrator: ObservableObject {
     func submitWithAutoDecomposition(prompt: String, model: ClaudeModel) {
         guard let appState = appState else { return }
 
+        // Adjust concurrency based on current resource pressure
+        if let lm = poolManager.lifecycleManager {
+            let pressure = lm.cleanupManager.resourcePressure
+            concurrencyController.adjustForPressure(pressure)
+            poolManager.evaluateAndResize(resourcePressure: pressure)
+        }
+
         // Create commander agent
         let commander = AgentFactory.createCommander(model: model)
         appState.agents.append(commander)
@@ -86,7 +122,14 @@ class AutoDecompositionOrchestrator: ObservableObject {
             if let taskId = subTask.taskId {
                 appState?.cliProcessManager.cancelProcess(taskId: taskId)
             }
+            concurrencyController.taskCancelled(commanderId: commanderId, taskIndex: subTask.index)
         }
+
+        // Clean up scheduler
+        scheduler.removeOrchestration(commanderId: commanderId)
+
+        // Release idle sub-agents back to pool
+        releaseIdleSubAgents(commanderId: commanderId)
     }
 
     // MARK: - Phase 1: Decomposition
@@ -234,8 +277,11 @@ class AutoDecompositionOrchestrator: ObservableObject {
         state.phase = .executing
         activeOrchestrations[commanderId] = state
 
-        // Create sub-agents and execute
-        createSubAgentsAndExecute(commanderId: commanderId, model: model)
+        // Register sub-tasks with the priority scheduler
+        scheduler.scheduleSubTasks(commanderId: commanderId, subTasks: state.subTasks)
+
+        // Start demand-driven execution: only create agents for tasks that can run now
+        executeNextBatch(commanderId: commanderId, model: model)
     }
 
     private func handleDecompositionFailed(commanderId: UUID, taskId: UUID, error: String, originalPrompt: String, model: ClaudeModel) {
@@ -278,103 +324,102 @@ class AutoDecompositionOrchestrator: ObservableObject {
         return nil
     }
 
-    // MARK: - Phase 2: Create Sub-Agents & Execute
+    // MARK: - Phase 2: Demand-Driven Execution Engine
 
-    private func createSubAgentsAndExecute(commanderId: UUID, model: ClaudeModel) {
-        guard let appState = appState,
-              var state = activeOrchestrations[commanderId] else { return }
-
-        let roles: [AgentRole] = [.developer, .researcher, .reviewer, .tester, .designer]
-
-        // Create a sub-agent for each subtask
-        for i in 0..<state.subTasks.count {
-            let role = roles[i % roles.count]
-            let subAgent = AgentFactory.createSubAgent(parentId: commanderId, role: role, model: model)
-
-            // Register sub-agent
-            appState.agents.append(subAgent)
-            if let cmdIdx = appState.agents.firstIndex(where: { $0.id == commanderId }) {
-                appState.agents[cmdIdx].subAgentIds.append(subAgent.id)
-            }
-
-            state.subTasks[i].agentId = subAgent.id
-        }
-
-        activeOrchestrations[commanderId] = state
-
-        // Rebuild scene with new agents
-        appState.rebuildScene()
-
-        // Walk all sub-agents to their desks
-        let subAgentIds = state.subTasks.compactMap(\.agentId)
-        let walkGroup = DispatchGroup()
-
-        for agentId in subAgentIds {
-            walkGroup.enter()
-            appState.sceneManager.walkAgentToDesk(agentId) {
-                walkGroup.leave()
-            }
-        }
-
-        walkGroup.notify(queue: .main) { [weak self] in
-            Task { @MainActor in
-                // Play wave animation
-                for agentId in subAgentIds {
-                    self?.appState?.sceneManager.playWaveForAgent(agentId)
-                }
-
-                // Start executing waves after animation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                    self?.executeNextWave(commanderId: commanderId, model: model)
-                }
-            }
-        }
-    }
-
-    // MARK: - Phase 3: Wave Execution Engine
-
-    private func executeNextWave(commanderId: UUID, model: ClaudeModel) {
+    /// Execute the next batch of ready tasks, creating sub-agents on-demand.
+    /// Unlike the old approach that created all sub-agents upfront, this only
+    /// creates agents when they have immediate work to do, preventing idle agents.
+    private func executeNextBatch(commanderId: UUID, model: ClaudeModel) {
         guard var state = activeOrchestrations[commanderId] else { return }
 
-        // Find tasks whose dependencies are all satisfied
-        var tasksToStart: [Int] = []
+        // Ask scheduler for the next batch of ready tasks
+        let readyCount = scheduler.readyCount(commanderId: commanderId)
 
-        for i in 0..<state.subTasks.count {
-            guard state.subTasks[i].status == .pending else { continue }
-
-            let depsCompleted = state.subTasks[i].dependencies.allSatisfy { depIdx in
-                depIdx >= 0 && depIdx < state.subTasks.count &&
-                state.subTasks[depIdx].status == .completed
-            }
-
-            if depsCompleted {
-                tasksToStart.append(i)
-            }
-        }
-
-        // If no tasks to start and none in progress, check if we're done
-        if tasksToStart.isEmpty {
-            let anyInProgress = state.subTasks.contains { $0.status == .inProgress }
-            if !anyInProgress {
-                // All waves done — start synthesis
-                let allCompleted = state.subTasks.allSatisfy { $0.status == .completed || $0.status == .failed }
-                if allCompleted {
+        // If nothing is ready and nothing is running, check if we're done
+        if readyCount == 0 {
+            let runningCount = concurrencyController.runningCount(for: commanderId)
+            if runningCount == 0 {
+                let allDone = state.subTasks.allSatisfy { $0.status == .completed || $0.status == .failed }
+                if allDone {
+                    // Release all idle sub-agents before synthesis
+                    releaseIdleSubAgents(commanderId: commanderId)
                     startSynthesisPhase(commanderId: commanderId, model: model)
                 }
             }
             return
         }
 
+        // Calculate optimal wave size based on available concurrency slots
+        let totalRemaining = state.subTasks.filter { $0.status == .pending || $0.status == .waiting }.count
+        let waveSize = concurrencyController.optimalWaveSize(readyCount: readyCount, totalRemaining: totalRemaining)
+
+        guard waveSize > 0 else { return }
+
+        // Get the prioritized batch
+        let batch = scheduler.nextBatch(commanderId: commanderId, maxSize: waveSize)
+
         state.currentWave += 1
         activeOrchestrations[commanderId] = state
 
-        // Start CLI for each task in this wave
-        for taskIndex in tasksToStart {
-            startSubAgentCLI(commanderId: commanderId, taskIndex: taskIndex, model: model)
+        for item in batch {
+            // Create sub-agent on-demand (try pool first)
+            ensureSubAgentExists(commanderId: commanderId, taskIndex: item.taskIndex, model: model)
+
+            // Infer priority from scheduler
+            let priority = item.priority
+
+            // Request start through concurrency controller
+            // If the slot is available, it will call doStartSubAgentCLI immediately via callback
+            // If not, it will be queued and started when a slot opens up
+            concurrencyController.requestStart(
+                commanderId: commanderId,
+                taskIndex: item.taskIndex,
+                model: model,
+                priority: priority
+            )
+        }
+
+        // Refresh monitor
+        monitor.refresh()
+    }
+
+    /// Ensure a sub-agent exists for a given task index; create one on-demand if needed
+    private func ensureSubAgentExists(commanderId: UUID, taskIndex: Int, model: ClaudeModel) {
+        guard let appState = appState,
+              var state = activeOrchestrations[commanderId] else { return }
+        guard taskIndex < state.subTasks.count else { return }
+
+        // If agent already assigned, nothing to do
+        if state.subTasks[taskIndex].agentId != nil { return }
+
+        let roles: [AgentRole] = [.developer, .researcher, .reviewer, .tester, .designer]
+        let role = roles[taskIndex % roles.count]
+
+        // Try pool first, then factory
+        let subAgent = poolManager.acquireOrCreate(role: role, parentId: commanderId, model: model)
+
+        // Register sub-agent
+        appState.agents.append(subAgent)
+        if let cmdIdx = appState.agents.firstIndex(where: { $0.id == commanderId }) {
+            appState.agents[cmdIdx].subAgentIds.append(subAgent.id)
+        }
+
+        state.subTasks[taskIndex].agentId = subAgent.id
+        activeOrchestrations[commanderId] = state
+
+        // Rebuild scene with new agent
+        appState.rebuildScene()
+
+        // Walk sub-agent to desk (non-blocking)
+        appState.sceneManager.walkAgentToDesk(subAgent.id) { [weak appState] in
+            Task { @MainActor in
+                appState?.sceneManager.playWaveForAgent(subAgent.id)
+            }
         }
     }
 
-    private func startSubAgentCLI(commanderId: UUID, taskIndex: Int, model: ClaudeModel) {
+    /// Actually start a sub-agent CLI process (called by ConcurrencyController callback)
+    private func doStartSubAgentCLI(commanderId: UUID, taskIndex: Int, model: ClaudeModel) {
         guard let appState = appState,
               var state = activeOrchestrations[commanderId] else { return }
         guard taskIndex < state.subTasks.count else { return }
@@ -382,10 +427,34 @@ class AutoDecompositionOrchestrator: ObservableObject {
         let subTask = state.subTasks[taskIndex]
         guard let agentId = subTask.agentId else { return }
 
+        // Skip if already completed (prevents re-execution on resume)
+        if subTask.status == .completed {
+            print("[Orchestrator] Skipping already-completed task \(taskIndex): \(subTask.title)")
+            return
+        }
+
         // Mark as in progress
         state.subTasks[taskIndex].status = .inProgress
         state.subTasks[taskIndex].startedAt = Date()
         activeOrchestrations[commanderId] = state
+
+        // Mark in scheduler
+        scheduler.markStarted(commanderId: commanderId, taskIndex: taskIndex)
+
+        // Track in task queue for persistence
+        let queueItem = SubAgentTaskQueueItem(
+            id: UUID(),
+            commanderId: commanderId,
+            orchestrationTaskIndex: taskIndex,
+            title: subTask.title,
+            prompt: subTask.prompt,
+            agentId: agentId,
+            dependencies: subTask.dependencies,
+            status: .inProgress,
+            enqueuedAt: Date(),
+            startedAt: Date()
+        )
+        taskQueueManager?.enqueue(queueItem)
 
         // Create a real task entry
         let taskId = UUID()
@@ -520,8 +589,21 @@ class AutoDecompositionOrchestrator: ObservableObject {
             appState.handleAgentStatusChange(agentId, to: .completed)
         }
 
-        // Try to execute next wave
-        executeNextWave(commanderId: commanderId, model: model)
+        // Notify scheduler and concurrency controller
+        scheduler.markCompleted(commanderId: commanderId, taskIndex: taskIndex)
+        concurrencyController.taskCompleted(commanderId: commanderId, taskIndex: taskIndex)
+
+        // Update task queue
+        if let queueItem = taskQueueManager?.item(commanderId: commanderId, taskIndex: taskIndex) {
+            taskQueueManager?.markCompleted(itemId: queueItem.id, commanderId: commanderId, result: result)
+        }
+
+        // Try to release the completed sub-agent back to pool if there are no more
+        // tasks for it (prevents idle sub-agents waiting around)
+        releaseCompletedSubAgentIfPossible(commanderId: commanderId, taskIndex: taskIndex)
+
+        // Execute next batch of tasks
+        executeNextBatch(commanderId: commanderId, model: model)
     }
 
     private func handleSubAgentFailed(commanderId: UUID, taskIndex: Int, taskId: UUID, error: String, model: ClaudeModel) {
@@ -546,11 +628,53 @@ class AutoDecompositionOrchestrator: ObservableObject {
             appState.handleAgentStatusChange(agentId, to: .error)
         }
 
-        // Continue with next wave (skip dependent tasks)
-        executeNextWave(commanderId: commanderId, model: model)
+        // Notify scheduler and concurrency controller
+        scheduler.markFailed(commanderId: commanderId, taskIndex: taskIndex)
+        concurrencyController.taskCompleted(commanderId: commanderId, taskIndex: taskIndex)
+
+        // Update task queue
+        if let queueItem = taskQueueManager?.item(commanderId: commanderId, taskIndex: taskIndex) {
+            taskQueueManager?.markFailed(itemId: queueItem.id, commanderId: commanderId, error: error)
+        }
+
+        // Continue with next batch
+        executeNextBatch(commanderId: commanderId, model: model)
     }
 
-    // MARK: - Phase 4: Synthesis
+    // MARK: - Sub-Agent Pool Release
+
+    /// Release a completed sub-agent back to the pool if it has no more work
+    private func releaseCompletedSubAgentIfPossible(commanderId: UUID, taskIndex: Int) {
+        guard let state = activeOrchestrations[commanderId],
+              taskIndex < state.subTasks.count,
+              let agentId = state.subTasks[taskIndex].agentId,
+              let agent = appState?.agents.first(where: { $0.id == agentId }) else { return }
+
+        // Check if this agent has any pending tasks in the current orchestration
+        let hasMoreWork = state.subTasks.contains { subTask in
+            subTask.agentId == agentId &&
+            (subTask.status == .pending || subTask.status == .inProgress || subTask.status == .waiting)
+        }
+
+        guard !hasMoreWork else { return }
+
+        // Try to return to pool
+        poolManager.release(agent)
+    }
+
+    /// Release all idle/completed sub-agents back to pool (called before synthesis or after cancel)
+    private func releaseIdleSubAgents(commanderId: UUID) {
+        guard let state = activeOrchestrations[commanderId] else { return }
+
+        for subTask in state.subTasks {
+            guard let agentId = subTask.agentId,
+                  subTask.status == .completed || subTask.status == .failed,
+                  let agent = appState?.agents.first(where: { $0.id == agentId }) else { continue }
+            poolManager.release(agent)
+        }
+    }
+
+    // MARK: - Phase 3: Synthesis
 
     private func startSynthesisPhase(commanderId: UUID, model: ClaudeModel) {
         guard let appState = appState,
@@ -689,11 +813,18 @@ class AutoDecompositionOrchestrator: ObservableObject {
         state.completedAt = Date()
         activeOrchestrations[commanderId] = state
 
+        // Clean up scheduler and concurrency state
+        scheduler.removeOrchestration(commanderId: commanderId)
+        concurrencyController.reset()
+
         // Set commander to completed
         appState.handleAgentStatusChange(commanderId, to: .completed)
 
         // Schedule team disband
         appState.scheduleDisbandIfNeeded(commanderId: commanderId)
+
+        // Refresh monitor
+        monitor.refresh()
     }
 
     private func handleSynthesisFailed(commanderId: UUID, taskId: UUID, error: String) {
@@ -710,8 +841,14 @@ class AutoDecompositionOrchestrator: ObservableObject {
         state.completedAt = Date()
         activeOrchestrations[commanderId] = state
 
+        // Clean up
+        scheduler.removeOrchestration(commanderId: commanderId)
+        concurrencyController.reset()
+
         appState.handleAgentStatusChange(commanderId, to: .error)
         appState.scheduleDisbandIfNeeded(commanderId: commanderId)
+
+        monitor.refresh()
     }
 
     // MARK: - Fallback
@@ -723,12 +860,12 @@ class AutoDecompositionOrchestrator: ObservableObject {
         // Remove orchestration state
         activeOrchestrations.removeValue(forKey: commanderId)
 
-        // Create default sub-agents like normal team
+        // Create default sub-agents like normal team (try pool first)
         let subAgentCount = 2
         for _ in 0..<subAgentCount {
             let roles: [AgentRole] = [.developer, .researcher, .reviewer, .tester, .designer]
             let role = roles.randomElement() ?? .developer
-            let subAgent = AgentFactory.createSubAgent(parentId: commanderId, role: role, model: model)
+            let subAgent = poolManager.acquireOrCreate(role: role, parentId: commanderId, model: model)
             appState.agents.append(subAgent)
             if let cmdIdx = appState.agents.firstIndex(where: { $0.id == commanderId }) {
                 appState.agents[cmdIdx].subAgentIds.append(subAgent.id)

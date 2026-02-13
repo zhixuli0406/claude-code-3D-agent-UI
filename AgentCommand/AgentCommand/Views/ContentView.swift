@@ -85,6 +85,13 @@ struct ContentView: View {
                         }
                 }
             }
+            .overlay(alignment: .center) {
+                if appState.showResumePanel && !appState.pendingResumes.isEmpty {
+                    ResumePanelView()
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        .zIndex(100)
+                }
+            }
     }
 
     private var mainContentBase: some View {

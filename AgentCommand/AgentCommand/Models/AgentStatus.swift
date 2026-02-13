@@ -10,6 +10,7 @@ enum AgentStatus: String, Codable, CaseIterable {
     case requestingPermission
     case waitingForAnswer
     case reviewingPlan
+    case suspended             // CLI process terminated; waiting for user resume
 
     var displayName: String {
         switch self {
@@ -21,6 +22,7 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .requestingPermission: return "Requesting Permission"
         case .waitingForAnswer: return "Waiting for Answer"
         case .reviewingPlan: return "Reviewing Plan"
+        case .suspended: return "Suspended"
         }
     }
 
@@ -34,6 +36,7 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .requestingPermission: return l.localized(.statusRequestingPermission)
         case .waitingForAnswer: return l.localized(.statusWaitingForAnswer)
         case .reviewingPlan: return l.localized(.statusReviewingPlan)
+        case .suspended: return l.localized(.statusIdle) // fallback until localization key is added
         }
     }
 
@@ -47,6 +50,17 @@ enum AgentStatus: String, Codable, CaseIterable {
         case .requestingPermission: return "#FF9800"
         case .waitingForAnswer: return "#2196F3"
         case .reviewingPlan: return "#9C27B0"
+        case .suspended: return "#FFC107"
+        }
+    }
+
+    /// Whether the agent is waiting for user input and should not be auto-disbanded
+    var isWaitingForUser: Bool {
+        switch self {
+        case .requestingPermission, .waitingForAnswer, .reviewingPlan, .suspended:
+            return true
+        default:
+            return false
         }
     }
 }

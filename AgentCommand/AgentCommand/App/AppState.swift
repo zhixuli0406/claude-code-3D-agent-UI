@@ -229,6 +229,13 @@ class AppState: ObservableObject {
     /// Timer for personality idle behaviors (E1)
     private var idleBehaviorTimer: DispatchWorkItem?
 
+    // SubAgent Resume & Persistence
+    let persistenceManager = AgentPersistenceManager()
+    let taskQueueManager = SubAgentTaskQueueManager()
+    @Published var pendingResumes: [ResumeContext] = []
+    @Published var showResumePanel: Bool = false
+    private let retryPolicy: RetryPolicy = .default
+
     /// Tracks teams that are currently being disbanded (animation in progress)
     @Published var disbandingTeamIds: Set<UUID> = []
 
@@ -580,6 +587,23 @@ class AppState: ObservableObject {
             autoDecompositionEnabled = true
         } else {
             autoDecompositionEnabled = UserDefaults.standard.bool(forKey: Self.autoDecompositionKey)
+        }
+
+        // Initialize task queue manager
+        taskQueueManager.persistenceManager = persistenceManager
+        taskQueueManager.loadPersistedQueues()
+        orchestrator.taskQueueManager = taskQueueManager
+
+        // Load pending resume contexts from previous session
+        pendingResumes = persistenceManager.allPendingResumes()
+        if !pendingResumes.isEmpty {
+            showResumePanel = true
+            print("[AppState] Found \(pendingResumes.count) pending resume(s) from previous session")
+        }
+
+        // Start periodic auto-save of state snapshot
+        persistenceManager.startAutoSave { [weak self] in
+            self?.buildStateSnapshot()
         }
     }
 
@@ -1109,8 +1133,32 @@ class AppState: ObservableObject {
 
     func handleCLIFailed(_ taskId: UUID, error: String) {
         guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
+
+        // Check if we should auto-retry before marking as failed
+        let currentRetryCount = tasks[idx].retryCount
+        if currentRetryCount < retryPolicy.maxRetries && !RetryPolicy.isUserCancellation(error) {
+            tasks[idx].retryCount = currentRetryCount + 1
+            tasks[idx].lastError = error
+            let delay = retryPolicy.delay(forAttempt: currentRetryCount)
+            print("[AppState] Auto-retrying task \(taskId) (attempt \(tasks[idx].retryCount)/\(retryPolicy.maxRetries)) after \(delay)s")
+
+            timelineManager.recordEvent(
+                kind: .taskFailed,
+                taskId: taskId,
+                agentId: tasks[idx].assignedAgentId,
+                title: "Retrying: \(tasks[idx].title) (attempt \(tasks[idx].retryCount))",
+                detail: String(error.prefix(100))
+            )
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                self?.retryFailedTask(taskId)
+            }
+            return
+        }
+
         tasks[idx].status = .failed
         tasks[idx].cliResult = "Error: \(error)"
+        tasks[idx].lastError = error
 
         // D5: Record failure metrics
         metricsManager.taskFailed(taskId: taskId)
@@ -1360,6 +1408,174 @@ class AppState: ObservableObject {
         return parts.isEmpty ? "Continue" : parts.joined(separator: ". ") + "."
     }
 
+    // MARK: - SubAgent Resume & Persistence
+
+    /// Shutdown: save all active agent contexts and final snapshot before app terminates
+    func shutdown() {
+        // Suspend all in-progress task queue items
+        taskQueueManager.suspendAllQueues()
+
+        // Save resume contexts for all active agents
+        for agent in agents where agent.status == .working || agent.status == .thinking {
+            saveResumeContextForAgent(agent.id, reason: .appTerminated)
+        }
+
+        // Save final state snapshot
+        if let snapshot = buildStateSnapshot() {
+            persistenceManager.saveSnapshot(snapshot)
+        }
+
+        persistenceManager.stopAutoSave()
+        print("[AppState] Shutdown complete — saved \(pendingResumes.count) resume context(s)")
+    }
+
+    /// Resume a previously suspended agent from its saved context
+    func resumeSuspendedAgent(_ context: ResumeContext) {
+        // Recreate agent if not already in agents array
+        if !agents.contains(where: { $0.id == context.agentId }) {
+            let restoredAgent = Agent(
+                id: context.agentId,
+                name: context.agentName,
+                role: context.agentRole,
+                status: .idle,
+                selectedModel: context.agentModel,
+                personality: context.agentPersonality,
+                appearance: context.agentAppearance,
+                position: ScenePosition(x: 0, y: 0, z: 0, rotation: 0),
+                parentAgentId: context.commanderId,
+                subAgentIds: [],
+                assignedTaskIds: [context.taskId]
+            )
+            agents.append(restoredAgent)
+            rebuildScene()
+
+            // Walk to desk before resuming
+            sceneManager.walkAgentToDesk(restoredAgent.id) { [weak self] in
+                Task { @MainActor in
+                    self?.performResume(context)
+                }
+            }
+        } else {
+            performResume(context)
+        }
+
+        // Remove from pending list
+        pendingResumes.removeAll { $0.agentId == context.agentId }
+        persistenceManager.removeResumeContext(agentId: context.agentId)
+
+        if pendingResumes.isEmpty {
+            showResumePanel = false
+        }
+    }
+
+    /// Discard a suspended agent without resuming
+    func discardSuspendedAgent(_ context: ResumeContext) {
+        persistenceManager.removeResumeContext(agentId: context.agentId)
+        pendingResumes.removeAll { $0.agentId == context.agentId }
+
+        // Remove agent from scene if it exists
+        agents.removeAll { $0.id == context.agentId }
+        tasks.removeAll { $0.id == context.taskId }
+        rebuildScene()
+
+        if pendingResumes.isEmpty {
+            showResumePanel = false
+        }
+    }
+
+    /// Retry a failed task with exponential backoff
+    func retryFailedTask(_ taskId: UUID) {
+        guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
+        let task = tasks[idx]
+        guard task.retryCount < retryPolicy.maxRetries else { return }
+        guard let agentId = task.assignedAgentId else { return }
+
+        tasks[idx].retryCount += 1
+        tasks[idx].status = .inProgress
+        tasks[idx].lastError = nil
+
+        handleAgentStatusChange(agentId, to: .working)
+
+        timelineManager.recordEvent(
+            kind: .taskCreated,
+            taskId: taskId,
+            agentId: agentId,
+            title: "Retrying task (attempt \(tasks[idx].retryCount)): \(task.title)"
+        )
+
+        // Use sessionId for resume if available, otherwise re-submit prompt
+        startCLIProcess(
+            taskId: taskId,
+            agentId: agentId,
+            prompt: task.sessionId != nil ? "Continue from where you left off." : task.title,
+            resumeSessionId: task.sessionId
+        )
+    }
+
+    /// Build a state snapshot for persistence
+    func buildStateSnapshot() -> AgentStateSnapshot? {
+        guard !agents.isEmpty || !tasks.isEmpty else { return nil }
+        return AgentStateSnapshot(
+            savedAt: Date(),
+            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0",
+            agents: agents,
+            tasks: tasks,
+            resumeContexts: persistenceManager.allPendingResumes()
+        )
+    }
+
+    // MARK: - Resume & Retry Private Helpers
+
+    private func performResume(_ context: ResumeContext) {
+        handleAgentStatusChange(context.agentId, to: .working)
+
+        startCLIProcess(
+            taskId: context.taskId,
+            agentId: context.agentId,
+            prompt: "Continue from where you left off.",
+            resumeSessionId: context.sessionId
+        )
+    }
+
+    private func saveResumeContextForAgent(_ agentId: UUID, reason: SuspensionReason) {
+        guard let agent = agents.first(where: { $0.id == agentId }) else { return }
+
+        let cliProcess = cliProcessManager.processes.values.first(where: { $0.agentId == agentId })
+        guard let sessionId = cliProcess?.sessionId ?? tasks.first(where: { $0.assignedAgentId == agentId })?.sessionId else {
+            print("[AppState] Cannot save resume context: no sessionId for agent \(agent.name)")
+            return
+        }
+
+        let taskId = agent.assignedTaskIds.last ?? UUID()
+        let task = tasks.first(where: { $0.id == taskId })
+
+        let context = ResumeContext(
+            agentId: agentId,
+            agentName: agent.name,
+            agentRole: agent.role,
+            agentModel: agent.selectedModel,
+            agentPersonality: agent.personality,
+            agentAppearance: agent.appearance,
+            sessionId: sessionId,
+            workingDirectory: workspaceManager.activeDirectory,
+            taskId: taskId,
+            taskTitle: task?.title ?? "",
+            originalPrompt: cliProcess?.prompt ?? task?.title ?? "",
+            suspendedAt: Date(),
+            suspensionReason: reason,
+            toolCallCount: cliProcess?.toolCallCount ?? 0,
+            progressEstimate: task?.progress ?? 0,
+            commanderId: agent.parentAgentId,
+            teamAgentIds: agent.isMainAgent ? agent.subAgentIds : [],
+            orchestrationId: orchestrator.activeOrchestrations[agent.parentAgentId ?? agent.id]?.id,
+            orchestrationTaskIndex: nil,
+            pendingInteraction: nil
+        )
+
+        persistenceManager.saveResumeContext(context)
+        pendingResumes.append(context)
+    }
+
     // MARK: - Team Disband
 
     /// Schedule a completed or failed team to disband after a delay.
@@ -1371,11 +1587,11 @@ class AppState: ObservableObject {
         }
 
         // Only schedule if the entire team is finished (completed or failed/error+idle)
-        // Never schedule if any agent is waiting for user input
+        // Never schedule if any agent is waiting for user input or suspended
         let teamAgents = [commanderId] + subAgents(of: commanderId).map(\.id)
         let anyWaitingForUser = teamAgents.contains { agentId in
             guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
-            return status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan
+            return status.isWaitingForUser
         }
         guard !anyWaitingForUser else { return }
 
@@ -1410,10 +1626,10 @@ class AppState: ObservableObject {
 
         let teamAgentIds = [commanderId] + subAgents(of: commanderId).map(\.id)
 
-        // Verify no agent is waiting for user input
+        // Verify no agent is waiting for user input or suspended
         let anyWaitingForUser = teamAgentIds.contains { agentId in
             guard let status = agents.first(where: { $0.id == agentId })?.status else { return false }
-            return status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan
+            return status.isWaitingForUser
         }
         guard !anyWaitingForUser else { return }
 
@@ -1600,8 +1816,7 @@ class AppState: ObservableObject {
         }
 
         // If team resumes work or enters a waiting-for-user state, cancel any pending disband
-        if status == .working || status == .thinking
-            || status == .requestingPermission || status == .waitingForAnswer || status == .reviewingPlan {
+        if status == .working || status == .thinking || status.isWaitingForUser {
             if let agent = agents.first(where: { $0.id == agentId }) {
                 let commanderId = agent.isMainAgent ? agent.id : agent.parentAgentId
                 if let commanderId = commanderId {
@@ -1642,6 +1857,8 @@ class AppState: ObservableObject {
             return .thinking  // Keep sub-agents visually alive while waiting for user
         case .reviewingPlan:
             return .thinking
+        case .suspended:
+            return .idle
         }
     }
 
