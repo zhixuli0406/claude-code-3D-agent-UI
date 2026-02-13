@@ -16,8 +16,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
 enum L10nKey: String {
     // Toolbar
-    case theme, loadConfig, language
-    case helpChangeTheme, helpLoadConfig
+    case theme, language
+    case helpChangeTheme
 
     // SceneSelectionView
     case agentCommand, selectYourEnvironment, enter, themeCanBeChangedLater
@@ -254,6 +254,174 @@ enum L10nKey: String {
     // F1: Background Music
     case backgroundMusic, helpBackgroundMusic
     case musicVolume, musicIntensity, musicIntensityCalm, musicIntensityActive
+
+    // H1: RAG System
+    case ragKnowledgeBase, helpRAGKnowledgeBase
+    case ragIndexing, ragIndexComplete, ragReindex, ragClearIndex
+    case ragSearch, ragSearchResults, ragNoResults
+    case ragDocuments, ragDatabaseSize, ragLastUpdated
+    case ragKnowledgeGraph, ragShowInScene, ragHideFromScene
+    case ragAutoIndex, ragNoDocuments
+    case ragContextInjected, ragTotalLines
+    case ragFileType, ragLineCount, ragFileSize
+    case ragRelationships, ragIndexProgress
+
+    // H2: Agent Memory System
+    case agentMemory, helpAgentMemory
+    case memoryTimeline, memorySearch
+    case memoryTotalMemories, memoryTotalAgents
+    case memoryDatabaseSize, memoryLastUpdated
+    case memoryNoMemories, memoryNoMemoriesDesc
+    case memoryCategory, memoryRecent
+    case memoryClearAll, memoryConfirmClear
+    case memoryAgents, memorySize
+    case memoryShared, memoryRecall
+
+    // H3: Task Decomposition
+    case taskDecomposition, helpTaskDecompositionStatus
+    case tdSubTasks, tdCompleted
+    case tdNoDecomposition, tdEnterTaskHint
+    // Auto-Decomposition Orchestration
+    case autoDecomposition, autoDecompositionToggle
+    case orchDecomposing, orchExecuting, orchSynthesizing, orchCompleted, orchFailed
+    case orchWaveProgress, orchCancelDecomposition
+    case orchExecution, orchSubAgentStatus, orchPhase
+
+    // H4: Prompt Optimization
+    case promptOptimization, helpPromptOptimization
+    case promptAnalyze, promptAnalyzeInput, promptSuggestions
+    case promptQuality, promptClarity, promptSpecificity
+    case promptContext, promptActionability, promptTokenEfficiency
+    case promptTokenCount, promptEstimatedCost
+    case promptHistory, promptPatterns, promptABTest, promptVersions
+    case promptNoAnalysis, promptNoHistory, promptNoPatternsYet, promptNoABTests, promptNoVersions
+    case promptTotalAnalyzed, promptAvgScore
+    case promptShowInScene, promptHideFromScene, promptViewDetails
+    case promptRefreshPatterns
+    case promptPatternCount, promptPatternSuccessRate, promptPatternAvgTokens
+    case promptCreateABTest, promptABTaskDesc
+    case promptIssuesDetected, promptRewriteSuggestion, promptRewritePreview, promptApplyRewrite
+    case promptFilterByTag, promptFilterByResult, promptSortBy, promptGroupBy
+    case promptAllTags, promptSuccessOnly, promptFailedOnly, promptAllResults
+    case promptStatistics, promptSuccessRate, promptTotalTokens, promptTotalCost
+    case promptCategoryBreakdown, promptLastUsed, promptAvgTokensPerPrompt
+    case promptGroupDaily, promptGroupWeekly, promptGroupMonthly
+    case promptPromptDetail, promptDuration, promptTags, promptApplySuggestion
+
+    // I1: CI/CD Integration
+    case cicdPipeline, helpCICD
+    case cicdPipelines, cicdBuildHistory, cicdStages, cicdBuildResult
+    case cicdDeployProgress, cicdPRReview, cicdSuccessRate, cicdTotalRuns
+    case cicdShowInScene, cicdHideFromScene
+    case cicdQueued, cicdInProgress, cicdSuccess, cicdFailure, cicdCancelled
+    case cicdRefresh, cicdStartMonitoring, cicdStopMonitoring
+
+    // I2: Test Coverage
+    case testCoverage, helpTestCoverage
+    case testOverallCoverage, testResults, testPassed, testFailed, testSkipped
+    case testTotal, testCoverageTrend, testRunTests, testNoData
+    case testShowInScene, testHideFromScene, testUncovered
+    case testDuration, testSuiteName
+
+    // I3: Code Quality
+    case codeQuality, helpCodeQuality
+    case cqErrors, cqWarnings, cqInfo
+    case cqComplexity, cqTechDebt, cqRefactorSuggestions
+    case cqLintIssues, cqMaintainability, cqAnalyze
+    case cqShowInScene, cqHideFromScene
+    case cqTotalIssues, cqResolve, cqEstimatedHours
+
+    // I4: Multi-Project Workspace
+    case multiProject, helpMultiProject
+    case mpProjects, mpAddProject, mpRemoveProject, mpSwitchProject
+    case mpActive, mpNoProjects, mpSearch, mpComparison
+    case mpTaskCount, mpAgentCount
+
+    // I5: Docker / Dev Environment
+    case dockerContainers, helpDocker
+    case dockerLogs, dockerResources, dockerRunning, dockerStopped
+    case dockerMemory, dockerCPU, dockerNetwork
+    case dockerStart, dockerStop, dockerRestart
+    case dockerNoContainers, dockerShowInScene, dockerHideFromScene
+    case dockerNotAvailable, dockerStartMonitoring, dockerStopMonitoring
+
+    // J1: Code Knowledge Graph
+    case codeKnowledgeGraph, helpCodeKnowledgeGraph
+    case ckgTotalFiles, ckgDependencies, ckgAvgComplexity, ckgMostConnected
+    case ckgAnalyzing, ckgAnalyze
+    case ckgFileDependencies, ckgFunctionCalls, ckgArchitectureOverview
+    case ckgShowInScene, ckgHideFromScene
+    case ckgNoFiles, ckgNoFunctionCalls
+
+    // J2: Collaboration Visualization
+    case collabVisualization, helpCollabVisualization
+    case collabActivePaths, collabConflicts, collabHandoffs, collabEfficiency
+    case collabDataFlow, collabSharedResources, collabTaskHandoffs, collabRadarChart
+    case collabActive, collabStartMonitoring, collabStopMonitoring
+    case collabShowInScene, collabHideFromScene
+    case collabNoPaths, collabNoResources, collabNoHandoffs, collabNoMetrics
+
+    // J3: AR/VR Support
+    case arvrSettings, helpARVR
+    case arvrPlatform, arvrImmersiveLevel, arvrControls
+    case arvrGestureControl, arvrGestureControlDesc
+    case arvrHandTracking, arvrHandTrackingDesc
+    case arvrSpatialAudio, arvrSpatialAudioDesc
+    case arvrPassthrough, arvrPassthroughDesc
+    case arvrGestures, arvrVisionOSNotAvailable
+
+    // J4: Data Flow Animation
+    case dataFlowAnimation, helpDataFlow
+    case dfTokensIn, dfTokensOut, dfToolCalls, dfActiveFlows
+    case dfTokenStream, dfIOPipeline, dfToolChain
+    case dfShowInScene, dfHideFromScene
+    case dfNoFlows, dfNoPipeline, dfNoToolCalls, dfAvgResponseTime
+
+    // L1: Workflow Automation
+    case wfWorkflowEngine, helpWorkflow
+    case wfWorkflows, wfTemplates, wfHistory
+    case wfWorkflowName, wfWorkflowDesc, wfCreateWorkflow
+    case wfActiveWorkflows, wfTotalExecutions, wfSuccessRate
+    case wfNoWorkflows, wfUseTemplate
+    case wfShowInScene, wfHideFromScene
+
+    // L2: Smart Scheduling
+    case ssSmartScheduling, helpSmartScheduling
+    case ssSchedule, ssOptimizations, ssTimeline
+    case ssScheduledTasks, ssCompletedOnTime, ssResourceUtil
+    case ssAutoSchedule, ssOptimize
+    case ssTaskName, ssAddTask
+    case ssBatchTasks, ssPeakHours
+
+    // L3: Anomaly Detection
+    case adAnomalyDetection, helpAnomalyDetection
+    case adAlerts, adPatterns, adRetryConfig
+    case adActiveAlerts, adResolved, adRetrySuccess
+    case adMonitoring, adResolve, adResolveAll
+    case adNoAlerts, adNoPatterns
+
+    // H5+H1 Unified Knowledge Search
+    case unifiedSearch, helpUnifiedSearch
+    case unifiedSearchPlaceholder, unifiedSearchMode
+    case unifiedSearchModeAll, unifiedSearchModeRAG, unifiedSearchModeSemantic
+    case unifiedSearchResultCount, unifiedSearchProcessingTime
+    case unifiedSearchNoResults, unifiedSearchNoResultsDesc
+    case unifiedSearchKeywordScore, unifiedSearchSemanticScore
+    case unifiedSearchEntityScore, unifiedSearchRecencyScore
+    case unifiedSearchRelationshipScore, unifiedSearchCombinedScore
+    case unifiedSearchSource, unifiedSearchIntent, unifiedSearchConfidence
+    case unifiedSearchEntities, unifiedSearchInsertContext
+    case unifiedSearchScoreDimensions, unifiedSearchExplanation
+    case unifiedSearchRunTest, unifiedSearchTestResults
+    case unifiedSearchPerformance, unifiedSearchAccuracy
+
+    // L4: MCP Integration
+    case mcpIntegration, helpMCP
+    case mcpServers, mcpTools, mcpCallHistory
+    case mcpTotalCalls, mcpAvgResponse
+    case mcpServerName, mcpServerURL, mcpAddServer
+    case mcpConnect, mcpDisconnect
+    case mcpNoServers, mcpNoTools
 }
 
 struct L10n {
@@ -271,10 +439,8 @@ struct L10n {
     private static let zhTW: [L10nKey: String] = [
         // Toolbar
         .theme: "主題",
-        .loadConfig: "載入設定",
         .language: "語言",
         .helpChangeTheme: "變更場景主題",
-        .helpLoadConfig: "載入範例設定",
 
         // SceneSelectionView
         .agentCommand: "AGENT COMMAND",
@@ -767,6 +933,392 @@ struct L10n {
         .musicIntensity: "音樂強度",
         .musicIntensityCalm: "平靜",
         .musicIntensityActive: "活躍",
+
+        // H1: RAG System
+        .ragKnowledgeBase: "知識庫",
+        .helpRAGKnowledgeBase: "管理本地知識庫與語義搜尋",
+        .ragIndexing: "索引中...",
+        .ragIndexComplete: "索引完成",
+        .ragReindex: "重新索引",
+        .ragClearIndex: "清除索引",
+        .ragSearch: "搜尋知識庫",
+        .ragSearchResults: "搜尋結果",
+        .ragNoResults: "找不到相關結果",
+        .ragDocuments: "已索引文件",
+        .ragDatabaseSize: "資料庫大小",
+        .ragLastUpdated: "最後更新",
+        .ragKnowledgeGraph: "知識圖譜",
+        .ragShowInScene: "在 3D 場景中顯示",
+        .ragHideFromScene: "從 3D 場景中隱藏",
+        .ragAutoIndex: "自動索引",
+        .ragNoDocuments: "尚無已索引文件",
+        .ragContextInjected: "已注入上下文",
+        .ragTotalLines: "總行數",
+        .ragFileType: "檔案類型",
+        .ragLineCount: "行數",
+        .ragFileSize: "檔案大小",
+        .ragRelationships: "依賴關係",
+        .ragIndexProgress: "索引進度",
+
+        // H5+H1 Unified Knowledge Search
+        .unifiedSearch: "統一知識搜尋",
+        .helpUnifiedSearch: "整合 RAG 與語義搜尋的統一知識庫介面",
+        .unifiedSearchPlaceholder: "搜尋知識庫...",
+        .unifiedSearchMode: "搜尋模式",
+        .unifiedSearchModeAll: "全部",
+        .unifiedSearchModeRAG: "RAG 關鍵字",
+        .unifiedSearchModeSemantic: "語義搜尋",
+        .unifiedSearchResultCount: "搜尋結果",
+        .unifiedSearchProcessingTime: "處理時間",
+        .unifiedSearchNoResults: "無搜尋結果",
+        .unifiedSearchNoResultsDesc: "嘗試不同的關鍵字或切換搜尋模式",
+        .unifiedSearchKeywordScore: "關鍵字分數",
+        .unifiedSearchSemanticScore: "語義相關性",
+        .unifiedSearchEntityScore: "實體匹配",
+        .unifiedSearchRecencyScore: "新鮮度",
+        .unifiedSearchRelationshipScore: "關聯度",
+        .unifiedSearchCombinedScore: "綜合分數",
+        .unifiedSearchSource: "來源",
+        .unifiedSearchIntent: "意圖",
+        .unifiedSearchConfidence: "信心度",
+        .unifiedSearchEntities: "辨識實體",
+        .unifiedSearchInsertContext: "插入上下文",
+        .unifiedSearchScoreDimensions: "分數維度",
+        .unifiedSearchExplanation: "排名說明",
+        .unifiedSearchRunTest: "執行測試",
+        .unifiedSearchTestResults: "測試結果",
+        .unifiedSearchPerformance: "效能指標",
+        .unifiedSearchAccuracy: "準確度",
+
+        // H2: Agent Memory System
+        .agentMemory: "代理記憶",
+        .helpAgentMemory: "管理 AI 代理記憶系統",
+        .memoryTimeline: "記憶時間軸",
+        .memorySearch: "搜尋記憶...",
+        .memoryTotalMemories: "總記憶數",
+        .memoryTotalAgents: "代理數",
+        .memoryDatabaseSize: "資料庫大小",
+        .memoryLastUpdated: "最後更新",
+        .memoryNoMemories: "尚無記憶",
+        .memoryNoMemoriesDesc: "當代理完成任務後，記憶將自動記錄。",
+        .memoryCategory: "分類",
+        .memoryRecent: "最近記憶",
+        .memoryClearAll: "清除全部",
+        .memoryConfirmClear: "確定要清除所有代理記憶嗎？",
+        .memoryAgents: "代理",
+        .memorySize: "大小",
+        .memoryShared: "已分享",
+        .memoryRecall: "回憶",
+
+        // H3: Task Decomposition
+        .taskDecomposition: "任務分解",
+        .helpTaskDecompositionStatus: "顯示/隱藏任務分解狀態面板",
+        .tdSubTasks: "子任務",
+        .tdCompleted: "已完成",
+        .tdNoDecomposition: "尚無任務分解",
+        .tdEnterTaskHint: "輸入複雜任務以觸發自動分解",
+        // Auto-Decomposition Orchestration
+        .autoDecomposition: "自動分解",
+        .autoDecompositionToggle: "自動分解模式",
+        .orchDecomposing: "分解指令中...",
+        .orchExecuting: "執行中",
+        .orchSynthesizing: "彙整結果中...",
+        .orchCompleted: "已完成",
+        .orchFailed: "失敗",
+        .orchWaveProgress: "Wave 進度",
+        .orchCancelDecomposition: "取消分解執行",
+        .orchExecution: "執行",
+        .orchSubAgentStatus: "子代理狀態",
+        .orchPhase: "階段",
+
+        // H4: Prompt Optimization
+        .promptOptimization: "提示詞優化",
+        .helpPromptOptimization: "分析與優化提示詞品質",
+        .promptAnalyze: "分析",
+        .promptAnalyzeInput: "輸入提示詞進行品質分析",
+        .promptSuggestions: "優化建議",
+        .promptQuality: "品質",
+        .promptClarity: "清晰度",
+        .promptSpecificity: "具體性",
+        .promptContext: "上下文",
+        .promptActionability: "可操作性",
+        .promptTokenEfficiency: "Token效率",
+        .promptTokenCount: "Token 數量",
+        .promptEstimatedCost: "預估費用",
+        .promptHistory: "歷史",
+        .promptPatterns: "模式分析",
+        .promptABTest: "A/B 測試",
+        .promptVersions: "版本",
+        .promptNoAnalysis: "尚未分析提示詞",
+        .promptNoHistory: "尚無提示詞歷史",
+        .promptNoPatternsYet: "完成更多任務以偵測模式",
+        .promptNoABTests: "尚無 A/B 測試",
+        .promptNoVersions: "尚無版本記錄",
+        .promptTotalAnalyzed: "已分析",
+        .promptAvgScore: "平均分數",
+        .promptShowInScene: "在 3D 場景中顯示",
+        .promptHideFromScene: "從 3D 場景中隱藏",
+        .promptViewDetails: "詳細分析",
+        .promptRefreshPatterns: "重新偵測",
+        .promptPatternCount: "使用次數",
+        .promptPatternSuccessRate: "成功率",
+        .promptPatternAvgTokens: "平均Token",
+        .promptCreateABTest: "建立 A/B 測試",
+        .promptABTaskDesc: "任務描述...",
+        .promptIssuesDetected: "問題偵測",
+        .promptRewriteSuggestion: "改寫建議",
+        .promptRewritePreview: "改寫預覽",
+        .promptApplyRewrite: "套用改寫",
+        .promptFilterByTag: "依標籤篩選",
+        .promptFilterByResult: "依結果篩選",
+        .promptSortBy: "排序方式",
+        .promptGroupBy: "分組方式",
+        .promptAllTags: "所有標籤",
+        .promptSuccessOnly: "僅成功",
+        .promptFailedOnly: "僅失敗",
+        .promptAllResults: "所有結果",
+        .promptStatistics: "統計概覽",
+        .promptSuccessRate: "成功率",
+        .promptTotalTokens: "總 Token",
+        .promptTotalCost: "總費用",
+        .promptCategoryBreakdown: "類別統計",
+        .promptLastUsed: "最後使用",
+        .promptAvgTokensPerPrompt: "平均Token/次",
+        .promptGroupDaily: "每日",
+        .promptGroupWeekly: "每週",
+        .promptGroupMonthly: "每月",
+        .promptPromptDetail: "提示詞詳情",
+        .promptDuration: "耗時",
+        .promptTags: "標籤",
+        .promptApplySuggestion: "套用建議",
+
+        // I1: CI/CD Integration
+        .cicdPipeline: "CI/CD 管線",
+        .helpCICD: "CI/CD 管線視覺化與監控",
+        .cicdPipelines: "管線",
+        .cicdBuildHistory: "構建歷史",
+        .cicdStages: "階段",
+        .cicdBuildResult: "構建結果",
+        .cicdDeployProgress: "部署進度",
+        .cicdPRReview: "PR 審核",
+        .cicdSuccessRate: "成功率",
+        .cicdTotalRuns: "總執行數",
+        .cicdShowInScene: "在 3D 場景中顯示",
+        .cicdHideFromScene: "從 3D 場景中隱藏",
+        .cicdQueued: "等待中",
+        .cicdInProgress: "進行中",
+        .cicdSuccess: "成功",
+        .cicdFailure: "失敗",
+        .cicdCancelled: "已取消",
+        .cicdRefresh: "重新整理",
+        .cicdStartMonitoring: "開始監控",
+        .cicdStopMonitoring: "停止監控",
+
+        // I2: Test Coverage
+        .testCoverage: "測試覆蓋率",
+        .helpTestCoverage: "測試覆蓋率視覺化與分析",
+        .testOverallCoverage: "整體覆蓋率",
+        .testResults: "測試結果",
+        .testPassed: "通過",
+        .testFailed: "失敗",
+        .testSkipped: "跳過",
+        .testTotal: "總計",
+        .testCoverageTrend: "覆蓋率趨勢",
+        .testRunTests: "執行測試",
+        .testNoData: "尚無測試資料",
+        .testShowInScene: "在 3D 場景中顯示",
+        .testHideFromScene: "從 3D 場景中隱藏",
+        .testUncovered: "未覆蓋區域",
+        .testDuration: "測試時長",
+        .testSuiteName: "測試套件",
+
+        // I3: Code Quality
+        .codeQuality: "程式碼品質",
+        .helpCodeQuality: "程式碼品質分析與技術債追蹤",
+        .cqErrors: "錯誤",
+        .cqWarnings: "警告",
+        .cqInfo: "資訊",
+        .cqComplexity: "複雜度",
+        .cqTechDebt: "技術債",
+        .cqRefactorSuggestions: "重構建議",
+        .cqLintIssues: "Lint 問題",
+        .cqMaintainability: "可維護性",
+        .cqAnalyze: "分析專案",
+        .cqShowInScene: "在 3D 場景中顯示",
+        .cqHideFromScene: "從 3D 場景中隱藏",
+        .cqTotalIssues: "總問題數",
+        .cqResolve: "解決",
+        .cqEstimatedHours: "預估工時",
+
+        // I4: Multi-Project Workspace
+        .multiProject: "多專案工作區",
+        .helpMultiProject: "同時監控多個專案",
+        .mpProjects: "專案",
+        .mpAddProject: "新增專案",
+        .mpRemoveProject: "移除專案",
+        .mpSwitchProject: "切換專案",
+        .mpActive: "活躍",
+        .mpNoProjects: "尚無專案",
+        .mpSearch: "搜尋任務",
+        .mpComparison: "專案比較",
+        .mpTaskCount: "任務數",
+        .mpAgentCount: "代理數",
+
+        // I5: Docker / Dev Environment
+        .dockerContainers: "Docker 容器",
+        .helpDocker: "Docker 容器監控與管理",
+        .dockerLogs: "容器日誌",
+        .dockerResources: "資源監控",
+        .dockerRunning: "執行中",
+        .dockerStopped: "已停止",
+        .dockerMemory: "記憶體",
+        .dockerCPU: "CPU",
+        .dockerNetwork: "網路",
+        .dockerStart: "啟動",
+        .dockerStop: "停止",
+        .dockerRestart: "重啟",
+        .dockerNoContainers: "無 Docker 容器",
+        .dockerShowInScene: "在 3D 場景中顯示",
+        .dockerHideFromScene: "從 3D 場景中隱藏",
+        .dockerNotAvailable: "Docker 未安裝或未啟動",
+        .dockerStartMonitoring: "開始監控",
+        .dockerStopMonitoring: "停止監控",
+
+        // J1: Code Knowledge Graph
+        .codeKnowledgeGraph: "程式碼知識圖譜",
+        .helpCodeKnowledgeGraph: "檔案依賴關係與架構視覺化",
+        .ckgTotalFiles: "檔案數",
+        .ckgDependencies: "依賴數",
+        .ckgAvgComplexity: "平均複雜度",
+        .ckgMostConnected: "最多連線",
+        .ckgAnalyzing: "分析中...",
+        .ckgAnalyze: "分析專案",
+        .ckgFileDependencies: "檔案依賴",
+        .ckgFunctionCalls: "函數呼叫",
+        .ckgArchitectureOverview: "架構概覽",
+        .ckgShowInScene: "在 3D 場景中顯示",
+        .ckgHideFromScene: "從 3D 場景中隱藏",
+        .ckgNoFiles: "尚無檔案節點",
+        .ckgNoFunctionCalls: "尚無函數呼叫鏈",
+
+        // J2: Collaboration Visualization
+        .collabVisualization: "協作視覺化",
+        .helpCollabVisualization: "多 Agent 協作路徑與效率視覺化",
+        .collabActivePaths: "活躍路徑",
+        .collabConflicts: "衝突",
+        .collabHandoffs: "交接",
+        .collabEfficiency: "效率",
+        .collabDataFlow: "資料流動",
+        .collabSharedResources: "共享資源",
+        .collabTaskHandoffs: "任務交接",
+        .collabRadarChart: "效率雷達圖",
+        .collabActive: "活躍中",
+        .collabStartMonitoring: "開始監控",
+        .collabStopMonitoring: "停止監控",
+        .collabShowInScene: "在 3D 場景中顯示",
+        .collabHideFromScene: "從 3D 場景中隱藏",
+        .collabNoPaths: "尚無協作路徑",
+        .collabNoResources: "尚無共享資源",
+        .collabNoHandoffs: "尚無任務交接",
+        .collabNoMetrics: "尚無效率指標",
+
+        // J3: AR/VR Support
+        .arvrSettings: "AR/VR 設定",
+        .helpARVR: "AR/VR 沉浸式體驗設定",
+        .arvrPlatform: "平台",
+        .arvrImmersiveLevel: "沉浸等級",
+        .arvrControls: "控制設定",
+        .arvrGestureControl: "手勢控制",
+        .arvrGestureControlDesc: "以手勢與 3D Agent 互動",
+        .arvrHandTracking: "手部追蹤",
+        .arvrHandTrackingDesc: "精確追蹤手部動作",
+        .arvrSpatialAudio: "空間音效",
+        .arvrSpatialAudioDesc: "根據 3D 位置調整音效方向",
+        .arvrPassthrough: "穿透模式",
+        .arvrPassthroughDesc: "顯示真實環境與虛擬物件疊加",
+        .arvrGestures: "手勢類型",
+        .arvrVisionOSNotAvailable: "此裝置不支援 visionOS 功能。需要 Apple Vision Pro。",
+
+        // J4: Data Flow Animation
+        .dataFlowAnimation: "資料流動畫",
+        .helpDataFlow: "Token 串流與工具呼叫鏈視覺化",
+        .dfTokensIn: "Token 輸入",
+        .dfTokensOut: "Token 輸出",
+        .dfToolCalls: "工具呼叫",
+        .dfActiveFlows: "活躍流",
+        .dfTokenStream: "Token 串流",
+        .dfIOPipeline: "I/O 管道",
+        .dfToolChain: "工具鏈",
+        .dfShowInScene: "在 3D 場景中顯示",
+        .dfHideFromScene: "從 3D 場景中隱藏",
+        .dfNoFlows: "尚無資料流",
+        .dfNoPipeline: "尚無管道資料",
+        .dfNoToolCalls: "尚無工具呼叫",
+        .dfAvgResponseTime: "平均回應",
+
+        // L1: Workflow Automation
+        .wfWorkflowEngine: "工作流引擎",
+        .helpWorkflow: "自動化工作流編輯與管理",
+        .wfWorkflows: "工作流",
+        .wfTemplates: "模板",
+        .wfHistory: "執行歷史",
+        .wfWorkflowName: "工作流名稱",
+        .wfWorkflowDesc: "描述",
+        .wfCreateWorkflow: "建立工作流",
+        .wfActiveWorkflows: "活躍工作流",
+        .wfTotalExecutions: "總執行數",
+        .wfSuccessRate: "成功率",
+        .wfNoWorkflows: "尚無工作流",
+        .wfUseTemplate: "使用模板",
+        .wfShowInScene: "在 3D 場景中顯示",
+        .wfHideFromScene: "從 3D 場景中隱藏",
+
+        // L2: Smart Scheduling
+        .ssSmartScheduling: "智慧排程",
+        .helpSmartScheduling: "智慧任務排程與資源預測",
+        .ssSchedule: "排程",
+        .ssOptimizations: "優化",
+        .ssTimeline: "時間軸",
+        .ssScheduledTasks: "已排程任務",
+        .ssCompletedOnTime: "準時完成",
+        .ssResourceUtil: "資源利用率",
+        .ssAutoSchedule: "自動排程",
+        .ssOptimize: "優化排程",
+        .ssTaskName: "任務名稱",
+        .ssAddTask: "新增任務",
+        .ssBatchTasks: "批次任務",
+        .ssPeakHours: "尖峰時段",
+
+        // L3: Anomaly Detection
+        .adAnomalyDetection: "異常偵測",
+        .helpAnomalyDetection: "異常偵測與自我修復系統",
+        .adAlerts: "警報",
+        .adPatterns: "錯誤模式",
+        .adRetryConfig: "重試設定",
+        .adActiveAlerts: "活躍警報",
+        .adResolved: "已解決",
+        .adRetrySuccess: "重試成功率",
+        .adMonitoring: "監控中",
+        .adResolve: "解決",
+        .adResolveAll: "全部解決",
+        .adNoAlerts: "無警報",
+        .adNoPatterns: "尚無錯誤模式",
+
+        // L4: MCP Integration
+        .mcpIntegration: "MCP 整合",
+        .helpMCP: "Model Context Protocol 伺服器管理",
+        .mcpServers: "伺服器",
+        .mcpTools: "工具",
+        .mcpCallHistory: "呼叫歷史",
+        .mcpTotalCalls: "總呼叫數",
+        .mcpAvgResponse: "平均回應",
+        .mcpServerName: "伺服器名稱",
+        .mcpServerURL: "伺服器 URL",
+        .mcpAddServer: "新增伺服器",
+        .mcpConnect: "連線",
+        .mcpDisconnect: "中斷連線",
+        .mcpNoServers: "尚無 MCP 伺服器",
+        .mcpNoTools: "尚無工具",
     ]
 
     // MARK: - English
@@ -774,10 +1326,8 @@ struct L10n {
     private static let en: [L10nKey: String] = [
         // Toolbar
         .theme: "Theme",
-        .loadConfig: "Load Config",
         .language: "Language",
         .helpChangeTheme: "Change scene theme",
-        .helpLoadConfig: "Load sample configuration",
 
         // SceneSelectionView
         .agentCommand: "AGENT COMMAND",
@@ -1270,5 +1820,391 @@ struct L10n {
         .musicIntensity: "Music Intensity",
         .musicIntensityCalm: "Calm",
         .musicIntensityActive: "Active",
+
+        // H1: RAG System
+        .ragKnowledgeBase: "Knowledge Base",
+        .helpRAGKnowledgeBase: "Manage local knowledge base and semantic search",
+        .ragIndexing: "Indexing...",
+        .ragIndexComplete: "Index Complete",
+        .ragReindex: "Re-index",
+        .ragClearIndex: "Clear Index",
+        .ragSearch: "Search Knowledge Base",
+        .ragSearchResults: "Search Results",
+        .ragNoResults: "No matching results found",
+        .ragDocuments: "Indexed Documents",
+        .ragDatabaseSize: "Database Size",
+        .ragLastUpdated: "Last Updated",
+        .ragKnowledgeGraph: "Knowledge Graph",
+        .ragShowInScene: "Show in 3D Scene",
+        .ragHideFromScene: "Hide from 3D Scene",
+        .ragAutoIndex: "Auto Index",
+        .ragNoDocuments: "No indexed documents",
+        .ragContextInjected: "Context Injected",
+        .ragTotalLines: "Total Lines",
+        .ragFileType: "File Type",
+        .ragLineCount: "Lines",
+        .ragFileSize: "File Size",
+        .ragRelationships: "Dependencies",
+        .ragIndexProgress: "Index Progress",
+
+        // H5+H1 Unified Knowledge Search
+        .unifiedSearch: "Unified Knowledge Search",
+        .helpUnifiedSearch: "Unified RAG and semantic search knowledge base interface",
+        .unifiedSearchPlaceholder: "Search knowledge base...",
+        .unifiedSearchMode: "Search Mode",
+        .unifiedSearchModeAll: "All",
+        .unifiedSearchModeRAG: "RAG Keyword",
+        .unifiedSearchModeSemantic: "Semantic",
+        .unifiedSearchResultCount: "Results",
+        .unifiedSearchProcessingTime: "Processing Time",
+        .unifiedSearchNoResults: "No results found",
+        .unifiedSearchNoResultsDesc: "Try different keywords or switch search mode",
+        .unifiedSearchKeywordScore: "Keyword Score",
+        .unifiedSearchSemanticScore: "Semantic Relevance",
+        .unifiedSearchEntityScore: "Entity Match",
+        .unifiedSearchRecencyScore: "Recency",
+        .unifiedSearchRelationshipScore: "Relationship",
+        .unifiedSearchCombinedScore: "Combined Score",
+        .unifiedSearchSource: "Source",
+        .unifiedSearchIntent: "Intent",
+        .unifiedSearchConfidence: "Confidence",
+        .unifiedSearchEntities: "Entities",
+        .unifiedSearchInsertContext: "Insert Context",
+        .unifiedSearchScoreDimensions: "Score Dimensions",
+        .unifiedSearchExplanation: "Ranking Explanation",
+        .unifiedSearchRunTest: "Run Test",
+        .unifiedSearchTestResults: "Test Results",
+        .unifiedSearchPerformance: "Performance",
+        .unifiedSearchAccuracy: "Accuracy",
+
+        // H2: Agent Memory System
+        .agentMemory: "Agent Memory",
+        .helpAgentMemory: "Manage AI agent memory system",
+        .memoryTimeline: "Memory Timeline",
+        .memorySearch: "Search memories...",
+        .memoryTotalMemories: "Total Memories",
+        .memoryTotalAgents: "Agents",
+        .memoryDatabaseSize: "Database Size",
+        .memoryLastUpdated: "Last Updated",
+        .memoryNoMemories: "No memories yet",
+        .memoryNoMemoriesDesc: "Memories will be recorded automatically when agents complete tasks.",
+        .memoryCategory: "Category",
+        .memoryRecent: "Recent Memories",
+        .memoryClearAll: "Clear All",
+        .memoryConfirmClear: "Are you sure you want to clear all agent memories?",
+        .memoryAgents: "Agents",
+        .memorySize: "Size",
+        .memoryShared: "Shared",
+        .memoryRecall: "Recall",
+
+        // H3: Task Decomposition
+        .taskDecomposition: "Task Decomposition",
+        .helpTaskDecompositionStatus: "Toggle task decomposition status panel",
+        .tdSubTasks: "Sub-tasks",
+        .tdCompleted: "Completed",
+        .tdNoDecomposition: "No task decomposition",
+        .tdEnterTaskHint: "Enter a complex task to trigger auto-decomposition",
+        // Auto-Decomposition Orchestration
+        .autoDecomposition: "Auto Decomposition",
+        .autoDecompositionToggle: "Auto Decomposition Mode",
+        .orchDecomposing: "Decomposing...",
+        .orchExecuting: "Executing",
+        .orchSynthesizing: "Synthesizing...",
+        .orchCompleted: "Completed",
+        .orchFailed: "Failed",
+        .orchWaveProgress: "Wave Progress",
+        .orchCancelDecomposition: "Cancel Decomposition",
+        .orchExecution: "Execution",
+        .orchSubAgentStatus: "Sub-Agent Status",
+        .orchPhase: "Phase",
+
+        // H4: Prompt Optimization
+        .promptOptimization: "Prompt Optimization",
+        .helpPromptOptimization: "Analyze and optimize prompt quality",
+        .promptAnalyze: "Analyze",
+        .promptAnalyzeInput: "Enter prompt for quality analysis",
+        .promptSuggestions: "Suggestions",
+        .promptQuality: "Quality",
+        .promptClarity: "Clarity",
+        .promptSpecificity: "Specificity",
+        .promptContext: "Context",
+        .promptActionability: "Actionability",
+        .promptTokenEfficiency: "Token Efficiency",
+        .promptTokenCount: "Token Count",
+        .promptEstimatedCost: "Est. Cost",
+        .promptHistory: "History",
+        .promptPatterns: "Patterns",
+        .promptABTest: "A/B Test",
+        .promptVersions: "Versions",
+        .promptNoAnalysis: "No prompt analyzed yet",
+        .promptNoHistory: "No prompt history",
+        .promptNoPatternsYet: "Complete more tasks to detect patterns",
+        .promptNoABTests: "No A/B tests yet",
+        .promptNoVersions: "No version history",
+        .promptTotalAnalyzed: "Analyzed",
+        .promptAvgScore: "Avg Score",
+        .promptShowInScene: "Show in 3D Scene",
+        .promptHideFromScene: "Hide from 3D Scene",
+        .promptViewDetails: "View Details",
+        .promptRefreshPatterns: "Refresh",
+        .promptPatternCount: "Count",
+        .promptPatternSuccessRate: "Success Rate",
+        .promptPatternAvgTokens: "Avg Tokens",
+        .promptCreateABTest: "Create A/B Test",
+        .promptABTaskDesc: "Task description...",
+        .promptIssuesDetected: "Issues Detected",
+        .promptRewriteSuggestion: "Rewrite Suggestion",
+        .promptRewritePreview: "Rewrite Preview",
+        .promptApplyRewrite: "Apply Rewrite",
+        .promptFilterByTag: "Filter by Tag",
+        .promptFilterByResult: "Filter by Result",
+        .promptSortBy: "Sort by",
+        .promptGroupBy: "Group by",
+        .promptAllTags: "All Tags",
+        .promptSuccessOnly: "Success Only",
+        .promptFailedOnly: "Failed Only",
+        .promptAllResults: "All Results",
+        .promptStatistics: "Statistics",
+        .promptSuccessRate: "Success Rate",
+        .promptTotalTokens: "Total Tokens",
+        .promptTotalCost: "Total Cost",
+        .promptCategoryBreakdown: "Category Breakdown",
+        .promptLastUsed: "Last Used",
+        .promptAvgTokensPerPrompt: "Avg Tokens/Prompt",
+        .promptGroupDaily: "Daily",
+        .promptGroupWeekly: "Weekly",
+        .promptGroupMonthly: "Monthly",
+        .promptPromptDetail: "Prompt Detail",
+        .promptDuration: "Duration",
+        .promptTags: "Tags",
+        .promptApplySuggestion: "Apply Suggestion",
+
+        // I1: CI/CD Integration
+        .cicdPipeline: "CI/CD Pipeline",
+        .helpCICD: "CI/CD pipeline visualization and monitoring",
+        .cicdPipelines: "Pipelines",
+        .cicdBuildHistory: "Build History",
+        .cicdStages: "Stages",
+        .cicdBuildResult: "Build Result",
+        .cicdDeployProgress: "Deploy Progress",
+        .cicdPRReview: "PR Review",
+        .cicdSuccessRate: "Success Rate",
+        .cicdTotalRuns: "Total Runs",
+        .cicdShowInScene: "Show in 3D Scene",
+        .cicdHideFromScene: "Hide from 3D Scene",
+        .cicdQueued: "Queued",
+        .cicdInProgress: "In Progress",
+        .cicdSuccess: "Success",
+        .cicdFailure: "Failure",
+        .cicdCancelled: "Cancelled",
+        .cicdRefresh: "Refresh",
+        .cicdStartMonitoring: "Start Monitoring",
+        .cicdStopMonitoring: "Stop Monitoring",
+
+        // I2: Test Coverage
+        .testCoverage: "Test Coverage",
+        .helpTestCoverage: "Test coverage visualization and analysis",
+        .testOverallCoverage: "Overall Coverage",
+        .testResults: "Test Results",
+        .testPassed: "Passed",
+        .testFailed: "Failed",
+        .testSkipped: "Skipped",
+        .testTotal: "Total",
+        .testCoverageTrend: "Coverage Trend",
+        .testRunTests: "Run Tests",
+        .testNoData: "No test data",
+        .testShowInScene: "Show in 3D Scene",
+        .testHideFromScene: "Hide from 3D Scene",
+        .testUncovered: "Uncovered",
+        .testDuration: "Duration",
+        .testSuiteName: "Test Suite",
+
+        // I3: Code Quality
+        .codeQuality: "Code Quality",
+        .helpCodeQuality: "Code quality analysis and tech debt tracking",
+        .cqErrors: "Errors",
+        .cqWarnings: "Warnings",
+        .cqInfo: "Info",
+        .cqComplexity: "Complexity",
+        .cqTechDebt: "Tech Debt",
+        .cqRefactorSuggestions: "Refactor Suggestions",
+        .cqLintIssues: "Lint Issues",
+        .cqMaintainability: "Maintainability",
+        .cqAnalyze: "Analyze Project",
+        .cqShowInScene: "Show in 3D Scene",
+        .cqHideFromScene: "Hide from 3D Scene",
+        .cqTotalIssues: "Total Issues",
+        .cqResolve: "Resolve",
+        .cqEstimatedHours: "Est. Hours",
+
+        // I4: Multi-Project Workspace
+        .multiProject: "Multi-Project",
+        .helpMultiProject: "Monitor multiple projects simultaneously",
+        .mpProjects: "Projects",
+        .mpAddProject: "Add Project",
+        .mpRemoveProject: "Remove Project",
+        .mpSwitchProject: "Switch Project",
+        .mpActive: "Active",
+        .mpNoProjects: "No projects",
+        .mpSearch: "Search Tasks",
+        .mpComparison: "Comparison",
+        .mpTaskCount: "Tasks",
+        .mpAgentCount: "Agents",
+
+        // I5: Docker / Dev Environment
+        .dockerContainers: "Docker Containers",
+        .helpDocker: "Docker container monitoring and management",
+        .dockerLogs: "Container Logs",
+        .dockerResources: "Resources",
+        .dockerRunning: "Running",
+        .dockerStopped: "Stopped",
+        .dockerMemory: "Memory",
+        .dockerCPU: "CPU",
+        .dockerNetwork: "Network",
+        .dockerStart: "Start",
+        .dockerStop: "Stop",
+        .dockerRestart: "Restart",
+        .dockerNoContainers: "No Docker containers",
+        .dockerShowInScene: "Show in 3D Scene",
+        .dockerHideFromScene: "Hide from 3D Scene",
+        .dockerNotAvailable: "Docker not installed or not running",
+        .dockerStartMonitoring: "Start Monitoring",
+        .dockerStopMonitoring: "Stop Monitoring",
+
+        // J1: Code Knowledge Graph
+        .codeKnowledgeGraph: "Code Knowledge Graph",
+        .helpCodeKnowledgeGraph: "File dependency and architecture visualization",
+        .ckgTotalFiles: "Files",
+        .ckgDependencies: "Dependencies",
+        .ckgAvgComplexity: "Avg Complexity",
+        .ckgMostConnected: "Most Connected",
+        .ckgAnalyzing: "Analyzing...",
+        .ckgAnalyze: "Analyze Project",
+        .ckgFileDependencies: "File Dependencies",
+        .ckgFunctionCalls: "Function Calls",
+        .ckgArchitectureOverview: "Architecture Overview",
+        .ckgShowInScene: "Show in 3D Scene",
+        .ckgHideFromScene: "Hide from 3D Scene",
+        .ckgNoFiles: "No file nodes",
+        .ckgNoFunctionCalls: "No function call chains",
+
+        // J2: Collaboration Visualization
+        .collabVisualization: "Collaboration Viz",
+        .helpCollabVisualization: "Multi-agent collaboration paths and efficiency visualization",
+        .collabActivePaths: "Active Paths",
+        .collabConflicts: "Conflicts",
+        .collabHandoffs: "Handoffs",
+        .collabEfficiency: "Efficiency",
+        .collabDataFlow: "Data Flow",
+        .collabSharedResources: "Shared Resources",
+        .collabTaskHandoffs: "Task Handoffs",
+        .collabRadarChart: "Efficiency Radar",
+        .collabActive: "Active",
+        .collabStartMonitoring: "Start Monitoring",
+        .collabStopMonitoring: "Stop Monitoring",
+        .collabShowInScene: "Show in 3D Scene",
+        .collabHideFromScene: "Hide from 3D Scene",
+        .collabNoPaths: "No collaboration paths",
+        .collabNoResources: "No shared resources",
+        .collabNoHandoffs: "No task handoffs",
+        .collabNoMetrics: "No efficiency metrics",
+
+        // J3: AR/VR Support
+        .arvrSettings: "AR/VR Settings",
+        .helpARVR: "AR/VR immersive experience settings",
+        .arvrPlatform: "Platform",
+        .arvrImmersiveLevel: "Immersive Level",
+        .arvrControls: "Controls",
+        .arvrGestureControl: "Gesture Control",
+        .arvrGestureControlDesc: "Interact with 3D agents using gestures",
+        .arvrHandTracking: "Hand Tracking",
+        .arvrHandTrackingDesc: "Precise hand motion tracking",
+        .arvrSpatialAudio: "Spatial Audio",
+        .arvrSpatialAudioDesc: "Directional audio based on 3D position",
+        .arvrPassthrough: "Passthrough",
+        .arvrPassthroughDesc: "Show real environment with virtual objects overlay",
+        .arvrGestures: "Gesture Types",
+        .arvrVisionOSNotAvailable: "visionOS features not available on this device. Requires Apple Vision Pro.",
+
+        // J4: Data Flow Animation
+        .dataFlowAnimation: "Data Flow Animation",
+        .helpDataFlow: "Token stream and tool call chain visualization",
+        .dfTokensIn: "Tokens In",
+        .dfTokensOut: "Tokens Out",
+        .dfToolCalls: "Tool Calls",
+        .dfActiveFlows: "Active Flows",
+        .dfTokenStream: "Token Stream",
+        .dfIOPipeline: "I/O Pipeline",
+        .dfToolChain: "Tool Chain",
+        .dfShowInScene: "Show in 3D Scene",
+        .dfHideFromScene: "Hide from 3D Scene",
+        .dfNoFlows: "No data flows",
+        .dfNoPipeline: "No pipeline data",
+        .dfNoToolCalls: "No tool calls",
+        .dfAvgResponseTime: "Avg Response",
+
+        // L1: Workflow Automation
+        .wfWorkflowEngine: "Workflow Engine",
+        .helpWorkflow: "Workflow automation editor and management",
+        .wfWorkflows: "Workflows",
+        .wfTemplates: "Templates",
+        .wfHistory: "History",
+        .wfWorkflowName: "Workflow Name",
+        .wfWorkflowDesc: "Description",
+        .wfCreateWorkflow: "Create Workflow",
+        .wfActiveWorkflows: "Active Workflows",
+        .wfTotalExecutions: "Total Executions",
+        .wfSuccessRate: "Success Rate",
+        .wfNoWorkflows: "No workflows",
+        .wfUseTemplate: "Use Template",
+        .wfShowInScene: "Show in 3D Scene",
+        .wfHideFromScene: "Hide from 3D Scene",
+
+        // L2: Smart Scheduling
+        .ssSmartScheduling: "Smart Scheduling",
+        .helpSmartScheduling: "Smart task scheduling and resource prediction",
+        .ssSchedule: "Schedule",
+        .ssOptimizations: "Optimizations",
+        .ssTimeline: "Timeline",
+        .ssScheduledTasks: "Scheduled Tasks",
+        .ssCompletedOnTime: "On Time",
+        .ssResourceUtil: "Resource Util",
+        .ssAutoSchedule: "Auto Schedule",
+        .ssOptimize: "Optimize",
+        .ssTaskName: "Task Name",
+        .ssAddTask: "Add Task",
+        .ssBatchTasks: "Batch Tasks",
+        .ssPeakHours: "Peak Hours",
+
+        // L3: Anomaly Detection
+        .adAnomalyDetection: "Anomaly Detection",
+        .helpAnomalyDetection: "Anomaly detection and self-healing system",
+        .adAlerts: "Alerts",
+        .adPatterns: "Error Patterns",
+        .adRetryConfig: "Retry Config",
+        .adActiveAlerts: "Active Alerts",
+        .adResolved: "Resolved",
+        .adRetrySuccess: "Retry Success",
+        .adMonitoring: "Monitoring",
+        .adResolve: "Resolve",
+        .adResolveAll: "Resolve All",
+        .adNoAlerts: "No alerts",
+        .adNoPatterns: "No error patterns",
+
+        // L4: MCP Integration
+        .mcpIntegration: "MCP Integration",
+        .helpMCP: "Model Context Protocol server management",
+        .mcpServers: "Servers",
+        .mcpTools: "Tools",
+        .mcpCallHistory: "Call History",
+        .mcpTotalCalls: "Total Calls",
+        .mcpAvgResponse: "Avg Response",
+        .mcpServerName: "Server Name",
+        .mcpServerURL: "Server URL",
+        .mcpAddServer: "Add Server",
+        .mcpConnect: "Connect",
+        .mcpDisconnect: "Disconnect",
+        .mcpNoServers: "No MCP servers",
+        .mcpNoTools: "No tools",
     ]
 }

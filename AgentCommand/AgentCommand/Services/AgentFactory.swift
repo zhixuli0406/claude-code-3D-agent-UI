@@ -24,6 +24,44 @@ struct AgentFactory {
 
     private static var teamCounter = 0
 
+    /// Create a standalone commander agent (no sub-agents yet)
+    static func createCommander(model: ClaudeModel = .sonnet) -> Agent {
+        teamCounter += 1
+        let commanderName = commanderNames[(teamCounter - 1) % commanderNames.count]
+        return Agent(
+            id: UUID(),
+            name: "\(commanderName) #\(teamCounter)",
+            role: .commander,
+            status: .idle,
+            selectedModel: model,
+            personality: randomPersonality(for: .commander),
+            appearance: randomAppearance(),
+            position: ScenePosition(x: 0, y: 0, z: 0, rotation: 0),
+            parentAgentId: nil,
+            subAgentIds: [],
+            assignedTaskIds: []
+        )
+    }
+
+    /// Create a single sub-agent attached to a parent commander
+    static func createSubAgent(parentId: UUID, role: AgentRole, model: ClaudeModel = .sonnet) -> Agent {
+        let shuffledNames = subAgentNames.shuffled()
+        let name = shuffledNames.first ?? "Sub Agent"
+        return Agent(
+            id: UUID(),
+            name: "\(name) #\(teamCounter)",
+            role: role,
+            status: .idle,
+            selectedModel: model,
+            personality: randomPersonality(for: role),
+            appearance: randomAppearance(),
+            position: ScenePosition(x: 0, y: 0, z: 0, rotation: 0),
+            parentAgentId: parentId,
+            subAgentIds: [],
+            assignedTaskIds: []
+        )
+    }
+
     /// Create a new team: 1 commander + `subAgentCount` sub-agents
     static func createTeam(subAgentCount: Int = 2, model: ClaudeModel = .sonnet) -> [Agent] {
         teamCounter += 1

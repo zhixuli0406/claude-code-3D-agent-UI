@@ -17,6 +17,10 @@ class GitIntegrationManager: ObservableObject {
     // Compile-time source path — always inside the project git repo
     private static let compileTimeSourcePath: String = #filePath
 
+    deinit {
+        pollingTimer?.invalidate()
+    }
+
     // MARK: - Lifecycle
 
     func startMonitoring(directory: String) {

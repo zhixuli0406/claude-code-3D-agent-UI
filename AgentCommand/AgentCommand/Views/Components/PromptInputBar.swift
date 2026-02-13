@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct PromptInputBar: View {
     @EnvironmentObject var appState: AppState
@@ -8,6 +9,11 @@ struct PromptInputBar: View {
     @State private var showVariableSheet = false
     @State private var pendingTemplate: PromptTemplate?
     @State private var variableValues: [String: String] = [:]
+
+    // Live quality analysis state
+    @State private var liveScore: PromptQualityScore?
+    @State private var analysisCancellable: AnyCancellable?
+    @State private var analysisSubject = PassthroughSubject<String, Never>()
 
     private var templateManager: PromptTemplateManager { appState.promptTemplateManager }
 
@@ -45,10 +51,38 @@ struct PromptInputBar: View {
             // G1: Model selector
             ModelSelectorButton(selectedModel: $appState.selectedModelForNewTeam)
 
+            // Unified Knowledge Search button
+            Button(action: { appState.isUnifiedSearchVisible = true }) {
+                HStack(spacing: 3) {
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 10))
+                    Text(localization.localized(.ragSearch))
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                }
+                .foregroundColor(Color(hex: "#9C27B0"))
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(Color(hex: "#9C27B0").opacity(0.1))
+                .cornerRadius(4)
+            }
+            .buttonStyle(.plain)
+
             // Terminal icon
             Image(systemName: "terminal")
                 .foregroundColor(Color(hex: "#00BCD4"))
                 .font(.system(size: 14))
+
+            // Live quality badge
+            if let score = liveScore, !promptText.isEmpty {
+                Text(score.gradeLabel)
+                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color(hex: score.gradeColorHex))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(Color(hex: score.gradeColorHex).opacity(0.15))
+                    .cornerRadius(3)
+                    .help("Quality: \(score.overallPercentage)%")
+            }
 
             // Text field
             TextField(localization.localized(.typeTaskPrompt), text: $promptText)
@@ -57,6 +91,9 @@ struct PromptInputBar: View {
                 .foregroundColor(.white)
                 .onSubmit {
                     submitTask()
+                }
+                .onChange(of: promptText) { _, newValue in
+                    analysisSubject.send(newValue)
                 }
 
             // Send button
@@ -108,6 +145,19 @@ struct PromptInputBar: View {
                 )
                 .environmentObject(localization)
             }
+        }
+        .onAppear {
+            analysisCancellable = analysisSubject
+                .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+                .removeDuplicates()
+                .sink { text in
+                    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed.count >= 3 {
+                        liveScore = appState.promptOptimizationManager.quickAnalyze(trimmed)
+                    } else {
+                        liveScore = nil
+                    }
+                }
         }
     }
 
@@ -202,7 +252,7 @@ struct PromptInputBar: View {
         let trimmed = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        appState.submitPromptWithNewTeam(title: trimmed)
+        appState.submitPromptSmart(title: trimmed)
         promptText = ""
 
         withAnimation(.easeInOut(duration: 0.3)) {

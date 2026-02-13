@@ -14,6 +14,9 @@ class PerformanceMetricsManager: ObservableObject {
 
     @Published var taskMetrics: [UUID: TaskMetrics] = [:]
 
+    // Memory optimization: cap completed task metrics to prevent unbounded growth
+    private static let maxCompletedMetrics = 100
+
     // MARK: - Resource monitoring
 
     @Published var processResourceUsage: [UUID: ResourceSnapshot] = [:]
@@ -79,6 +82,7 @@ class PerformanceMetricsManager: ObservableObject {
 
         taskMetrics[taskId] = metrics
         save()
+        evictOldMetrics()
     }
 
     func taskFailed(taskId: UUID) {
@@ -90,6 +94,7 @@ class PerformanceMetricsManager: ObservableObject {
         }
         taskMetrics[taskId] = metrics
         save()
+        evictOldMetrics()
     }
 
     func recordToolCall(taskId: UUID, tool: String) {
@@ -167,6 +172,21 @@ class PerformanceMetricsManager: ObservableObject {
                 // Process may have ended
                 processResourceUsage.removeValue(forKey: taskId)
             }
+        }
+    }
+
+    // MARK: - Memory Management
+
+    /// Evict oldest completed/failed metrics when exceeding the cap
+    private func evictOldMetrics() {
+        let finished = taskMetrics.filter { $0.value.status != .running }
+        guard finished.count > Self.maxCompletedMetrics else { return }
+
+        // Sort finished by endTime ascending, remove oldest
+        let sorted = finished.sorted { ($0.value.endTime ?? .distantPast) < ($1.value.endTime ?? .distantPast) }
+        let removeCount = finished.count - Self.maxCompletedMetrics
+        for entry in sorted.prefix(removeCount) {
+            taskMetrics.removeValue(forKey: entry.key)
         }
     }
 

@@ -1283,4 +1283,186 @@ class ThemeableScene: ObservableObject {
             node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
         }
     }
+
+    // MARK: - RAG Knowledge Graph Visualization (H1)
+
+    func showRAGKnowledgeGraph(_ documents: [RAGDocument], _ relationships: [RAGRelationship]) {
+        removeRAGKnowledgeGraph()
+        let graph = RAGVisualizationBuilder.buildKnowledgeGraph(documents: documents, relationships: relationships)
+        graph.position = SCNVector3(0, 2.5, -2.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removeRAGKnowledgeGraph() {
+        if let node = scene.rootNode.childNode(withName: "ragKnowledgeGraph", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Prompt Optimization Visualization (H4)
+
+    func showPromptOptimizationGraph(
+        score: PromptQualityScore?,
+        patterns: [PromptPattern],
+        history: [PromptHistoryRecord],
+        antiPatterns: [PromptAntiPattern] = []
+    ) {
+        removePromptOptimizationGraph()
+        let graph = PromptOptimizationVisualizationBuilder.buildOptimizationGraph(
+            score: score,
+            patterns: patterns,
+            history: history,
+            antiPatterns: antiPatterns
+        )
+        graph.position = SCNVector3(-3.0, 2.5, -1.5)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removePromptOptimizationGraph() {
+        if let node = scene.rootNode.childNode(withName: "promptOptimizationGraph", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - CI/CD Visualization (I1)
+
+    func showCICDVisualization(_ pipelines: [CICDPipeline]) {
+        removeCICDVisualization()
+        let graph = CICDVisualizationBuilder.buildPipelineVisualization(pipelines: pipelines)
+        graph.position = SCNVector3(3.0, 3.0, -3.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removeCICDVisualization() {
+        if let node = scene.rootNode.childNode(withName: "cicdVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Test Coverage Visualization (I2)
+
+    func showTestCoverageVisualization(_ report: TestCoverageReport) {
+        removeTestCoverageVisualization()
+        let graph = TestCoverageVisualizationBuilder.buildCoverageMap(report: report)
+        graph.position = SCNVector3(-3.0, 2.5, -3.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removeTestCoverageVisualization() {
+        if let node = scene.rootNode.childNode(withName: "testCoverageVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Code Quality Visualization (I3)
+
+    func showCodeQualityVisualization(_ complexities: [CodeComplexity]) {
+        removeCodeQualityVisualization()
+        let graph = CodeQualityVisualizationBuilder.buildComplexityGraph(complexities: complexities)
+        graph.position = SCNVector3(0, 3.0, -4.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removeCodeQualityVisualization() {
+        if let node = scene.rootNode.childNode(withName: "codeQualityVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Docker Visualization (I5)
+
+    func showDockerVisualization(_ containers: [DockerContainer]) {
+        removeDockerVisualization()
+        let graph = DockerVisualizationBuilder.buildContainerVisualization(containers: containers)
+        let roomWidth = currentSceneConfig?.roomSize.width ?? 20
+        graph.position = SCNVector3(-roomWidth / 2 + 2.0, 2.5, -1.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(.fadeIn(duration: 0.5))
+    }
+
+    func removeDockerVisualization() {
+        if let node = scene.rootNode.childNode(withName: "dockerVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Code Knowledge Graph Visualization (J1)
+
+    func showCodeKnowledgeGraphVisualization(_ files: [CodeFileNode], _ edges: [CodeDependencyEdge]) {
+        removeCodeKnowledgeGraphVisualization()
+        let graph = CodeKnowledgeGraphVisualizationBuilder.buildKnowledgeGraph(nodes: files, edges: edges)
+        graph.position = SCNVector3(0, 3.0, -2.5)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(SCNAction.fadeIn(duration: 0.5))
+    }
+
+    func removeCodeKnowledgeGraphVisualization() {
+        if let node = scene.rootNode.childNode(withName: "codeKnowledgeGraph", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Collaboration Visualization (J2)
+
+    func showCollaborationVisualization(
+        _ paths: [AgentCollaborationPath],
+        _ handoffs: [TaskHandoff],
+        _ metrics: [TeamEfficiencyMetric]
+    ) {
+        removeCollaborationVisualization()
+        let graph = CollaborationVisualizationBuilder.buildCollaborationGraph(
+            paths: paths,
+            handoffs: handoffs,
+            metrics: metrics
+        )
+        let roomWidth = currentSceneConfig?.roomSize.width ?? 20
+        graph.position = SCNVector3(roomWidth / 2 - 2.5, 2.5, -2.0)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(SCNAction.fadeIn(duration: 0.5))
+    }
+
+    func removeCollaborationVisualization() {
+        if let node = scene.rootNode.childNode(withName: "collaborationVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
+
+    // MARK: - Data Flow Animation Visualization (J4)
+
+    func showDataFlowVisualization(
+        _ tokenFlows: [TokenFlowEvent],
+        _ pipelineStages: [IOPipelineStage],
+        _ toolCallChain: [ToolCallChainEntry]
+    ) {
+        removeDataFlowVisualization()
+        let graph = DataFlowVisualizationBuilder.buildDataFlowVisualization(
+            flows: tokenFlows,
+            pipeline: pipelineStages,
+            toolCalls: toolCallChain
+        )
+        let roomWidth = currentSceneConfig?.roomSize.width ?? 20
+        graph.position = SCNVector3(-roomWidth / 2 + 2.5, 2.5, -1.5)
+        graph.opacity = 0
+        scene.rootNode.addChildNode(graph)
+        graph.runAction(SCNAction.fadeIn(duration: 0.5))
+    }
+
+    func removeDataFlowVisualization() {
+        if let node = scene.rootNode.childNode(withName: "dataFlowVisualization", recursively: false) {
+            node.runAction(.sequence([.fadeOut(duration: 0.3), .removeFromParentNode()]))
+        }
+    }
 }

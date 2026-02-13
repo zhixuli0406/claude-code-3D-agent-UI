@@ -91,6 +91,41 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - **Quick-Launch Menu** — Fast template selection directly from the prompt input bar with recent history
 - **Variable Substitution** — Dynamic `{{variable}}` placeholders with live preview and default values
 
+### AI Enhancement Features
+
+- **RAG System** — Local knowledge base with SQLite FTS5 full-text search, automatic project file indexing, semantic search, context injection into prompts, and 3D knowledge graph visualization
+- **Agent Memory** — Long-term memory storage for task summaries, contextual recall across sessions, timeline bubble visualization, cross-agent knowledge sharing, and relevance-based ranking
+- **Smart Task Decomposition** — Automatic sub-task breakdown, dependency graph visualization in 3D, intelligent assignment suggestions based on agent history, parallel execution planning, and complexity estimation
+- **Prompt Optimization** — Quality scoring, auto-completion suggestions, historical analysis, A/B testing framework, and prompt version tracking
+- **Semantic Query & Intent Classification** — NLP preprocessing pipeline with language detection, tokenization, entity extraction; hybrid rule-based + AI intent classification for 16 intent types; multi-source unified search orchestrator integrating RAG, direct match, and agent memory; multi-dimensional result ranking (BM25, semantic relevance, entity match, recency, dependency graph)
+
+### Dev Workflow Integration
+
+- **CI/CD Visualization** — GitHub Actions status monitoring in 3D scene, build result animations, deployment progress tracking, and PR review status display
+- **Test Coverage Visualization** — 3D coverage heatmap, real-time test result animations, coverage trend tracking, and uncovered area highlighting
+- **Code Quality Dashboard** — Static analysis integration (SwiftLint, ESLint), technical debt tracking, 3D code complexity visualization, and refactoring suggestions
+- **Multi-Project Workspace** — Simultaneous multi-project agent monitoring, cross-project task search, smooth project switching transitions, and project-level performance comparison
+- **Docker Integration** — Container status monitoring in 3D, real-time container log streaming, one-click environment start/stop, and CPU/memory/network resource visualization
+
+### Advanced Visualization
+
+- **Code Knowledge Graph** — 3D file dependency graph with node-and-link visualization, real-time change propagation highlighting, function call chain animation, and architectural bird's-eye view
+- **Collaboration Visualization** — Multi-agent collaboration path animation, shared resource access conflict display, task handoff transitions, and team efficiency radar chart
+- **AR/VR Support** — visionOS adaptation for Apple Vision Pro spatial computing, gesture controls for 3D agent interaction, spatial audio positioning, and immersive work environments
+- **Data Flow Animation** — Token stream particle flow visualization, input/output pipeline animation, and tool call chain visualization
+
+### Dev Workflow & Intelligence
+
+- **Workflow Automation** — Visual workflow editor with trigger-based execution (git push, file change, schedule), step-by-step progress tracking, built-in templates (PR Review, Bug Fix), and 3D workflow node visualization
+- **Smart Scheduling** — AI-powered task scheduling with priority optimization, resource utilization tracking, time slot management, auto-scheduling, and 3D timeline visualization
+- **Anomaly Detection & Self-Healing** — Real-time monitoring for infinite loops, excessive token usage, repeated errors, memory leaks, and rate limit risks; configurable retry strategies (exponential backoff, linear, immediate); error pattern tracking with 3D alert visualization
+- **MCP Integration** — Model Context Protocol server management with tool discovery, call recording, latency tracking, and 3D hub-and-spoke visualization of connected servers and tools
+
+### SkillsMP Integration
+
+- Browse and import community skills from the SkillsMP marketplace
+- Install skills directly into agent workflows
+
 ### CLI Integration
 
 - Spawns and manages Claude Code CLI processes
@@ -98,6 +133,7 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - Tool call counting and progress estimation
 - Session resume support
 - Workspace management
+- Session history with replay capability
 
 ### Localization
 
@@ -187,29 +223,39 @@ Open `AgentCommand/Package.swift` in Xcode to build and run from the IDE.
 ```
 AgentCommand/
 ├── App/                  # App entry point & global state
-├── Models/               # Data models (Agent, Achievement, Cosmetic, Skill, etc.)
-├── Services/             # Business logic (CLI process, achievements, stats, skills, etc.)
+├── Models/               # Data models (Agent, Achievement, Cosmetic, Skill, RAG, Memory, Workflow, MCP, Semantic Query, CI/CD, Docker, etc.)
+├── Services/             # Business logic (CLI process, RAG, memory, task decomposition, semantic query, workflow, scheduling, anomaly, MCP, CI/CD, Docker, etc.)
 ├── Views/
 │   ├── Components/       # Reusable UI components
-│   ├── Overlays/         # Achievement gallery, cosmetic shop, minimap, metrics, etc.
-│   ├── Panels/           # Agent detail, CLI output, task list panels
+│   ├── Overlays/         # Achievement gallery, cosmetic shop, minimap, RAG status,
+│   │                     #   agent memory, task decomposition, prompt optimization,
+│   │                     #   workflow, scheduling, anomaly detection, MCP, CI/CD,
+│   │                     #   test coverage, code quality, Docker, knowledge graph, etc.
+│   ├── Panels/           # Agent detail, CLI output, task list, model comparison panels
 │   ├── Windows/          # Multi-window management
 │   └── Timeline/         # Timeline views
 ├── Scene3D/
 │   ├── Themes/           # 9 theme builders
 │   ├── Voxel/            # Voxel character system (body, hats, particles, name tags)
 │   ├── Animation/        # 16 animation controllers
-│   └── Effects/          # Particles, chat bubbles, weather, day/night cycle
+│   ├── Effects/          # Particles, chat bubbles, weather, day/night cycle,
+│   │                     #   RAG/task decomposition/prompt optimization visualizations,
+│   │                     #   workflow/scheduling/anomaly/MCP visualizations,
+│   │                     #   CI/CD/test coverage/code quality/Docker/knowledge graph/
+│   │                     #   collaboration/data flow/multi-project visualizations
+│   └── Environment/      # Room, desk, monitor, lighting, multi-team layout
 ├── Utilities/            # Helper functions
 └── Resources/            # Assets and sample configs
 ```
 
 ## Roadmap
 
-See [TODO-features.md](./TODO-features.md) for the full feature backlog. Upcoming items include:
+See [TODO-features.md](./TODO-features.md) and [TODO-next-features.md](./TODO-next-features.md) for the full feature backlog. Upcoming items include:
 
-- Spectator mode with live sharing
-- Template sharing and community presets
+- Theme Marketplace & community sharing
+- Real-time multiplayer collaboration
+- Advanced analytics dashboard & export
+- Voice control & plugin system
 
 ## License
 

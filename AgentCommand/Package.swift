@@ -14,6 +14,11 @@ let package = Package(
             resources: [
                 .copy("Resources/SampleConfigs")
             ]
+        ),
+        .testTarget(
+            name: "AgentCommandTests",
+            dependencies: ["AgentCommand"],
+            path: "Tests"
         )
     ]
 )

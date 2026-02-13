@@ -71,6 +71,91 @@ class AppState: ObservableObject {
     // Help Overlay state (F1 keyboard shortcut)
     @Published var isHelpOverlayVisible: Bool = false
 
+    // RAG System state (H1)
+    @Published var isRAGStatusVisible: Bool = false
+    @Published var isRAGKnowledgeGraphVisible: Bool = false
+    @Published var isRAGKnowledgeGraphInScene: Bool = false
+
+    // Agent Memory System state (H2)
+    @Published var isAgentMemoryVisible: Bool = false
+    @Published var isAgentMemoryOverlayVisible: Bool = false
+
+    // Auto-Decomposition state (H3)
+    @Published var isTaskDecompositionStatusVisible: Bool = false
+    @Published var isTaskDecompositionViewVisible: Bool = false
+
+    // Prompt Optimization state (H4)
+    @Published var isPromptOptimizationVisible: Bool = false
+    @Published var isPromptOptimizationPanelVisible: Bool = false
+    @Published var isPromptOptimizationInScene: Bool = false
+
+    // CI/CD Integration state (I1)
+    @Published var isCICDStatusVisible: Bool = false
+    @Published var isCICDViewVisible: Bool = false
+    @Published var isCICDInScene: Bool = false
+
+    // Test Coverage state (I2)
+    @Published var isTestCoverageStatusVisible: Bool = false
+    @Published var isTestCoverageViewVisible: Bool = false
+    @Published var isTestCoverageInScene: Bool = false
+
+    // Code Quality state (I3)
+    @Published var isCodeQualityStatusVisible: Bool = false
+    @Published var isCodeQualityViewVisible: Bool = false
+    @Published var isCodeQualityInScene: Bool = false
+
+    // Multi-Project state (I4)
+    @Published var isMultiProjectStatusVisible: Bool = false
+    @Published var isMultiProjectViewVisible: Bool = false
+
+    // Docker state (I5)
+    @Published var isDockerStatusVisible: Bool = false
+    @Published var isDockerViewVisible: Bool = false
+    @Published var isDockerInScene: Bool = false
+
+    // Code Knowledge Graph state (J1)
+    @Published var isCodeKnowledgeGraphStatusVisible: Bool = false
+    @Published var isCodeKnowledgeGraphViewVisible: Bool = false
+    @Published var isCodeKnowledgeGraphInScene: Bool = false
+
+    // Collaboration Visualization state (J2)
+    @Published var isCollaborationVizStatusVisible: Bool = false
+    @Published var isCollaborationVizViewVisible: Bool = false
+    @Published var isCollaborationVizInScene: Bool = false
+
+    // AR/VR state (J3)
+    @Published var isARVRSettingsVisible: Bool = false
+
+    // Data Flow Animation state (J4)
+    @Published var isDataFlowStatusVisible: Bool = false
+    @Published var isDataFlowViewVisible: Bool = false
+    @Published var isDataFlowInScene: Bool = false
+
+    // Workflow Automation state (L1)
+    @Published var isWorkflowStatusVisible: Bool = false
+    @Published var isWorkflowEditorVisible: Bool = false
+
+    // Smart Scheduling state (L2)
+    @Published var isSmartSchedulingStatusVisible: Bool = false
+    @Published var isSmartSchedulingViewVisible: Bool = false
+
+    // Anomaly Detection state (L3)
+    @Published var isAnomalyDetectionStatusVisible: Bool = false
+    @Published var isAnomalyDetectionViewVisible: Bool = false
+
+    // MCP Integration state (L4)
+    @Published var isMCPStatusVisible: Bool = false
+    @Published var isMCPManagementVisible: Bool = false
+
+    // Semantic Understanding state (H5)
+    @Published var isSemanticSearchEnabled: Bool = true
+    @Published var semanticSearchConfig: RAGSemanticConfig = .default
+
+    // Unified Knowledge Search state (H5+H1)
+    @Published var isUnifiedSearchVisible: Bool = false
+    @Published var unifiedSearchResponse: SemanticSearchResponse?
+    @Published var isUnifiedSearchProcessing: Bool = false
+
     // Multi-Window Support (D2)
     let windowManager = WindowManager()
 
@@ -94,6 +179,25 @@ class AppState: ObservableObject {
     let promptTemplateManager = PromptTemplateManager()
     let relationshipManager = AgentRelationshipManager()
     let backgroundMusicManager = BackgroundMusicManager()
+    var ragManager = RAGSystemManager()
+    let agentMemoryManager = AgentMemorySystemManager()
+    let promptOptimizationManager = PromptOptimizationManager()
+    let cicdManager = CICDManager()
+    let testCoverageManager = TestCoverageManager()
+    let codeQualityManager = CodeQualityManager()
+    let multiProjectManager = MultiProjectManager()
+    let dockerManager = DockerManager()
+    let codeKnowledgeGraphManager = CodeKnowledgeGraphManager()
+    let collaborationVizManager = CollaborationVizManager()
+    let arvrManager = ARVRManager()
+    let dataFlowAnimationManager = DataFlowAnimationManager()
+    let workflowManager = WorkflowManager()
+    let smartSchedulingManager = SmartSchedulingManager()
+    let anomalyDetectionManager = AnomalyDetectionManager()
+    let mcpIntegrationManager = MCPIntegrationManager()
+    let semanticOrchestrator = SemanticSearchOrchestrator()
+    let orchestrator = AutoDecompositionOrchestrator()
+    @Published var autoDecompositionEnabled: Bool = true
     private let dayNightController = DayNightCycleController()
     /// Timer for personality idle behaviors (E1)
     private var idleBehaviorTimer: DispatchWorkItem?
@@ -110,6 +214,44 @@ class AppState: ObservableObject {
     private var workspaceCancellable: AnyCancellable?
     /// Forward gitManager changes so views observing AppState re-render
     private var gitManagerCancellable: AnyCancellable?
+    /// Forward ragManager changes so views observing AppState re-render
+    private var ragManagerCancellable: AnyCancellable?
+    /// Forward agentMemoryManager changes (H2)
+    private var agentMemoryCancellable: AnyCancellable?
+    /// Forward promptOptimizationManager changes (H4)
+    private var promptOptimizationCancellable: AnyCancellable?
+    /// Auto-refresh 3D scene when prompt analysis data changes
+    private var promptOptimizationSceneCancellable: AnyCancellable?
+    /// Forward cicdManager changes (I1)
+    private var cicdCancellable: AnyCancellable?
+    /// Forward testCoverageManager changes (I2)
+    private var testCoverageCancellable: AnyCancellable?
+    /// Forward codeQualityManager changes (I3)
+    private var codeQualityCancellable: AnyCancellable?
+    /// Forward multiProjectManager changes (I4)
+    private var multiProjectCancellable: AnyCancellable?
+    /// Forward dockerManager changes (I5)
+    private var dockerCancellable: AnyCancellable?
+    /// Forward codeKnowledgeGraphManager changes (J1)
+    private var codeKnowledgeGraphCancellable: AnyCancellable?
+    /// Forward collaborationVizManager changes (J2)
+    private var collaborationVizCancellable: AnyCancellable?
+    /// Forward arvrManager changes (J3)
+    private var arvrCancellable: AnyCancellable?
+    /// Forward dataFlowAnimationManager changes (J4)
+    private var dataFlowAnimationCancellable: AnyCancellable?
+    /// Forward workflowManager changes (L1)
+    private var workflowCancellable: AnyCancellable?
+    /// Forward smartSchedulingManager changes (L2)
+    private var smartSchedulingCancellable: AnyCancellable?
+    /// Forward anomalyDetectionManager changes (L3)
+    private var anomalyDetectionCancellable: AnyCancellable?
+    /// Forward mcpIntegrationManager changes (L4)
+    private var mcpIntegrationCancellable: AnyCancellable?
+    /// Forward orchestrator changes
+    private var orchestratorCancellable: AnyCancellable?
+    /// Forward semanticOrchestrator changes (H5)
+    private var semanticOrchestratorCancellable: AnyCancellable?
 
     /// Snapshot of state before replay, restored when replay stops
     private var preReplayAgents: [Agent]?
@@ -123,6 +265,22 @@ class AppState: ObservableObject {
     private static let miniMapKey = "miniMapVisible"
     private static let taskQueueKey = "taskQueueVisible"
     private static let metricsKey = "metricsVisible"
+    private static let ragStatusKey = "ragStatusVisible"
+    private static let memoryOverlayKey = "memoryOverlayVisible"
+    private static let promptOptimizationKey = "promptOptimizationVisible"
+    private static let cicdStatusKey = "cicdStatusVisible"
+    private static let testCoverageStatusKey = "testCoverageStatusVisible"
+    private static let codeQualityStatusKey = "codeQualityStatusVisible"
+    private static let multiProjectStatusKey = "multiProjectStatusVisible"
+    private static let dockerStatusKey = "dockerStatusVisible"
+    private static let codeKnowledgeGraphStatusKey = "codeKnowledgeGraphStatusVisible"
+    private static let collaborationVizStatusKey = "collaborationVizStatusVisible"
+    private static let dataFlowStatusKey = "dataFlowStatusVisible"
+    private static let workflowStatusKey = "workflowStatusVisible"
+    private static let smartSchedulingStatusKey = "smartSchedulingStatusVisible"
+    private static let anomalyDetectionStatusKey = "anomalyDetectionStatusVisible"
+    private static let mcpStatusKey = "mcpStatusVisible"
+    private static let autoDecompositionKey = "autoDecompositionEnabled"
 
     init() {
         if let saved = UserDefaults.standard.string(forKey: Self.themeKey),
@@ -146,6 +304,30 @@ class AppState: ObservableObject {
             isTaskQueueVisible = UserDefaults.standard.bool(forKey: Self.taskQueueKey)
         }
         isMetricsVisible = UserDefaults.standard.bool(forKey: Self.metricsKey)
+        isRAGStatusVisible = UserDefaults.standard.bool(forKey: Self.ragStatusKey)
+        isAgentMemoryOverlayVisible = UserDefaults.standard.bool(forKey: Self.memoryOverlayKey)
+        isPromptOptimizationVisible = UserDefaults.standard.bool(forKey: Self.promptOptimizationKey)
+        isCICDStatusVisible = UserDefaults.standard.bool(forKey: Self.cicdStatusKey)
+        isTestCoverageStatusVisible = UserDefaults.standard.bool(forKey: Self.testCoverageStatusKey)
+        isCodeQualityStatusVisible = UserDefaults.standard.bool(forKey: Self.codeQualityStatusKey)
+        isMultiProjectStatusVisible = UserDefaults.standard.bool(forKey: Self.multiProjectStatusKey)
+        isDockerStatusVisible = UserDefaults.standard.bool(forKey: Self.dockerStatusKey)
+        isCodeKnowledgeGraphStatusVisible = UserDefaults.standard.bool(forKey: Self.codeKnowledgeGraphStatusKey)
+        isCollaborationVizStatusVisible = UserDefaults.standard.bool(forKey: Self.collaborationVizStatusKey)
+        isDataFlowStatusVisible = UserDefaults.standard.bool(forKey: Self.dataFlowStatusKey)
+        if isDataFlowStatusVisible {
+            dataFlowAnimationManager.startAnimating()
+        }
+        isWorkflowStatusVisible = UserDefaults.standard.bool(forKey: Self.workflowStatusKey)
+        isSmartSchedulingStatusVisible = UserDefaults.standard.bool(forKey: Self.smartSchedulingStatusKey)
+        isAnomalyDetectionStatusVisible = UserDefaults.standard.bool(forKey: Self.anomalyDetectionStatusKey)
+        isMCPStatusVisible = UserDefaults.standard.bool(forKey: Self.mcpStatusKey)
+
+        // Initialize RAG system (H1)
+        ragManager.initialize()
+
+        // Initialize Agent Memory system (H2)
+        agentMemoryManager.initialize()
 
         // Observe workspace changes and restart Git monitoring automatically
         workspaceCancellable = workspaceManager.$activeWorkspace
@@ -165,6 +347,161 @@ class AppState: ObservableObject {
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
             }
+
+        // Forward ragManager's @Published changes (H1)
+        ragManagerCancellable = ragManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward agentMemoryManager's @Published changes (H2)
+        agentMemoryCancellable = agentMemoryManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward promptOptimizationManager's @Published changes (H4)
+        promptOptimizationCancellable = promptOptimizationManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Auto-refresh 3D prompt optimization graph when analysis data changes (H4)
+        promptOptimizationSceneCancellable = promptOptimizationManager.$lastScore
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.refreshPromptOptimizationScene()
+            }
+
+        // Forward cicdManager's @Published changes (I1)
+        cicdCancellable = cicdManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward testCoverageManager's @Published changes (I2)
+        testCoverageCancellable = testCoverageManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward codeQualityManager's @Published changes (I3)
+        codeQualityCancellable = codeQualityManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward multiProjectManager's @Published changes (I4)
+        multiProjectCancellable = multiProjectManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward dockerManager's @Published changes (I5)
+        dockerCancellable = dockerManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward codeKnowledgeGraphManager's @Published changes (J1)
+        codeKnowledgeGraphCancellable = codeKnowledgeGraphManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward collaborationVizManager's @Published changes (J2)
+        collaborationVizCancellable = collaborationVizManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward arvrManager's @Published changes (J3)
+        arvrCancellable = arvrManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward dataFlowAnimationManager's @Published changes (J4)
+        dataFlowAnimationCancellable = dataFlowAnimationManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward workflowManager's @Published changes (L1)
+        workflowCancellable = workflowManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward smartSchedulingManager's @Published changes (L2)
+        smartSchedulingCancellable = smartSchedulingManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward anomalyDetectionManager's @Published changes (L3)
+        anomalyDetectionCancellable = anomalyDetectionManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward mcpIntegrationManager's @Published changes (L4)
+        mcpIntegrationCancellable = mcpIntegrationManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Connect managers that need live AppState access
+        collaborationVizManager.appState = self
+        anomalyDetectionManager.appState = self
+        multiProjectManager.appState = self
+        workflowManager.appState = self
+
+        // Initialize MCP servers from Claude config (L4)
+        mcpIntegrationManager.loadFromClaudeConfig()
+
+        // Load saved scheduling stats (L2)
+        smartSchedulingManager.loadSavedStats()
+
+        // Initialize Semantic Search Orchestrator (H5)
+        semanticOrchestrator.ragManager = ragManager
+        semanticOrchestrator.memoryManager = agentMemoryManager
+        semanticOrchestratorCancellable = semanticOrchestrator.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Initialize orchestrator
+        orchestrator.appState = self
+        orchestratorCancellable = orchestrator.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Load auto-decomposition preference (default: true)
+        if UserDefaults.standard.object(forKey: Self.autoDecompositionKey) == nil {
+            autoDecompositionEnabled = true
+        } else {
+            autoDecompositionEnabled = UserDefaults.standard.bool(forKey: Self.autoDecompositionKey)
+        }
     }
 
     func setTheme(_ theme: SceneTheme) {
@@ -239,62 +576,6 @@ class AppState: ObservableObject {
 
     func subAgents(of agentId: UUID) -> [Agent] {
         agents.filter { $0.parentAgentId == agentId }
-    }
-
-    // MARK: - Configuration Loading
-
-    func loadSampleConfig() {
-        let bundleAgents = configLoader.loadAgentsFromBundle()
-        let bundleTasks = configLoader.loadTasksFromBundle()
-        let bundleScene = configLoader.loadSceneConfigFromBundle()
-
-        if !bundleAgents.isEmpty {
-            // Preserve running CLI tasks
-            let runningTasks = tasks.filter { $0.status == .inProgress && $0.isRealExecution }
-            agents = bundleAgents
-            tasks = bundleTasks + runningTasks
-            sceneConfig = bundleScene
-
-            // Re-link running tasks to agents
-            for task in runningTasks {
-                if let agentId = task.assignedAgentId,
-                   let idx = agents.firstIndex(where: { $0.id == agentId }) {
-                    if !agents[idx].assignedTaskIds.contains(task.id) {
-                        agents[idx].assignedTaskIds.append(task.id)
-                    }
-                    agents[idx].status = .working
-                }
-            }
-        } else {
-            loadFromSampleDirectory()
-        }
-
-        rebuildScene()
-    }
-
-    func loadFromDirectory(_ url: URL) {
-        do {
-            let result = try configLoader.loadAll(from: url)
-            // Preserve running CLI tasks
-            let runningTasks = tasks.filter { $0.status == .inProgress && $0.isRealExecution }
-            agents = result.agents
-            tasks = result.tasks + runningTasks
-            sceneConfig = result.sceneConfig
-
-            for task in runningTasks {
-                if let agentId = task.assignedAgentId,
-                   let idx = agents.firstIndex(where: { $0.id == agentId }) {
-                    if !agents[idx].assignedTaskIds.contains(task.id) {
-                        agents[idx].assignedTaskIds.append(task.id)
-                    }
-                    agents[idx].status = .working
-                }
-            }
-
-            rebuildScene()
-        } catch {
-            print("[AppState] Failed to load config: \(error)")
-        }
     }
 
     // MARK: - Scene
@@ -388,6 +669,23 @@ class AppState: ObservableObject {
     }
 
     // MARK: - Prompt Task Submission
+
+    /// Smart entry point: when auto-decomposition is enabled, ALL prompts go through
+    /// the orchestrator (Haiku CLI decides whether to split). If it produces <=1 subtask,
+    /// it automatically falls back to direct execution.
+    func submitPromptSmart(title: String) {
+        // Auto-record prompt to history with quality analysis
+        promptOptimizationManager.recordPrompt(title)
+
+        if autoDecompositionEnabled {
+            orchestrator.submitWithAutoDecomposition(prompt: title, model: selectedModelForNewTeam)
+        } else {
+            submitPromptWithNewTeam(title: title)
+        }
+
+        // Save preference
+        UserDefaults.standard.set(autoDecompositionEnabled, forKey: Self.autoDecompositionKey)
+    }
 
     func submitPromptWithNewTeam(title: String) {
         // 1. Create a new team with selected model
@@ -539,7 +837,7 @@ class AppState: ObservableObject {
         }
     }
 
-    private func startCLIProcess(taskId: UUID, agentId: UUID, prompt: String, resumeSessionId: String? = nil) {
+    func startCLIProcess(taskId: UUID, agentId: UUID, prompt: String, resumeSessionId: String? = nil) {
         let workDir = workspaceManager.activeDirectory
 
         // G1: Look up the agent's selected model
@@ -603,7 +901,7 @@ class AppState: ObservableObject {
         }
     }
 
-    private func handleCLICompleted(_ taskId: UUID, result: String) {
+    func handleCLICompleted(_ taskId: UUID, result: String) {
         guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
         tasks[idx].status = .completed
         tasks[idx].progress = 1.0
@@ -637,6 +935,19 @@ class AppState: ObservableObject {
                 timelineEvents: timelineManager.events,
                 cliOutputs: gatherCLIOutputs()
             )
+        }
+
+        // H2: Record task completion as agent memory
+        if let leadId = tasks[idx].assignedAgentId,
+           let agent = agents.first(where: { $0.id == leadId }) {
+            agentMemoryManager.recordTaskCompletion(
+                agentName: agent.name,
+                taskTitle: tasks[idx].title,
+                result: String(result.prefix(500))
+            )
+            // Share knowledge across team
+            let teamNames = tasks[idx].teamAgentIds.compactMap { id in agents.first { $0.id == id }?.name }
+            agentMemoryManager.shareTeamKnowledge(teamAgentNames: teamNames)
         }
 
         // E1: Update mood and relationships for team agents
@@ -717,7 +1028,7 @@ class AppState: ObservableObject {
         }
     }
 
-    private func handleCLIFailed(_ taskId: UUID, error: String) {
+    func handleCLIFailed(_ taskId: UUID, error: String) {
         guard let idx = tasks.firstIndex(where: { $0.id == taskId }) else { return }
         tasks[idx].status = .failed
         tasks[idx].cliResult = "Error: \(error)"
@@ -734,6 +1045,16 @@ class AppState: ObservableObject {
                 agents: agents, tasks: tasks,
                 timelineEvents: timelineManager.events,
                 cliOutputs: gatherCLIOutputs()
+            )
+        }
+
+        // H2: Record error pattern as agent memory
+        if let leadId = tasks[idx].assignedAgentId,
+           let agent = agents.first(where: { $0.id == leadId }) {
+            agentMemoryManager.recordErrorPattern(
+                agentName: agent.name,
+                taskTitle: tasks[idx].title,
+                error: error
             )
         }
 
@@ -769,7 +1090,7 @@ class AppState: ObservableObject {
 
     // MARK: - Dangerous Command Handling
 
-    private func handleDangerousCommand(taskId: UUID, agentId: UUID, tool: String, input: String, reason: String) {
+    func handleDangerousCommand(taskId: UUID, agentId: UUID, tool: String, input: String, reason: String) {
         // Set agent to requesting permission animation
         handleAgentStatusChange(agentId, to: .requestingPermission)
 
@@ -807,7 +1128,7 @@ class AppState: ObservableObject {
 
     // MARK: - AskUserQuestion Handling
 
-    private func handleAskUserQuestion(taskId: UUID, agentId: UUID, sessionId: String, inputJSON: String) {
+    func handleAskUserQuestion(taskId: UUID, agentId: UUID, sessionId: String, inputJSON: String) {
         guard let parsed = AskUserQuestionParser.parse(
             inputJSON: inputJSON,
             taskId: taskId,
@@ -862,7 +1183,7 @@ class AppState: ObservableObject {
 
     // MARK: - Plan Review Handling
 
-    private func handlePlanReview(taskId: UUID, agentId: UUID, sessionId: String, inputJSON: String) {
+    func handlePlanReview(taskId: UUID, agentId: UUID, sessionId: String, inputJSON: String) {
         // Read the latest plan file
         let planContent = PlanReviewParser.readLatestPlanFile() ?? ""
 
@@ -963,7 +1284,13 @@ class AppState: ObservableObject {
     // MARK: - Team Disband
 
     /// Schedule a completed or failed team to disband after a delay.
-    private func scheduleDisbandIfNeeded(commanderId: UUID) {
+    func scheduleDisbandIfNeeded(commanderId: UUID) {
+        // Don't disband if orchestration is still active
+        if let orchestrationState = orchestrator.activeOrchestrations[commanderId],
+           !orchestrationState.isFinished {
+            return
+        }
+
         // Only schedule if the entire team is finished (completed or failed/error+idle)
         // Never schedule if any agent is waiting for user input
         let teamAgents = [commanderId] + subAgents(of: commanderId).map(\.id)
@@ -1069,7 +1396,7 @@ class AppState: ObservableObject {
 
     // MARK: - Chat Bubble Output
 
-    private func handleCLIOutput(agentId: UUID, entry: CLIOutputEntry) {
+    func handleCLIOutput(agentId: UUID, entry: CLIOutputEntry) {
         // D5: Track metrics per output entry
         let taskId = tasks.first(where: { $0.assignedAgentId == agentId && $0.status == .inProgress })?.id
 
@@ -1120,7 +1447,7 @@ class AppState: ObservableObject {
 
     // MARK: - Private
 
-    private func handleAgentStatusChange(_ agentId: UUID, to status: AgentStatus) {
+    func handleAgentStatusChange(_ agentId: UUID, to status: AgentStatus) {
         if let idx = agents.firstIndex(where: { $0.id == agentId }) {
             agents[idx].status = status
         }
@@ -1161,13 +1488,19 @@ class AppState: ObservableObject {
         backgroundMusicManager.setIntensity(hasWorkingAgents ? .active : .calm)
 
         // If this is a commander (main agent), propagate status to sub-agents
+        // Skip propagation during orchestration (sub-agents have their own CLI processes)
         if let agent = agents.first(where: { $0.id == agentId }), agent.isMainAgent {
-            let subAgentStatus = subAgentStatusFor(commanderStatus: status)
-            for sub in subAgents(of: agentId) {
-                if let subIdx = agents.firstIndex(where: { $0.id == sub.id }) {
-                    agents[subIdx].status = subAgentStatus
+            let isOrchestrating = orchestrator.activeOrchestrations[agentId] != nil
+                && !(orchestrator.activeOrchestrations[agentId]?.isFinished ?? true)
+
+            if !isOrchestrating {
+                let subAgentStatus = subAgentStatusFor(commanderStatus: status)
+                for sub in subAgents(of: agentId) {
+                    if let subIdx = agents.firstIndex(where: { $0.id == sub.id }) {
+                        agents[subIdx].status = subAgentStatus
+                    }
+                    sceneManager.updateAgentStatus(sub.id, to: subAgentStatus)
                 }
-                sceneManager.updateAgentStatus(sub.id, to: subAgentStatus)
             }
 
             // Trigger collaboration visit: a sub-agent walks to the commander occasionally
@@ -1262,14 +1595,6 @@ class AppState: ObservableObject {
         }
     }
 
-    private func loadFromSampleDirectory() {
-        let execURL = Bundle.main.bundleURL
-        let configDir = execURL.appendingPathComponent("Contents/Resources/SampleConfigs")
-        if FileManager.default.fileExists(atPath: configDir.path) {
-            loadFromDirectory(configDir)
-        }
-    }
-
     // MARK: - Mini-map (B6)
 
     func toggleMiniMap() {
@@ -1298,6 +1623,134 @@ class AppState: ObservableObject {
 
     func toggleHelpOverlay() {
         isHelpOverlayVisible.toggle()
+    }
+
+    // MARK: - RAG System (H1)
+
+    func toggleRAGStatus() {
+        isRAGStatusVisible.toggle()
+        UserDefaults.standard.set(isRAGStatusVisible, forKey: Self.ragStatusKey)
+    }
+
+    func startRAGIndexing() {
+        let directoryURL = URL(fileURLWithPath: workspaceManager.activeDirectory)
+        ragManager.indexDirectory(directoryURL)
+        ragManager.startWatching(directory: directoryURL)
+    }
+
+    func toggleRAGVisualization() {
+        isRAGKnowledgeGraphInScene.toggle()
+        if isRAGKnowledgeGraphInScene {
+            sceneManager.showRAGKnowledgeGraph(ragManager.documents, ragManager.relationships)
+        } else {
+            sceneManager.removeRAGKnowledgeGraph()
+        }
+    }
+
+    // MARK: - Agent Memory System (H2)
+
+    func toggleAgentMemoryOverlay() {
+        isAgentMemoryOverlayVisible.toggle()
+        UserDefaults.standard.set(isAgentMemoryOverlayVisible, forKey: Self.memoryOverlayKey)
+    }
+
+    // MARK: - Auto-Decomposition (H3)
+
+    func toggleTaskDecompositionStatus() {
+        isTaskDecompositionStatusVisible.toggle()
+    }
+
+    func showTaskDecompositionView() {
+        isTaskDecompositionViewVisible = true
+    }
+
+    // MARK: - Prompt Optimization (H4)
+
+    func togglePromptOptimization() {
+        isPromptOptimizationVisible.toggle()
+        UserDefaults.standard.set(isPromptOptimizationVisible, forKey: Self.promptOptimizationKey)
+    }
+
+    func togglePromptOptimizationVisualization() {
+        isPromptOptimizationInScene.toggle()
+        if isPromptOptimizationInScene {
+            refreshPromptOptimizationScene()
+        } else {
+            sceneManager.removePromptOptimizationGraph()
+        }
+    }
+
+    /// Refresh the 3D prompt optimization graph with latest data
+    func refreshPromptOptimizationScene() {
+        guard isPromptOptimizationInScene else { return }
+        sceneManager.showPromptOptimizationGraph(
+            score: promptOptimizationManager.lastScore,
+            patterns: promptOptimizationManager.patterns,
+            history: promptOptimizationManager.history,
+            antiPatterns: promptOptimizationManager.detectedAntiPatterns
+        )
+    }
+
+    // MARK: - Semantic Search (H5)
+
+    /// Run the full semantic search pipeline on a user query
+    func performSemanticSearch(query: String) -> SemanticSearchResponse {
+        return semanticOrchestrator.search(query: query)
+    }
+
+    /// Async version with optional AI-enhanced classification fallback
+    func performSemanticSearchAsync(query: String) async -> SemanticSearchResponse {
+        return await semanticOrchestrator.searchAsync(query: query)
+    }
+
+    /// Toggle semantic search on/off
+    func toggleSemanticSearch() {
+        isSemanticSearchEnabled.toggle()
+        semanticSearchConfig.enableSemanticSearch = isSemanticSearchEnabled
+    }
+
+    /// Update semantic search scoring weights preset
+    func updateSemanticScoringPreset(_ preset: String) {
+        semanticSearchConfig.scoringWeightsPreset = preset
+        switch preset {
+        case "codeSearch":
+            semanticOrchestrator.scoringWeights = .codeSearch
+        case "errorDiagnosis":
+            semanticOrchestrator.scoringWeights = .errorDiagnosis
+        default:
+            semanticOrchestrator.scoringWeights = .default
+        }
+    }
+
+    // MARK: - Unified Knowledge Search (H5+H1)
+
+    func toggleUnifiedSearch() {
+        isUnifiedSearchVisible.toggle()
+    }
+
+    /// Execute unified search combining RAG keyword + semantic pipeline
+    func performUnifiedSearch(query: String) {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        isUnifiedSearchProcessing = true
+        let response = semanticOrchestrator.search(query: query)
+        unifiedSearchResponse = response
+        isUnifiedSearchProcessing = false
+    }
+
+    /// Async unified search with AI-enhanced fallback
+    func performUnifiedSearchAsync(query: String) async {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        await MainActor.run { isUnifiedSearchProcessing = true }
+        let response = await semanticOrchestrator.searchAsync(query: query)
+        await MainActor.run {
+            unifiedSearchResponse = response
+            isUnifiedSearchProcessing = false
+        }
+    }
+
+    /// Clear unified search results
+    func clearUnifiedSearch() {
+        unifiedSearchResponse = nil
     }
 
     // MARK: - Multi-Model Support (G1)
@@ -1754,6 +2207,232 @@ class AppState: ObservableObject {
                 agents[idx].personality.lastIdleBehaviorTime = now
             }
         }
+    }
+
+    // MARK: - CI/CD Integration (I1)
+
+    func toggleCICDStatus() {
+        isCICDStatusVisible.toggle()
+        UserDefaults.standard.set(isCICDStatusVisible, forKey: Self.cicdStatusKey)
+    }
+
+    func startCICDMonitoring() {
+        cicdManager.startMonitoring(directory: workspaceManager.activeDirectory)
+    }
+
+    func toggleCICDVisualization() {
+        isCICDInScene.toggle()
+        if isCICDInScene {
+            sceneManager.showCICDVisualization(cicdManager.pipelines)
+        } else {
+            sceneManager.removeCICDVisualization()
+        }
+    }
+
+    // MARK: - Test Coverage (I2)
+
+    func toggleTestCoverageStatus() {
+        isTestCoverageStatusVisible.toggle()
+        UserDefaults.standard.set(isTestCoverageStatusVisible, forKey: Self.testCoverageStatusKey)
+    }
+
+    func initializeTestCoverage() {
+        testCoverageManager.initialize(directory: workspaceManager.activeDirectory)
+    }
+
+    func toggleTestCoverageVisualization() {
+        isTestCoverageInScene.toggle()
+        if isTestCoverageInScene {
+            if let report = testCoverageManager.currentReport {
+                sceneManager.showTestCoverageVisualization(report)
+            }
+        } else {
+            sceneManager.removeTestCoverageVisualization()
+        }
+    }
+
+    // MARK: - Code Quality (I3)
+
+    func toggleCodeQualityStatus() {
+        isCodeQualityStatusVisible.toggle()
+        UserDefaults.standard.set(isCodeQualityStatusVisible, forKey: Self.codeQualityStatusKey)
+    }
+
+    func analyzeCodeQuality() {
+        codeQualityManager.initialize(directory: workspaceManager.activeDirectory)
+        codeQualityManager.analyzeProject()
+    }
+
+    func toggleCodeQualityVisualization() {
+        isCodeQualityInScene.toggle()
+        if isCodeQualityInScene {
+            sceneManager.showCodeQualityVisualization(codeQualityManager.complexities)
+        } else {
+            sceneManager.removeCodeQualityVisualization()
+        }
+    }
+
+    // MARK: - Multi-Project Workspace (I4)
+
+    func toggleMultiProjectStatus() {
+        isMultiProjectStatusVisible.toggle()
+        UserDefaults.standard.set(isMultiProjectStatusVisible, forKey: Self.multiProjectStatusKey)
+    }
+
+    // MARK: - Docker / Dev Environment (I5)
+
+    func toggleDockerStatus() {
+        isDockerStatusVisible.toggle()
+        UserDefaults.standard.set(isDockerStatusVisible, forKey: Self.dockerStatusKey)
+    }
+
+    func startDockerMonitoring() {
+        dockerManager.checkDockerAvailability()
+        dockerManager.startMonitoring()
+    }
+
+    func toggleDockerVisualization() {
+        isDockerInScene.toggle()
+        if isDockerInScene {
+            sceneManager.showDockerVisualization(dockerManager.containers)
+        } else {
+            sceneManager.removeDockerVisualization()
+        }
+    }
+
+    // MARK: - Code Knowledge Graph (J1)
+
+    func toggleCodeKnowledgeGraphStatus() {
+        isCodeKnowledgeGraphStatusVisible.toggle()
+        UserDefaults.standard.set(isCodeKnowledgeGraphStatusVisible, forKey: Self.codeKnowledgeGraphStatusKey)
+    }
+
+    func analyzeCodeKnowledgeGraph() {
+        codeKnowledgeGraphManager.analyzeProject(directory: workspaceManager.activeDirectory)
+    }
+
+    func toggleCodeKnowledgeGraphVisualization() {
+        isCodeKnowledgeGraphInScene.toggle()
+        if isCodeKnowledgeGraphInScene {
+            sceneManager.showCodeKnowledgeGraphVisualization(codeKnowledgeGraphManager.fileNodes, codeKnowledgeGraphManager.edges)
+        } else {
+            sceneManager.removeCodeKnowledgeGraphVisualization()
+        }
+    }
+
+    // MARK: - Collaboration Visualization (J2)
+
+    func toggleCollaborationVizStatus() {
+        isCollaborationVizStatusVisible.toggle()
+        UserDefaults.standard.set(isCollaborationVizStatusVisible, forKey: Self.collaborationVizStatusKey)
+    }
+
+    func toggleCollaborationVisualization() {
+        isCollaborationVizInScene.toggle()
+        if isCollaborationVizInScene {
+            sceneManager.showCollaborationVisualization(
+                collaborationVizManager.collaborationPaths,
+                collaborationVizManager.taskHandoffs,
+                collaborationVizManager.efficiencyMetrics
+            )
+        } else {
+            sceneManager.removeCollaborationVisualization()
+        }
+    }
+
+    // MARK: - Data Flow Animation (J4)
+
+    func toggleDataFlowStatus() {
+        isDataFlowStatusVisible.toggle()
+        UserDefaults.standard.set(isDataFlowStatusVisible, forKey: Self.dataFlowStatusKey)
+        // Start or stop animation based on whether any data flow UI is visible
+        updateDataFlowAnimationState()
+    }
+
+    func toggleDataFlowVisualization() {
+        isDataFlowInScene.toggle()
+        if isDataFlowInScene {
+            // Ensure animation is running so there is data to visualize
+            if !dataFlowAnimationManager.isAnimating {
+                dataFlowAnimationManager.startAnimating()
+            }
+            sceneManager.showDataFlowVisualization(
+                dataFlowAnimationManager.tokenFlows,
+                dataFlowAnimationManager.pipelineStages,
+                dataFlowAnimationManager.toolCallChain
+            )
+        } else {
+            sceneManager.removeDataFlowVisualization()
+            updateDataFlowAnimationState()
+        }
+    }
+
+    /// Start or stop the data flow animation timer depending on UI visibility.
+    private func updateDataFlowAnimationState() {
+        let needsAnimation = isDataFlowStatusVisible || isDataFlowInScene || isDataFlowViewVisible
+        if needsAnimation && !dataFlowAnimationManager.isAnimating {
+            dataFlowAnimationManager.startAnimating()
+        } else if !needsAnimation && dataFlowAnimationManager.isAnimating {
+            dataFlowAnimationManager.stopAnimating()
+        }
+    }
+
+    // MARK: - Workflow Automation (L1)
+
+    func toggleWorkflowStatus() {
+        isWorkflowStatusVisible.toggle()
+        UserDefaults.standard.set(isWorkflowStatusVisible, forKey: Self.workflowStatusKey)
+    }
+
+    // MARK: - Smart Scheduling (L2)
+
+    func toggleSmartSchedulingStatus() {
+        isSmartSchedulingStatusVisible.toggle()
+        UserDefaults.standard.set(isSmartSchedulingStatusVisible, forKey: Self.smartSchedulingStatusKey)
+    }
+
+    // MARK: - Anomaly Detection (L3)
+
+    func toggleAnomalyDetectionStatus() {
+        isAnomalyDetectionStatusVisible.toggle()
+        UserDefaults.standard.set(isAnomalyDetectionStatusVisible, forKey: Self.anomalyDetectionStatusKey)
+    }
+
+    // MARK: - MCP Integration (L4)
+
+    func toggleMCPStatus() {
+        isMCPStatusVisible.toggle()
+        UserDefaults.standard.set(isMCPStatusVisible, forKey: Self.mcpStatusKey)
+    }
+
+    // MARK: - Memory Management
+
+    /// Coordinated cleanup of stale data across all managers.
+    /// Call periodically or when transitioning between sessions to free memory.
+    func performMemoryCleanup() {
+        // Reset completed task metrics that are no longer displayed
+        metricsManager.resetSession()
+
+        // Clear resolved anomaly alerts
+        anomalyDetectionManager.resolveAllAlerts()
+        anomalyDetectionManager.alerts.removeAll { $0.isResolved }
+
+        // Clear stale collaboration paths (inactive for > 60s)
+        let cutoff = Date().addingTimeInterval(-60)
+        collaborationVizManager.collaborationPaths.removeAll { !$0.isActive && $0.timestamp < cutoff }
+
+        // Trim task handoff history
+        if collaborationVizManager.taskHandoffs.count > 50 {
+            collaborationVizManager.taskHandoffs = Array(collaborationVizManager.taskHandoffs.suffix(50))
+        }
+
+        // Clear completed scheduled tasks
+        smartSchedulingManager.scheduledTasks.removeAll { $0.status == .completed }
+
+        // Stop monitoring timers for features that are not visible
+        if !isCollaborationVizStatusVisible { collaborationVizManager.stopMonitoring() }
+        if !isAnomalyDetectionStatusVisible { anomalyDetectionManager.stopMonitoring() }
+        if !isDataFlowStatusVisible { dataFlowAnimationManager.stopAnimating() }
     }
 
     private func defaultSceneConfig() -> SceneConfiguration {

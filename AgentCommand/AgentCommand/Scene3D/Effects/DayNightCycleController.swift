@@ -5,6 +5,10 @@ class DayNightCycleController {
     private weak var scene: SCNScene?
     private var timer: Timer?
 
+    deinit {
+        timer?.invalidate()
+    }
+
     func start(in scene: SCNScene) {
         self.scene = scene
         applyCurrentTimeOfDay()

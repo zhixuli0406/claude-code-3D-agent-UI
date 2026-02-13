@@ -169,14 +169,68 @@ struct SceneContainerView: View {
                     }
                 }
 
-                // Performance Metrics (right side, D5)
-                if appState.isMetricsVisible {
-                    VStack {
+                // Performance Metrics & RAG Status & Task Decomposition & Memory & Prompt Optimization & I-series (right side)
+                if appState.isMetricsVisible || appState.isRAGStatusVisible || appState.isTaskDecompositionStatusVisible || appState.isAgentMemoryOverlayVisible || appState.isPromptOptimizationVisible || appState.isCICDStatusVisible || appState.isTestCoverageStatusVisible || appState.isCodeQualityStatusVisible || appState.isMultiProjectStatusVisible || appState.isDockerStatusVisible || appState.isCodeKnowledgeGraphStatusVisible || appState.isCollaborationVizStatusVisible || appState.isDataFlowStatusVisible || appState.isWorkflowStatusVisible || appState.isSmartSchedulingStatusVisible || appState.isAnomalyDetectionStatusVisible || appState.isMCPStatusVisible {
+                    VStack(spacing: 8) {
                         HStack {
                             Spacer()
-                            PerformanceMetricsOverlay()
-                                .padding(.trailing, 12)
-                                .padding(.top, 80)
+                            ScrollView(.vertical, showsIndicators: false) {
+                                VStack(spacing: 8) {
+                                    if appState.isMetricsVisible {
+                                        PerformanceMetricsOverlay()
+                                    }
+                                    if appState.isRAGStatusVisible {
+                                        RAGStatusOverlay()
+                                    }
+                                    if appState.isAgentMemoryOverlayVisible {
+                                        AgentMemoryOverlay()
+                                    }
+                                    if appState.isTaskDecompositionStatusVisible {
+                                        TaskDecompositionStatusOverlay()
+                                    }
+                                    if appState.isPromptOptimizationVisible {
+                                        PromptOptimizationOverlay()
+                                    }
+                                    if appState.isCICDStatusVisible {
+                                        CICDStatusOverlay()
+                                    }
+                                    if appState.isTestCoverageStatusVisible {
+                                        TestCoverageOverlay()
+                                    }
+                                    if appState.isCodeQualityStatusVisible {
+                                        CodeQualityOverlay()
+                                    }
+                                    if appState.isMultiProjectStatusVisible {
+                                        MultiProjectOverlay()
+                                    }
+                                    if appState.isDockerStatusVisible {
+                                        DockerStatusOverlay()
+                                    }
+                                    if appState.isCodeKnowledgeGraphStatusVisible {
+                                        CodeKnowledgeGraphOverlay()
+                                    }
+                                    if appState.isCollaborationVizStatusVisible {
+                                        CollaborationVizOverlay()
+                                    }
+                                    if appState.isDataFlowStatusVisible {
+                                        DataFlowOverlay()
+                                    }
+                                    if appState.isWorkflowStatusVisible {
+                                        WorkflowStatusOverlay()
+                                    }
+                                    if appState.isSmartSchedulingStatusVisible {
+                                        SmartSchedulingOverlay()
+                                    }
+                                    if appState.isAnomalyDetectionStatusVisible {
+                                        AnomalyDetectionOverlay()
+                                    }
+                                    if appState.isMCPStatusVisible {
+                                        MCPStatusOverlay()
+                                    }
+                                }
+                            }
+                            .padding(.trailing, 12)
+                            .padding(.top, 80)
                         }
                         Spacer()
                     }
@@ -221,6 +275,11 @@ struct SceneContainerView: View {
             // Timeline
             if !appState.timelineManager.events.isEmpty {
                 TimelineView(timelineManager: appState.timelineManager)
+            }
+
+            // Unified search results overlay (above prompt bar)
+            if !appState.ragManager.searchResults.isEmpty || appState.unifiedSearchResponse?.hasResults == true {
+                RAGSearchResultsOverlay(onSelectSnippet: { _ in })
             }
 
             // Bottom: prompt input bar or replay indicator
