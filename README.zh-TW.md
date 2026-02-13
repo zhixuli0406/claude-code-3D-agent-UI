@@ -121,6 +121,12 @@
 - **異常偵測與自修復** — 即時監控無限迴圈、過度 Token 消耗、重複錯誤、記憶體洩漏及速率限制風險；可設定重試策略（指數退避、線性、立即）；錯誤模式追蹤搭配 3D 警告視覺化
 - **MCP 整合** — Model Context Protocol 伺服器管理，支援工具發現、呼叫記錄、延遲追蹤，以及 3D 中心輻射式伺服器與工具連接視覺化
 
+### 分析與報告（M 系列）
+
+- **進階分析儀表板（M1）** — 自訂報表建構器，支援 6 種小工具類型（折線圖、長條圖、圓餅圖、指標卡、表格、熱力圖）、6 種資料來源、趨勢預測（含信賴區間）、成本優化建議（含預估節省金額）、跨模型與代理人的效能基準測試，以及 3D 分析樞紐視覺化（脈動球體與旋轉環）
+- **報表匯出與生成（M2）** — 支援 JSON、CSV、Markdown、PDF 四種匯出格式；可重用報表模板（含 6 種章節類型：執行摘要、Token 使用量、成本分析、任務指標、錯誤分析、效能趨勢）；自動排程（每日/每週/雙週/每月）；匯出作業追蹤（含進度指示器）；3D 文件樞紐視覺化（格式特定幾何形狀）
+- **API 使用分析（M3）** — 逐次呼叫指標追蹤（Token、延遲、成本、錯誤）、依模型與任務類型的成本分解、預算警報（3 個嚴重等級：正常/警告/嚴重）、使用預測（趨勢偵測與月底預估）、每模型統計，以及 3D 使用量計量器（預算環與模型使用柱）
+
 ### SkillsMP 整合
 
 - 瀏覽並匯入社群 SkillsMP 市集中的技能
@@ -223,14 +229,15 @@ swift run AgentCommand
 ```
 AgentCommand/
 ├── App/                  # 應用程式入口與全域狀態
-├── Models/               # 資料模型（Agent、Achievement、Cosmetic、Skill、RAG、Memory、Workflow、MCP、Semantic Query、CI/CD、Docker 等）
-├── Services/             # 業務邏輯（CLI 程序、RAG、記憶系統、任務分解、語義查詢、工作流程、排程、異常偵測、MCP、CI/CD、Docker 等）
+├── Models/               # 資料模型（Agent、Achievement、Cosmetic、Skill、RAG、Memory、Workflow、MCP、Semantic Query、CI/CD、Docker、Analytics Dashboard、Report Export、API Usage 等）
+├── Services/             # 業務邏輯（CLI 程序、RAG、記憶系統、任務分解、語義查詢、工作流程、排程、異常偵測、MCP、CI/CD、Docker、分析儀表板、報表匯出、API 使用分析等）
 ├── Views/
 │   ├── Components/       # 可重用 UI 元件
 │   ├── Overlays/         # 成就展示、裝飾商店、小地圖、RAG 狀態、
 │   │                     #   Agent 記憶、任務分解、Prompt 優化、
 │   │                     #   工作流程、排程、異常偵測、MCP、CI/CD、
-│   │                     #   測試覆蓋率、程式碼品質、Docker、知識圖譜等
+│   │                     #   測試覆蓋率、程式碼品質、Docker、知識圖譜、
+│   │                     #   分析儀表板、報表匯出、API 使用分析等
 │   ├── Panels/           # 代理人詳情、CLI 輸出、任務列表、模型比較面板
 │   ├── Windows/          # 多視窗管理
 │   └── Timeline/         # 時間軸視圖
@@ -242,7 +249,8 @@ AgentCommand/
 │   │                     #   RAG／任務分解／Prompt 優化視覺化、
 │   │                     #   工作流程／排程／異常偵測／MCP 視覺化、
 │   │                     #   CI/CD／測試覆蓋率／程式碼品質／Docker／
-│   │                     #   知識圖譜／協作／資料流／多專案視覺化
+│   │                     #   知識圖譜／協作／資料流／多專案視覺化、
+│   │                     #   分析儀表板／報表匯出／API 使用分析視覺化
 │   └── Environment/      # 房間、桌子、螢幕、燈光、多團隊佈局
 ├── Utilities/            # 輔助工具函式
 └── Resources/            # 素材與範例配置
@@ -254,7 +262,6 @@ AgentCommand/
 
 - 主題市集與社群分享
 - 即時多人協作
-- 進階分析儀表板與匯出功能
 - 語音控制與外掛系統
 
 ## 授權條款

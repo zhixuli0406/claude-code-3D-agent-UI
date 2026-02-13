@@ -147,6 +147,18 @@ class AppState: ObservableObject {
     @Published var isMCPStatusVisible: Bool = false
     @Published var isMCPManagementVisible: Bool = false
 
+    // Analytics Dashboard state (M1)
+    @Published var isAnalyticsDashboardStatusVisible: Bool = false
+    @Published var isAnalyticsDashboardViewVisible: Bool = false
+
+    // Report Export state (M2)
+    @Published var isReportExportStatusVisible: Bool = false
+    @Published var isReportExportViewVisible: Bool = false
+
+    // API Usage Analytics state (M3)
+    @Published var isAPIUsageAnalyticsStatusVisible: Bool = false
+    @Published var isAPIUsageAnalyticsViewVisible: Bool = false
+
     // Semantic Understanding state (H5)
     @Published var isSemanticSearchEnabled: Bool = true
     @Published var semanticSearchConfig: RAGSemanticConfig = .default
@@ -195,6 +207,9 @@ class AppState: ObservableObject {
     let smartSchedulingManager = SmartSchedulingManager()
     let anomalyDetectionManager = AnomalyDetectionManager()
     let mcpIntegrationManager = MCPIntegrationManager()
+    let analyticsDashboardManager = AnalyticsDashboardManager()
+    let reportExportManager = ReportExportManager()
+    let apiUsageAnalyticsManager = APIUsageAnalyticsManager()
     let semanticOrchestrator = SemanticSearchOrchestrator()
     let orchestrator = AutoDecompositionOrchestrator()
     @Published var autoDecompositionEnabled: Bool = true
@@ -248,6 +263,12 @@ class AppState: ObservableObject {
     private var anomalyDetectionCancellable: AnyCancellable?
     /// Forward mcpIntegrationManager changes (L4)
     private var mcpIntegrationCancellable: AnyCancellable?
+    /// Forward analyticsDashboardManager changes (M1)
+    private var analyticsDashboardCancellable: AnyCancellable?
+    /// Forward reportExportManager changes (M2)
+    private var reportExportCancellable: AnyCancellable?
+    /// Forward apiUsageAnalyticsManager changes (M3)
+    private var apiUsageAnalyticsCancellable: AnyCancellable?
     /// Forward orchestrator changes
     private var orchestratorCancellable: AnyCancellable?
     /// Forward semanticOrchestrator changes (H5)
@@ -280,6 +301,9 @@ class AppState: ObservableObject {
     private static let smartSchedulingStatusKey = "smartSchedulingStatusVisible"
     private static let anomalyDetectionStatusKey = "anomalyDetectionStatusVisible"
     private static let mcpStatusKey = "mcpStatusVisible"
+    private static let analyticsDashboardStatusKey = "analyticsDashboardStatusVisible"
+    private static let reportExportStatusKey = "reportExportStatusVisible"
+    private static let apiUsageAnalyticsStatusKey = "apiUsageAnalyticsStatusVisible"
     private static let autoDecompositionKey = "autoDecompositionEnabled"
 
     init() {
@@ -322,6 +346,9 @@ class AppState: ObservableObject {
         isSmartSchedulingStatusVisible = UserDefaults.standard.bool(forKey: Self.smartSchedulingStatusKey)
         isAnomalyDetectionStatusVisible = UserDefaults.standard.bool(forKey: Self.anomalyDetectionStatusKey)
         isMCPStatusVisible = UserDefaults.standard.bool(forKey: Self.mcpStatusKey)
+        isAnalyticsDashboardStatusVisible = UserDefaults.standard.bool(forKey: Self.analyticsDashboardStatusKey)
+        isReportExportStatusVisible = UserDefaults.standard.bool(forKey: Self.reportExportStatusKey)
+        isAPIUsageAnalyticsStatusVisible = UserDefaults.standard.bool(forKey: Self.apiUsageAnalyticsStatusKey)
 
         // Initialize RAG system (H1)
         ragManager.initialize()
@@ -467,11 +494,35 @@ class AppState: ObservableObject {
                 self?.objectWillChange.send()
             }
 
+        // Forward analyticsDashboardManager's @Published changes (M1)
+        analyticsDashboardCancellable = analyticsDashboardManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward reportExportManager's @Published changes (M2)
+        reportExportCancellable = reportExportManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
+        // Forward apiUsageAnalyticsManager's @Published changes (M3)
+        apiUsageAnalyticsCancellable = apiUsageAnalyticsManager.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+
         // Connect managers that need live AppState access
         collaborationVizManager.appState = self
         anomalyDetectionManager.appState = self
         multiProjectManager.appState = self
         workflowManager.appState = self
+        analyticsDashboardManager.appState = self
+        reportExportManager.appState = self
+        apiUsageAnalyticsManager.appState = self
 
         // Initialize MCP servers from Claude config (L4)
         mcpIntegrationManager.loadFromClaudeConfig()
@@ -2403,6 +2454,27 @@ class AppState: ObservableObject {
     func toggleMCPStatus() {
         isMCPStatusVisible.toggle()
         UserDefaults.standard.set(isMCPStatusVisible, forKey: Self.mcpStatusKey)
+    }
+
+    // MARK: - Analytics Dashboard (M1)
+
+    func toggleAnalyticsDashboardStatus() {
+        isAnalyticsDashboardStatusVisible.toggle()
+        UserDefaults.standard.set(isAnalyticsDashboardStatusVisible, forKey: Self.analyticsDashboardStatusKey)
+    }
+
+    // MARK: - Report Export (M2)
+
+    func toggleReportExportStatus() {
+        isReportExportStatusVisible.toggle()
+        UserDefaults.standard.set(isReportExportStatusVisible, forKey: Self.reportExportStatusKey)
+    }
+
+    // MARK: - API Usage Analytics (M3)
+
+    func toggleAPIUsageAnalyticsStatus() {
+        isAPIUsageAnalyticsStatusVisible.toggle()
+        UserDefaults.standard.set(isAPIUsageAnalyticsStatusVisible, forKey: Self.apiUsageAnalyticsStatusKey)
     }
 
     // MARK: - Memory Management

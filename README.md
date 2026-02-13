@@ -121,6 +121,12 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 - **Anomaly Detection & Self-Healing** — Real-time monitoring for infinite loops, excessive token usage, repeated errors, memory leaks, and rate limit risks; configurable retry strategies (exponential backoff, linear, immediate); error pattern tracking with 3D alert visualization
 - **MCP Integration** — Model Context Protocol server management with tool discovery, call recording, latency tracking, and 3D hub-and-spoke visualization of connected servers and tools
 
+### Analytics & Reporting (M-Series)
+
+- **Advanced Analytics Dashboard (M1)** — Custom report builder with 6 widget types (line chart, bar chart, pie chart, metric, table, heatmap), 6 data sources, trend forecasting with confidence intervals, cost optimization tips with estimated savings, performance benchmarking across models and agents, and 3D hub visualization with pulsating analytics sphere
+- **Report Export & Generation (M2)** — Export reports in JSON, CSV, Markdown, or PDF formats; reusable report templates with 6 section types (executive summary, token usage, cost analysis, task metrics, error analysis, performance trends); automated scheduling (daily/weekly/biweekly/monthly); export job tracking with progress indicators; 3D document hub with format-specific geometry
+- **API Usage Analytics (M3)** — Per-call metrics tracking (tokens, latency, cost, errors), cost breakdown by model and task type, budget alerts with 3 severity levels (normal/warning/critical), usage forecasting with trend detection and month-end projections, per-model statistics, and 3D usage gauge with budget ring and model usage columns
+
 ### SkillsMP Integration
 
 - Browse and import community skills from the SkillsMP marketplace
@@ -223,14 +229,15 @@ Open `AgentCommand/Package.swift` in Xcode to build and run from the IDE.
 ```
 AgentCommand/
 ├── App/                  # App entry point & global state
-├── Models/               # Data models (Agent, Achievement, Cosmetic, Skill, RAG, Memory, Workflow, MCP, Semantic Query, CI/CD, Docker, etc.)
-├── Services/             # Business logic (CLI process, RAG, memory, task decomposition, semantic query, workflow, scheduling, anomaly, MCP, CI/CD, Docker, etc.)
+├── Models/               # Data models (Agent, Achievement, Cosmetic, Skill, RAG, Memory, Workflow, MCP, Semantic Query, CI/CD, Docker, Analytics Dashboard, Report Export, API Usage, etc.)
+├── Services/             # Business logic (CLI process, RAG, memory, task decomposition, semantic query, workflow, scheduling, anomaly, MCP, CI/CD, Docker, analytics dashboard, report export, API usage analytics, etc.)
 ├── Views/
 │   ├── Components/       # Reusable UI components
 │   ├── Overlays/         # Achievement gallery, cosmetic shop, minimap, RAG status,
 │   │                     #   agent memory, task decomposition, prompt optimization,
 │   │                     #   workflow, scheduling, anomaly detection, MCP, CI/CD,
-│   │                     #   test coverage, code quality, Docker, knowledge graph, etc.
+│   │                     #   test coverage, code quality, Docker, knowledge graph,
+│   │                     #   analytics dashboard, report export, API usage analytics, etc.
 │   ├── Panels/           # Agent detail, CLI output, task list, model comparison panels
 │   ├── Windows/          # Multi-window management
 │   └── Timeline/         # Timeline views
@@ -242,7 +249,8 @@ AgentCommand/
 │   │                     #   RAG/task decomposition/prompt optimization visualizations,
 │   │                     #   workflow/scheduling/anomaly/MCP visualizations,
 │   │                     #   CI/CD/test coverage/code quality/Docker/knowledge graph/
-│   │                     #   collaboration/data flow/multi-project visualizations
+│   │                     #   collaboration/data flow/multi-project visualizations,
+│   │                     #   analytics dashboard/report export/API usage visualizations
 │   └── Environment/      # Room, desk, monitor, lighting, multi-team layout
 ├── Utilities/            # Helper functions
 └── Resources/            # Assets and sample configs
@@ -254,7 +262,6 @@ See [TODO-features.md](./TODO-features.md) and [TODO-next-features.md](./TODO-ne
 
 - Theme Marketplace & community sharing
 - Real-time multiplayer collaboration
-- Advanced analytics dashboard & export
 - Voice control & plugin system
 
 ## License

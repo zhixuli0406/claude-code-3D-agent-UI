@@ -422,6 +422,28 @@ enum L10nKey: String {
     case mcpServerName, mcpServerURL, mcpAddServer
     case mcpConnect, mcpDisconnect
     case mcpNoServers, mcpNoTools
+
+    // M1: Analytics Dashboard
+    case adAnalyticsDashboard, helpAnalyticsDashboard
+    case adReports, adForecasts, adOptimizations, adBenchmarks
+    case adPotentialSavings, adAppliedSavings
+    case adCreateReport, adDeleteReport, adAddWidget
+    case adGenerateForecast, adAnalyzeOptimizations
+    case adNoReports, adNoForecasts, adNoOptimizations
+
+    // M2: Report Export
+    case reExportReports, helpReportExport
+    case reTemplates, reSchedules, reExports
+    case reCreateTemplate, reExportNow, reScheduleReport
+    case reNoTemplates, reNoSchedules, reNoExports
+    case reExportFormat, reExportProgress
+
+    // M3: API Usage Analytics
+    case auAPIUsageAnalytics, helpAPIUsageAnalytics
+    case auTotalCalls, auTotalCost, auErrorRate, auAvgLatency
+    case auBudget, auBudgetRemaining, auForecast
+    case auSetBudget, auModelBreakdown, auCostAnalysis
+    case auNoRecords, auNoForecast
 }
 
 struct L10n {
@@ -1319,6 +1341,55 @@ struct L10n {
         .mcpDisconnect: "中斷連線",
         .mcpNoServers: "尚無 MCP 伺服器",
         .mcpNoTools: "尚無工具",
+
+        // M1: Analytics Dashboard
+        .adAnalyticsDashboard: "進階分析儀表板",
+        .helpAnalyticsDashboard: "自訂報表與趨勢預測",
+        .adReports: "報表",
+        .adForecasts: "趨勢預測",
+        .adOptimizations: "優化建議",
+        .adBenchmarks: "效能基準",
+        .adPotentialSavings: "潛在節省",
+        .adAppliedSavings: "已套用節省",
+        .adCreateReport: "建立報表",
+        .adDeleteReport: "刪除報表",
+        .adAddWidget: "新增元件",
+        .adGenerateForecast: "產生預測",
+        .adAnalyzeOptimizations: "分析優化",
+        .adNoReports: "尚無報表",
+        .adNoForecasts: "尚無預測",
+        .adNoOptimizations: "尚無優化建議",
+
+        // M2: Report Export
+        .reExportReports: "匯出與報告",
+        .helpReportExport: "匯出 PDF、JSON、CSV 報告",
+        .reTemplates: "報表模板",
+        .reSchedules: "排程報告",
+        .reExports: "已匯出",
+        .reCreateTemplate: "建立模板",
+        .reExportNow: "立即匯出",
+        .reScheduleReport: "排程報告",
+        .reNoTemplates: "尚無模板",
+        .reNoSchedules: "尚無排程",
+        .reNoExports: "尚無匯出",
+        .reExportFormat: "匯出格式",
+        .reExportProgress: "匯出進度",
+
+        // M3: API Usage Analytics
+        .auAPIUsageAnalytics: "API 使用量分析",
+        .helpAPIUsageAnalytics: "API 呼叫分析與預算管理",
+        .auTotalCalls: "總呼叫數",
+        .auTotalCost: "總成本",
+        .auErrorRate: "錯誤率",
+        .auAvgLatency: "平均延遲",
+        .auBudget: "預算",
+        .auBudgetRemaining: "預算餘額",
+        .auForecast: "使用量預測",
+        .auSetBudget: "設定預算",
+        .auModelBreakdown: "模型分佈",
+        .auCostAnalysis: "成本分析",
+        .auNoRecords: "尚無 API 記錄",
+        .auNoForecast: "尚無預測",
     ]
 
     // MARK: - English
@@ -2206,5 +2277,54 @@ struct L10n {
         .mcpDisconnect: "Disconnect",
         .mcpNoServers: "No MCP servers",
         .mcpNoTools: "No tools",
+
+        // M1: Analytics Dashboard
+        .adAnalyticsDashboard: "Analytics Dashboard",
+        .helpAnalyticsDashboard: "Custom reports and trend forecasting",
+        .adReports: "Reports",
+        .adForecasts: "Forecasts",
+        .adOptimizations: "Optimizations",
+        .adBenchmarks: "Benchmarks",
+        .adPotentialSavings: "Potential Savings",
+        .adAppliedSavings: "Applied Savings",
+        .adCreateReport: "Create Report",
+        .adDeleteReport: "Delete Report",
+        .adAddWidget: "Add Widget",
+        .adGenerateForecast: "Generate Forecast",
+        .adAnalyzeOptimizations: "Analyze Optimizations",
+        .adNoReports: "No reports yet",
+        .adNoForecasts: "No forecasts yet",
+        .adNoOptimizations: "No optimization tips",
+
+        // M2: Report Export
+        .reExportReports: "Export & Reports",
+        .helpReportExport: "Export PDF, JSON, CSV reports",
+        .reTemplates: "Templates",
+        .reSchedules: "Schedules",
+        .reExports: "Exports",
+        .reCreateTemplate: "Create Template",
+        .reExportNow: "Export Now",
+        .reScheduleReport: "Schedule Report",
+        .reNoTemplates: "No templates yet",
+        .reNoSchedules: "No schedules yet",
+        .reNoExports: "No exports yet",
+        .reExportFormat: "Export Format",
+        .reExportProgress: "Export Progress",
+
+        // M3: API Usage Analytics
+        .auAPIUsageAnalytics: "API Usage Analytics",
+        .helpAPIUsageAnalytics: "API call analytics and budget management",
+        .auTotalCalls: "Total Calls",
+        .auTotalCost: "Total Cost",
+        .auErrorRate: "Error Rate",
+        .auAvgLatency: "Avg Latency",
+        .auBudget: "Budget",
+        .auBudgetRemaining: "Budget Remaining",
+        .auForecast: "Usage Forecast",
+        .auSetBudget: "Set Budget",
+        .auModelBreakdown: "Model Breakdown",
+        .auCostAnalysis: "Cost Analysis",
+        .auNoRecords: "No API records yet",
+        .auNoForecast: "No forecast available",
     ]
 }

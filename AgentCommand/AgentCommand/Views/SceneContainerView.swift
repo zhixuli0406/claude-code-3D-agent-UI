@@ -227,6 +227,15 @@ struct SceneContainerView: View {
                                     if appState.isMCPStatusVisible {
                                         MCPStatusOverlay()
                                     }
+                                    if appState.isAnalyticsDashboardStatusVisible {
+                                        AnalyticsDashboardOverlay()
+                                    }
+                                    if appState.isReportExportStatusVisible {
+                                        ReportExportOverlay()
+                                    }
+                                    if appState.isAPIUsageAnalyticsStatusVisible {
+                                        APIUsageAnalyticsOverlay()
+                                    }
                                 }
                             }
                             .padding(.trailing, 12)
