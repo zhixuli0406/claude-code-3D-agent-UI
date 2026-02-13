@@ -236,6 +236,18 @@ struct SceneContainerView: View {
                                     if appState.isAPIUsageAnalyticsStatusVisible {
                                         APIUsageAnalyticsOverlay()
                                     }
+                                    if appState.isSessionHistoryAnalyticsStatusVisible {
+                                        SessionHistoryAnalyticsOverlay()
+                                    }
+                                    if appState.isSessionHistoryChartsVisible {
+                                        SessionHistoryChartPanel()
+                                    }
+                                    if appState.isTeamPerformanceStatusVisible {
+                                        TeamPerformanceOverlay()
+                                    }
+                                    if appState.isTeamPerformanceChartsVisible {
+                                        TeamPerformanceChartPanel()
+                                    }
                                 }
                             }
                             .padding(.trailing, 12)

@@ -159,6 +159,16 @@ class AppState: ObservableObject {
     @Published var isAPIUsageAnalyticsStatusVisible: Bool = false
     @Published var isAPIUsageAnalyticsViewVisible: Bool = false
 
+    // Session History Analytics state (M4)
+    @Published var isSessionHistoryAnalyticsStatusVisible: Bool = false
+    @Published var isSessionHistoryAnalyticsViewVisible: Bool = false
+    @Published var isSessionHistoryChartsVisible: Bool = false
+
+    // Team Performance state (M5)
+    @Published var isTeamPerformanceStatusVisible: Bool = false
+    @Published var isTeamPerformanceViewVisible: Bool = false
+    @Published var isTeamPerformanceChartsVisible: Bool = false
+
     // Semantic Understanding state (H5)
     @Published var isSemanticSearchEnabled: Bool = true
     @Published var semanticSearchConfig: RAGSemanticConfig = .default
@@ -210,6 +220,8 @@ class AppState: ObservableObject {
     let analyticsDashboardManager = AnalyticsDashboardManager()
     let reportExportManager = ReportExportManager()
     let apiUsageAnalyticsManager = APIUsageAnalyticsManager()
+    let sessionHistoryAnalyticsManager = SessionHistoryAnalyticsManager()
+    let teamPerformanceManager = TeamPerformanceManager()
     let semanticOrchestrator = SemanticSearchOrchestrator()
     let orchestrator = AutoDecompositionOrchestrator()
     @Published var autoDecompositionEnabled: Bool = true
@@ -269,6 +281,10 @@ class AppState: ObservableObject {
     private var reportExportCancellable: AnyCancellable?
     /// Forward apiUsageAnalyticsManager changes (M3)
     private var apiUsageAnalyticsCancellable: AnyCancellable?
+    /// Forward sessionHistoryAnalyticsManager changes (M4)
+    private var sessionHistoryAnalyticsCancellable: AnyCancellable?
+    /// Forward teamPerformanceManager changes (M5)
+    private var teamPerformanceCancellable: AnyCancellable?
     /// Forward orchestrator changes
     private var orchestratorCancellable: AnyCancellable?
     /// Forward semanticOrchestrator changes (H5)
@@ -304,6 +320,10 @@ class AppState: ObservableObject {
     private static let analyticsDashboardStatusKey = "analyticsDashboardStatusVisible"
     private static let reportExportStatusKey = "reportExportStatusVisible"
     private static let apiUsageAnalyticsStatusKey = "apiUsageAnalyticsStatusVisible"
+    private static let sessionHistoryAnalyticsStatusKey = "sessionHistoryAnalyticsStatusVisible"
+    private static let sessionHistoryChartsKey = "sessionHistoryChartsVisible"
+    private static let teamPerformanceStatusKey = "teamPerformanceStatusVisible"
+    private static let teamPerformanceChartsKey = "teamPerformanceChartsVisible"
     private static let autoDecompositionKey = "autoDecompositionEnabled"
 
     init() {
@@ -349,6 +369,14 @@ class AppState: ObservableObject {
         isAnalyticsDashboardStatusVisible = UserDefaults.standard.bool(forKey: Self.analyticsDashboardStatusKey)
         isReportExportStatusVisible = UserDefaults.standard.bool(forKey: Self.reportExportStatusKey)
         isAPIUsageAnalyticsStatusVisible = UserDefaults.standard.bool(forKey: Self.apiUsageAnalyticsStatusKey)
+        isSessionHistoryAnalyticsStatusVisible = UserDefaults.standard.bool(forKey: Self.sessionHistoryAnalyticsStatusKey)
+        isSessionHistoryChartsVisible = UserDefaults.standard.bool(forKey: Self.sessionHistoryChartsKey)
+        isTeamPerformanceStatusVisible = UserDefaults.standard.bool(forKey: Self.teamPerformanceStatusKey)
+        isTeamPerformanceChartsVisible = UserDefaults.standard.bool(forKey: Self.teamPerformanceChartsKey)
+
+        // Initialize M4/M5 managers
+        sessionHistoryAnalyticsManager.appState = self
+        teamPerformanceManager.appState = self
 
         // Initialize RAG system (H1)
         ragManager.initialize()
@@ -2475,6 +2503,30 @@ class AppState: ObservableObject {
     func toggleAPIUsageAnalyticsStatus() {
         isAPIUsageAnalyticsStatusVisible.toggle()
         UserDefaults.standard.set(isAPIUsageAnalyticsStatusVisible, forKey: Self.apiUsageAnalyticsStatusKey)
+    }
+
+    // MARK: - Session History Analytics (M4)
+
+    func toggleSessionHistoryAnalyticsStatus() {
+        isSessionHistoryAnalyticsStatusVisible.toggle()
+        UserDefaults.standard.set(isSessionHistoryAnalyticsStatusVisible, forKey: Self.sessionHistoryAnalyticsStatusKey)
+    }
+
+    func toggleSessionHistoryCharts() {
+        isSessionHistoryChartsVisible.toggle()
+        UserDefaults.standard.set(isSessionHistoryChartsVisible, forKey: Self.sessionHistoryChartsKey)
+    }
+
+    // MARK: - Team Performance (M5)
+
+    func toggleTeamPerformanceStatus() {
+        isTeamPerformanceStatusVisible.toggle()
+        UserDefaults.standard.set(isTeamPerformanceStatusVisible, forKey: Self.teamPerformanceStatusKey)
+    }
+
+    func toggleTeamPerformanceCharts() {
+        isTeamPerformanceChartsVisible.toggle()
+        UserDefaults.standard.set(isTeamPerformanceChartsVisible, forKey: Self.teamPerformanceChartsKey)
     }
 
     // MARK: - Memory Management

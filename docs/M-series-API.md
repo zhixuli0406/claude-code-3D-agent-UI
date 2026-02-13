@@ -1,6 +1,6 @@
 # M-Series API Documentation
 
-This document describes the APIs for the M-series features: Advanced Analytics Dashboard (M1), Report Export & Generation (M2), and API Usage Analytics (M3).
+This document describes the APIs for the M-series features: Advanced Analytics Dashboard (M1), Report Export & Generation (M2), API Usage Analytics (M3), Session History Analytics (M4), and Team Performance Metrics (M5).
 
 ---
 
@@ -17,6 +17,12 @@ This document describes the APIs for the M-series features: Advanced Analytics D
 - [M3: API Usage Analytics](#m3-api-usage-analytics)
   - [Models](#m3-models)
   - [APIUsageAnalyticsManager](#apiusageanalyticsmanager)
+- [M4: Session History Analytics](#m4-session-history-analytics)
+  - [Models](#m4-models)
+  - [SessionHistoryAnalyticsManager](#sessionhistoryanalyticsmanager)
+- [M5: Team Performance Metrics](#m5-team-performance-metrics)
+  - [Models](#m5-models)
+  - [TeamPerformanceManager](#teamperformancemanager)
 - [AppState Integration](#appstate-integration)
 
 ---
@@ -579,6 +585,335 @@ When monitoring is active, a `Timer` fires every **30 seconds** to:
 
 ---
 
+## M4: Session History Analytics
+
+### M4 Models
+
+**File:** `AgentCommand/Models/SessionHistoryAnalyticsModels.swift`
+
+#### SessionAnalytics
+
+```swift
+struct SessionAnalytics: Identifiable, Codable, Hashable {
+    let id: String  // UUID
+    var sessionName: String
+    var startedAt: Date
+    var endedAt: Date?
+    var totalTokens: Int
+    var totalCost: Double
+    var tasksCompleted: Int
+    var tasksFailed: Int
+    var agentsUsed: Int
+    var dominantModel: String
+    var averageLatencyMs: Double
+    var peakTokenRate: Int
+    var productivityScore: Double  // 0.0-1.0
+}
+```
+
+Computed properties: `duration`, `formattedDuration`, `formattedCost`, `successRate`, `successRatePercentage`, `productivityLabel`, `productivityColorHex`
+
+#### ProductivityTrend
+
+```swift
+struct ProductivityTrend: Identifiable, Codable, Hashable {
+    let id: String
+    var dataPoints: [ProductivityDataPoint]
+    var overallTrend: TrendDirection
+    var averageProductivity: Double
+    var generatedAt: Date
+}
+```
+
+Computed properties: `averagePercentage`
+
+#### ProductivityDataPoint
+
+```swift
+struct ProductivityDataPoint: Identifiable, Codable, Hashable {
+    let id: String
+    var date: Date
+    var productivity: Double  // 0.0-1.0
+    var tasksCompleted: Int
+    var tokensUsed: Int
+    var cost: Double
+}
+```
+
+#### TrendDirection
+
+```swift
+enum TrendDirection {
+    case improving, stable, declining
+}
+```
+
+Properties: `displayName`, `iconName`, `colorHex`
+
+#### SessionComparison
+
+```swift
+struct SessionComparison: Identifiable, Codable, Hashable {
+    let id: String
+    var sessionAId: String
+    var sessionBId: String
+    var sessionAName: String
+    var sessionBName: String
+    var metrics: [ComparisonMetric]
+    var generatedAt: Date
+}
+```
+
+Initializer accepts two `SessionAnalytics` objects and auto-generates comparison metrics.
+
+#### ComparisonMetric
+
+```swift
+struct ComparisonMetric: Identifiable, Codable, Hashable {
+    let id: String
+    var name: String
+    var valueA: Double
+    var valueB: Double
+    var unit: String
+}
+```
+
+Computed properties: `delta`, `deltaPercentage`, `deltaDisplay`
+
+#### SessionTimeDistribution
+
+```swift
+struct SessionTimeDistribution: Identifiable, Codable, Hashable {
+    let id: String
+    var entries: [TimeDistributionEntry]
+    var totalMinutes: Double
+}
+```
+
+#### TimeDistributionEntry
+
+```swift
+struct TimeDistributionEntry: Identifiable, Codable, Hashable {
+    let id: String
+    var category: TimeCategory
+    var minutes: Double
+    var percentage: Double
+}
+```
+
+**TimeCategory** — `coding`, `reviewing`, `debugging`, `testing`, `planning`, `idle`
+
+Properties: `displayName`, `colorHex`, `iconName`
+
+---
+
+### SessionHistoryAnalyticsManager
+
+**File:** `AgentCommand/Services/SessionHistoryAnalyticsManager.swift`
+
+Session history analytics and productivity tracking. `@MainActor ObservableObject`.
+
+#### Published Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `sessions` | `[SessionAnalytics]` | All recorded sessions |
+| `productivityTrend` | `ProductivityTrend?` | Current trend analysis |
+| `comparisons` | `[SessionComparison]` | Session comparisons |
+| `currentTimeDistribution` | `SessionTimeDistribution?` | Active time distribution |
+| `isAnalyzing` | `Bool` | Analysis in progress |
+
+#### Computed Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `totalSessions` | `Int` | Total session count |
+| `averageProductivity` | `Double` | Average productivity score |
+| `totalTasksAllSessions` | `Int` | Sum of all tasks across sessions |
+| `totalCostAllSessions` | `Double` | Sum of all costs across sessions |
+
+#### Methods
+
+```swift
+// Session recording
+func recordSession(_ session: SessionAnalytics)
+
+// Productivity analysis
+func analyzeProductivityTrend() -> ProductivityTrend
+
+// Session comparison
+func compareSessions(sessionA: SessionAnalytics, sessionB: SessionAnalytics) -> SessionComparison
+
+// Time distribution
+func analyzeTimeDistribution(for session: SessionAnalytics) -> SessionTimeDistribution
+
+// Data
+func loadSampleData()
+```
+
+#### Memory Limits
+
+| Resource | Max Count |
+|----------|-----------|
+| Sessions | 100 |
+| Comparisons | 20 |
+
+---
+
+## M5: Team Performance Metrics
+
+### M5 Models
+
+**File:** `AgentCommand/Models/TeamPerformanceModels.swift`
+
+#### TeamPerformanceSnapshot
+
+```swift
+struct TeamPerformanceSnapshot: Identifiable, Codable, Hashable {
+    let id: String
+    var teamName: String
+    var capturedAt: Date
+    var memberMetrics: [AgentPerformanceMetric]
+    var overallEfficiency: Double  // 0.0-1.0
+    var totalTasksCompleted: Int
+    var totalCost: Double
+    var averageResponseTime: Double  // ms
+}
+```
+
+Computed properties: `efficiencyPercentage`, `formattedCost`, `efficiencyLabel`, `efficiencyColorHex`
+
+#### AgentPerformanceMetric
+
+```swift
+struct AgentPerformanceMetric: Identifiable, Codable, Hashable {
+    let id: String
+    var agentName: String
+    var role: String
+    var tasksCompleted: Int
+    var tasksFailed: Int
+    var averageLatencyMs: Double
+    var totalTokens: Int
+    var totalCost: Double
+    var efficiency: Double  // 0.0-1.0
+    var specialization: AgentSpecialization
+}
+```
+
+Computed properties: `successRate`, `successRatePercentage`, `efficiencyPercentage`, `costPerTask`, `formattedCostPerTask`
+
+**AgentSpecialization** — `general`, `codeGeneration`, `codeReview`, `testing`, `debugging`, `documentation`, `architecture`
+
+Properties: `displayName`, `iconName`, `colorHex`
+
+#### TeamRadarData
+
+```swift
+struct TeamRadarData: Identifiable, Codable, Hashable {
+    let id: String
+    var teamName: String
+    var dimensions: [RadarDimension]
+    var generatedAt: Date
+}
+```
+
+Computed properties: `averageScore`
+
+#### RadarDimension
+
+```swift
+struct RadarDimension: Identifiable, Codable, Hashable {
+    let id: String
+    var name: String
+    var value: Double  // 0.0-1.0
+    var category: PerformanceDimension
+}
+```
+
+**PerformanceDimension** — `speed`, `quality`, `costEfficiency`, `reliability`, `collaboration`, `throughput`
+
+Properties: `displayName`, `iconName`
+
+#### TeamLeaderboard
+
+```swift
+struct TeamLeaderboard: Identifiable, Codable, Hashable {
+    let id: String
+    var metric: LeaderboardMetric
+    var entries: [LeaderboardEntry]
+    var generatedAt: Date
+}
+```
+
+Auto-sorts entries by score on init.
+
+**LeaderboardMetric** — `tasksCompleted`, `successRate`, `costEfficiency`, `speed`, `tokensUsed`
+
+Properties: `displayName`, `unit`
+
+#### LeaderboardEntry
+
+```swift
+struct LeaderboardEntry: Identifiable, Codable, Hashable {
+    let id: String
+    var agentName: String
+    var score: Double
+    var rank: Int
+    var trend: TrendDirection
+}
+```
+
+Computed properties: `formattedScore`
+
+---
+
+### TeamPerformanceManager
+
+**File:** `AgentCommand/Services/TeamPerformanceManager.swift`
+
+Team performance tracking and analysis. `@MainActor ObservableObject`.
+
+#### Published Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `snapshots` | `[TeamPerformanceSnapshot]` | Performance snapshots |
+| `radarData` | `[TeamRadarData]` | Radar chart data |
+| `leaderboards` | `[TeamLeaderboard]` | Leaderboard rankings |
+| `isAnalyzing` | `Bool` | Analysis in progress |
+
+#### Computed Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `latestSnapshot` | `TeamPerformanceSnapshot?` | Most recent snapshot |
+
+#### Methods
+
+```swift
+// Snapshot capture
+func captureSnapshot(teamName: String, members: [AgentPerformanceMetric]) -> TeamPerformanceSnapshot
+
+// Radar data generation
+func generateRadarData(from snapshot: TeamPerformanceSnapshot) -> TeamRadarData
+
+// Leaderboard generation
+func generateLeaderboard(metric: LeaderboardMetric, from snapshot: TeamPerformanceSnapshot) -> TeamLeaderboard
+
+// Data
+func loadSampleData()
+```
+
+#### Memory Limits
+
+| Resource | Max Count |
+|----------|-----------|
+| Snapshots | 50 |
+| Radar Data | 20 |
+| Leaderboards | 30 |
+
+---
+
 ## AppState Integration
 
 **File:** `AgentCommand/App/AppState.swift`
@@ -602,14 +937,26 @@ let reportExportManager = ReportExportManager()
 @Published var isAPIUsageAnalyticsStatusVisible: Bool = false
 @Published var isAPIUsageAnalyticsViewVisible: Bool = false
 let apiUsageAnalyticsManager = APIUsageAnalyticsManager()
+
+// M4: Session History Analytics
+@Published var isSessionHistoryAnalyticsStatusVisible: Bool = false
+@Published var isSessionHistoryAnalyticsViewVisible: Bool = false
+let sessionHistoryAnalyticsManager = SessionHistoryAnalyticsManager()
+
+// M5: Team Performance
+@Published var isTeamPerformanceStatusVisible: Bool = false
+@Published var isTeamPerformanceViewVisible: Bool = false
+let teamPerformanceManager = TeamPerformanceManager()
 ```
 
 ### Toggle Methods
 
 ```swift
-func toggleAnalyticsDashboardStatus()   // Toggles M1 overlay visibility
-func toggleReportExportStatus()          // Toggles M2 overlay visibility
-func toggleAPIUsageAnalyticsStatus()     // Toggles M3 overlay visibility
+func toggleAnalyticsDashboardStatus()          // Toggles M1 overlay visibility
+func toggleReportExportStatus()                // Toggles M2 overlay visibility
+func toggleAPIUsageAnalyticsStatus()           // Toggles M3 overlay visibility
+func toggleSessionHistoryAnalyticsStatus()     // Toggles M4 overlay visibility
+func toggleTeamPerformanceStatus()             // Toggles M5 overlay visibility
 ```
 
 Each toggle method flips the corresponding `is*StatusVisible` boolean. The overlay views observe these properties to show/hide themselves in the scene.

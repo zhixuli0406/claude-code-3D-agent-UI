@@ -444,6 +444,20 @@ enum L10nKey: String {
     case auBudget, auBudgetRemaining, auForecast
     case auSetBudget, auModelBreakdown, auCostAnalysis
     case auNoRecords, auNoForecast
+
+    // M4: Session History Analytics
+    case shSessionAnalytics, helpSessionAnalytics
+    case shTotalSessions, shProductivity, shTotalTasks
+    case shTrend, shComparisons, shTimeDistribution
+    case shNoSessions, shNoTrend
+    case shSessionCharts, shSessionTasks
+
+    // M5: Team Performance
+    case tpTeamPerformance, helpTeamPerformance
+    case tpEfficiency, tpLeaderboard, tpRadar
+    case tpMembers, tpTopPerformer, tpSpecialization
+    case tpNoData, tpNoSnapshots
+    case tpTeamCharts
 }
 
 struct L10n {
@@ -1390,6 +1404,33 @@ struct L10n {
         .auCostAnalysis: "成本分析",
         .auNoRecords: "尚無 API 記錄",
         .auNoForecast: "尚無預測",
+
+        // M4: Session History Analytics
+        .shSessionAnalytics: "工作階段分析",
+        .helpSessionAnalytics: "歷史工作階段的生產力分析",
+        .shTotalSessions: "總工作階段數",
+        .shProductivity: "生產力",
+        .shTotalTasks: "總任務數",
+        .shTrend: "趨勢",
+        .shComparisons: "階段比較",
+        .shTimeDistribution: "時間分佈",
+        .shNoSessions: "尚無工作階段記錄",
+        .shNoTrend: "尚無趨勢資料",
+        .shSessionCharts: "工作階段圖表",
+        .shSessionTasks: "階段任務",
+
+        // M5: Team Performance
+        .tpTeamPerformance: "團隊效能",
+        .helpTeamPerformance: "團隊成員效能分析與排行",
+        .tpEfficiency: "效率",
+        .tpLeaderboard: "排行榜",
+        .tpRadar: "雷達圖",
+        .tpMembers: "成員",
+        .tpTopPerformer: "最佳表現者",
+        .tpSpecialization: "專長",
+        .tpNoData: "尚無效能資料",
+        .tpNoSnapshots: "尚無快照",
+        .tpTeamCharts: "團隊圖表",
     ]
 
     // MARK: - English
@@ -2326,5 +2367,32 @@ struct L10n {
         .auCostAnalysis: "Cost Analysis",
         .auNoRecords: "No API records yet",
         .auNoForecast: "No forecast available",
+
+        // M4: Session History Analytics
+        .shSessionAnalytics: "Session Analytics",
+        .helpSessionAnalytics: "Productivity analytics for past sessions",
+        .shTotalSessions: "Total Sessions",
+        .shProductivity: "Productivity",
+        .shTotalTasks: "Total Tasks",
+        .shTrend: "Trend",
+        .shComparisons: "Comparisons",
+        .shTimeDistribution: "Time Distribution",
+        .shNoSessions: "No sessions recorded yet",
+        .shNoTrend: "No trend data available",
+        .shSessionCharts: "Session Charts",
+        .shSessionTasks: "Session Tasks",
+
+        // M5: Team Performance
+        .tpTeamPerformance: "Team Performance",
+        .helpTeamPerformance: "Team member performance analysis and leaderboard",
+        .tpEfficiency: "Efficiency",
+        .tpLeaderboard: "Leaderboard",
+        .tpRadar: "Radar Chart",
+        .tpMembers: "Members",
+        .tpTopPerformer: "Top Performer",
+        .tpSpecialization: "Specialization",
+        .tpNoData: "No performance data yet",
+        .tpNoSnapshots: "No snapshots captured",
+        .tpTeamCharts: "Team Charts",
     ]
 }

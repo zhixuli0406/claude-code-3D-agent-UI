@@ -69,6 +69,10 @@ struct ContentView: View {
                 showAnomalyDetectionView: $showAnomalyDetectionView,
                 showMCPManagementView: $showMCPManagementView
             ))
+            .modifier(SheetGroupE(
+                appState: appState,
+                localization: localization
+            ))
             .overlay(alignment: .bottom) {
                 if let reward = appState.coinManager.lastCoinReward {
                     CoinRewardToast(reward: reward)
@@ -99,6 +103,7 @@ struct ContentView: View {
                     toolbarVisualizationMenu
                 }
                 Group {
+                    toolbarDataAnalyticsMenu
                     toolbarAutomationMenu
                     toolbarStoreMenu
                     toolbarWindowMenu
@@ -326,7 +331,61 @@ struct ContentView: View {
         .help("Visualization")
     }
 
-    // 5. Automation
+    // 5. Data & Analytics (M-series)
+    private var toolbarDataAnalyticsMenu: some View {
+        Menu {
+            // M1: Analytics Dashboard
+            Button(action: { appState.isAnalyticsDashboardViewVisible = true }) {
+                Label(localization.localized(.adAnalyticsDashboard), systemImage: "chart.bar.xaxis")
+            }
+            Button(action: { appState.toggleAnalyticsDashboardStatus() }) {
+                Label(localization.localized(.adReports), systemImage: appState.isAnalyticsDashboardStatusVisible ? "chart.xyaxis.line" : "chart.line.flattrend.xyaxis")
+            }
+            Divider()
+            // M2: Report Export
+            Button(action: { appState.isReportExportViewVisible = true }) {
+                Label(localization.localized(.reExportReports), systemImage: "doc.richtext")
+            }
+            Button(action: { appState.toggleReportExportStatus() }) {
+                Label(localization.localized(.reSchedules), systemImage: appState.isReportExportStatusVisible ? "calendar.badge.clock" : "calendar")
+            }
+            Divider()
+            // M3: API Usage Analytics
+            Button(action: { appState.isAPIUsageAnalyticsViewVisible = true }) {
+                Label(localization.localized(.auAPIUsageAnalytics), systemImage: "dollarsign.arrow.circlepath")
+            }
+            Button(action: { appState.toggleAPIUsageAnalyticsStatus() }) {
+                Label(localization.localized(.auBudget), systemImage: appState.isAPIUsageAnalyticsStatusVisible ? "gauge.with.needle.fill" : "gauge.with.needle")
+            }
+            Divider()
+            // M4: Session History Analytics
+            Button(action: { appState.isSessionHistoryAnalyticsViewVisible = true }) {
+                Label(localization.localized(.shSessionAnalytics), systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+            }
+            Button(action: { appState.toggleSessionHistoryAnalyticsStatus() }) {
+                Label(localization.localized(.shProductivity), systemImage: appState.isSessionHistoryAnalyticsStatusVisible ? "chart.line.uptrend.xyaxis" : "chart.line.flattrend.xyaxis")
+            }
+            Button(action: { appState.toggleSessionHistoryCharts() }) {
+                Label("Session Charts", systemImage: appState.isSessionHistoryChartsVisible ? "chart.xyaxis.line" : "chart.dots.scatter")
+            }
+            Divider()
+            // M5: Team Performance Metrics
+            Button(action: { appState.isTeamPerformanceViewVisible = true }) {
+                Label(localization.localized(.tpTeamPerformance), systemImage: "person.3.sequence.fill")
+            }
+            Button(action: { appState.toggleTeamPerformanceStatus() }) {
+                Label(localization.localized(.tpEfficiency), systemImage: appState.isTeamPerformanceStatusVisible ? "speedometer" : "gauge.with.dots.needle.33percent")
+            }
+            Button(action: { appState.toggleTeamPerformanceCharts() }) {
+                Label("Team Charts", systemImage: appState.isTeamPerformanceChartsVisible ? "chart.bar.xaxis" : "chart.bar")
+            }
+        } label: {
+            Label("Data", systemImage: "chart.bar")
+        }
+        .help("Data & Analytics")
+    }
+
+    // 6. Automation
     private var toolbarAutomationMenu: some View {
         Menu {
             // Workflow
@@ -670,6 +729,40 @@ private struct SheetGroupD: ViewModifier {
             }
             .sheet(isPresented: $showMCPManagementView) {
                 MCPManagementView()
+                    .environmentObject(appState)
+                    .environmentObject(localization)
+            }
+    }
+}
+
+private struct SheetGroupE: ViewModifier {
+    @ObservedObject var appState: AppState
+    var localization: LocalizationManager
+
+    func body(content: Content) -> some View {
+        content
+            .sheet(isPresented: $appState.isAnalyticsDashboardViewVisible) {
+                AnalyticsDashboardView()
+                    .environmentObject(appState)
+                    .environmentObject(localization)
+            }
+            .sheet(isPresented: $appState.isReportExportViewVisible) {
+                ReportExportView()
+                    .environmentObject(appState)
+                    .environmentObject(localization)
+            }
+            .sheet(isPresented: $appState.isAPIUsageAnalyticsViewVisible) {
+                APIUsageAnalyticsView()
+                    .environmentObject(appState)
+                    .environmentObject(localization)
+            }
+            .sheet(isPresented: $appState.isSessionHistoryAnalyticsViewVisible) {
+                SessionHistoryAnalyticsView()
+                    .environmentObject(appState)
+                    .environmentObject(localization)
+            }
+            .sheet(isPresented: $appState.isTeamPerformanceViewVisible) {
+                TeamPerformanceView()
                     .environmentObject(appState)
                     .environmentObject(localization)
             }
