@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1A1A2E"/>
+      <stop offset="100%" stop-color="#0A0A1A"/>
+    </radialGradient>
+
+    <!-- Cyan glow -->
+    <filter id="cyanGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Strong glow for accent elements -->
+    <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle inner shadow -->
+    <filter id="innerShadow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1"/>
+    </filter>
+
+    <!-- Isometric cube face gradients -->
+    <linearGradient id="cubeTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00BCD4" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0097A7" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="cubeLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00838F"/>
+      <stop offset="100%" stop-color="#006064"/>
+    </linearGradient>
+    <linearGradient id="cubeRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ACC1"/>
+      <stop offset="100%" stop-color="#00838F"/>
+    </linearGradient>
+
+    <!-- Grid line pattern -->
+    <pattern id="gridPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="40" y2="0" stroke="#00BCD4" stroke-width="0.5" stroke-opacity="0.15"/>
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#00BCD4" stroke-width="0.5" stroke-opacity="0.15"/>
+    </pattern>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)" stroke="#0F3460" stroke-width="2"/>
+
+  <!-- Subtle grid overlay -->
+  <circle cx="256" cy="256" r="238" fill="url(#gridPattern)" opacity="0.5"/>
+
+  <!-- Outer ring -->
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#00BCD4" stroke-width="1.5" stroke-opacity="0.3"/>
+  <circle cx="256" cy="256" r="228" fill="none" stroke="#00BCD4" stroke-width="0.5" stroke-opacity="0.15"/>
+
+  <!-- Corner accent dots on ring -->
+  <circle cx="256" cy="22" r="4" fill="#00BCD4" opacity="0.8"/>
+  <circle cx="256" cy="490" r="4" fill="#00BCD4" opacity="0.8"/>
+  <circle cx="22" cy="256" r="4" fill="#00BCD4" opacity="0.8"/>
+  <circle cx="490" cy="256" r="4" fill="#00BCD4" opacity="0.8"/>
+
+  <!-- Main 3D Isometric Cube - centered -->
+  <g transform="translate(256, 230)" filter="url(#cyanGlow)">
+    <!-- Top face -->
+    <polygon points="0,-80 90,-35 0,10 -90,-35" fill="url(#cubeTop)" stroke="#00E5FF" stroke-width="1.5"/>
+    <!-- Left face -->
+    <polygon points="-90,-35 0,10 0,100 -90,55" fill="url(#cubeLeft)" stroke="#00BCD4" stroke-width="1"/>
+    <!-- Right face -->
+    <polygon points="90,-35 0,10 0,100 90,55" fill="url(#cubeRight)" stroke="#00BCD4" stroke-width="1"/>
+
+    <!-- Grid lines on top face -->
+    <line x1="-45" y1="-57.5" x2="45" y2="-12.5" stroke="#00E5FF" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="-45" y1="-12.5" x2="45" y2="-57.5" stroke="#00E5FF" stroke-width="0.5" stroke-opacity="0.4"/>
+
+    <!-- Voxel agent silhouette on top face (small pixel person) -->
+    <g transform="translate(0, -35)" opacity="0.9">
+      <!-- Head -->
+      <rect x="-6" y="-18" width="12" height="12" fill="#00E5FF" rx="1"/>
+      <!-- Body -->
+      <rect x="-8" y="-4" width="16" height="14" fill="#00E5FF" rx="1"/>
+      <!-- Legs -->
+      <rect x="-8" y="12" width="6" height="8" fill="#00E5FF" rx="1"/>
+      <rect x="2" y="12" width="6" height="8" fill="#00E5FF" rx="1"/>
+    </g>
+  </g>
+
+  <!-- Holographic orbit ring -->
+  <ellipse cx="256" cy="265" rx="140" ry="35" fill="none" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="8,4" transform="rotate(-5, 256, 265)"/>
+
+  <!-- Small floating data nodes -->
+  <g filter="url(#strongGlow)">
+    <circle cx="140" cy="200" r="5" fill="#00BCD4" opacity="0.8"/>
+    <circle cx="372" cy="200" r="5" fill="#00BCD4" opacity="0.8"/>
+    <circle cx="160" cy="340" r="4" fill="#E91E63" opacity="0.7"/>
+    <circle cx="352" cy="340" r="4" fill="#E91E63" opacity="0.7"/>
+  </g>
+
+  <!-- Connecting lines from nodes to cube -->
+  <line x1="145" y1="203" x2="200" y2="230" stroke="#00BCD4" stroke-width="0.8" stroke-opacity="0.3" stroke-dasharray="4,3"/>
+  <line x1="367" y1="203" x2="312" y2="230" stroke="#00BCD4" stroke-width="0.8" stroke-opacity="0.3" stroke-dasharray="4,3"/>
+  <line x1="163" y1="337" x2="210" y2="300" stroke="#E91E63" stroke-width="0.8" stroke-opacity="0.3" stroke-dasharray="4,3"/>
+  <line x1="349" y1="337" x2="302" y2="300" stroke="#E91E63" stroke-width="0.8" stroke-opacity="0.3" stroke-dasharray="4,3"/>
+
+  <!-- Text: "AC" monogram at bottom -->
+  <g transform="translate(256, 420)">
+    <text text-anchor="middle" font-family="SF Mono, Monaco, Menlo, monospace" font-size="48" font-weight="900" fill="#00BCD4" letter-spacing="8" filter="url(#cyanGlow)">AC</text>
+    <text text-anchor="middle" y="24" font-family="SF Mono, Monaco, Menlo, monospace" font-size="11" font-weight="400" fill="#00BCD4" opacity="0.5" letter-spacing="6">AGENT COMMAND</text>
+  </g>
+
+  <!-- Top label -->
+  <text x="256" y="100" text-anchor="middle" font-family="SF Mono, Monaco, Menlo, monospace" font-size="9" fill="#00BCD4" opacity="0.4" letter-spacing="4">3D AGENT UI</text>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" width="200" height="40">
+  <defs>
+    <linearGradient id="nt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#00BCD4" stop-opacity="0.65"/>
+    </linearGradient>
+    <linearGradient id="nl" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00838F"/>
+      <stop offset="100%" stop-color="#004D40"/>
+    </linearGradient>
+    <linearGradient id="nr" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ACC1"/>
+      <stop offset="100%" stop-color="#006064"/>
+    </linearGradient>
+    <filter id="ng" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Cube icon -->
+  <g transform="translate(20, 18)">
+    <!-- Main cube -->
+    <polygon points="0,-10 12,-4 0,2 -12,-4" fill="url(#nt)" stroke="#00E5FF" stroke-width="0.5" stroke-opacity="0.8"/>
+    <polygon points="-12,-4 0,2 0,14 -12,8" fill="url(#nl)" stroke="#00BCD4" stroke-width="0.3" stroke-opacity="0.5"/>
+    <polygon points="12,-4 0,2 0,14 12,8" fill="url(#nr)" stroke="#00BCD4" stroke-width="0.3" stroke-opacity="0.5"/>
+
+    <!-- Mini agent on top -->
+    <g transform="translate(0, -10)">
+      <rect x="-2" y="-7" width="4" height="3.5" rx="0.5" fill="#00E5FF"/>
+      <rect x="-1.2" y="-5.8" width="1" height="1" fill="#0A0A1A"/>
+      <rect x="0.2" y="-5.8" width="1" height="1" fill="#0A0A1A"/>
+      <rect x="-2.5" y="-3" width="5" height="3.5" rx="0.5" fill="#00BCD4"/>
+      <rect x="-2" y="1" width="1.8" height="2" rx="0.3" fill="#004D40"/>
+      <rect x="0.2" y="1" width="1.8" height="2" rx="0.3" fill="#004D40"/>
+    </g>
+
+    <!-- Small purple accent cube -->
+    <g transform="translate(14, -7)" opacity="0.7">
+      <polygon points="0,-3.5 4,-1.5 0,0.5 -4,-1.5" fill="#7C4DFF" fill-opacity="0.7"/>
+      <polygon points="-4,-1.5 0,0.5 0,4 -4,2" fill="#4A148C" fill-opacity="0.5"/>
+      <polygon points="4,-1.5 0,0.5 0,4 4,2" fill="#6A1B9A" fill-opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- Text -->
+  <text x="42" y="16" font-family="SF Mono, Monaco, Menlo, monospace" font-size="14" font-weight="900" letter-spacing="1" fill="#00E5FF" filter="url(#ng)">AC</text>
+  <text x="42" y="30" font-family="SF Mono, Monaco, Menlo, monospace" font-size="7" font-weight="500" letter-spacing="2.5" fill="#00BCD4" opacity="0.6">AGENT COMMAND</text>
+</svg>

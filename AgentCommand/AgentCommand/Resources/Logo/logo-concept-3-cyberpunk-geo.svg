@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background -->
+    <radialGradient id="bg3" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#1A0A2E"/>
+      <stop offset="60%" stop-color="#0D0221"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+
+    <!-- Neon pink glow -->
+    <filter id="neonPink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Neon cyan glow -->
+    <filter id="neonCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle glow -->
+    <filter id="subtleGlow3" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Purple glow -->
+    <filter id="purpleGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Hexagon clip -->
+    <clipPath id="hexClip">
+      <polygon points="256,52 432,156 432,356 256,460 80,356 80,156"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="0" y="0" width="512" height="512" rx="108" ry="108" fill="url(#bg3)"/>
+
+  <!-- Subtle scan lines -->
+  <g opacity="0.03">
+    <line x1="0" y1="60" x2="512" y2="60" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="120" x2="512" y2="120" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="180" x2="512" y2="180" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="240" x2="512" y2="240" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="300" x2="512" y2="300" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="360" x2="512" y2="360" stroke="#FFF" stroke-width="1"/>
+    <line x1="0" y1="420" x2="512" y2="420" stroke="#FFF" stroke-width="1"/>
+  </g>
+
+  <!-- Outer hexagon frame -->
+  <polygon points="256,52 432,156 432,356 256,460 80,356 80,156" fill="none" stroke="#FF2A6D" stroke-width="2" stroke-opacity="0.25" filter="url(#neonPink)"/>
+
+  <!-- Inner hexagon frame -->
+  <polygon points="256,82 408,172 408,340 256,430 104,340 104,172" fill="none" stroke="#05D9E8" stroke-width="1.5" stroke-opacity="0.2" filter="url(#neonCyan)"/>
+
+  <!-- Central geometric composition -->
+  <g transform="translate(256, 248)">
+
+    <!-- Outer rotating ring (implied by dashed circle) -->
+    <circle cx="0" cy="0" r="130" fill="none" stroke="#FF2A6D" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="12,8"/>
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#05D9E8" stroke-width="0.5" stroke-opacity="0.15" stroke-dasharray="6,10"/>
+
+    <!-- Three overlapping triangles forming a complex shape -->
+    <!-- Triangle 1 (pointing up) - cyan -->
+    <polygon points="0,-95 82,47 -82,47" fill="none" stroke="#05D9E8" stroke-width="2.5" stroke-opacity="0.7" filter="url(#neonCyan)"/>
+
+    <!-- Triangle 2 (pointing down) - pink -->
+    <polygon points="0,95 -82,-47 82,-47" fill="none" stroke="#FF2A6D" stroke-width="2.5" stroke-opacity="0.7" filter="url(#neonPink)"/>
+
+    <!-- Center intersection creates a hexagon - fill it -->
+    <polygon points="0,-47 41,-24 41,24 0,47 -41,24 -41,-24" fill="#2B1055" fill-opacity="0.6" stroke="#7C4DFF" stroke-width="1.5" stroke-opacity="0.5"/>
+
+    <!-- Inner icon: stylized "A" for Agent -->
+    <g filter="url(#neonCyan)">
+      <!-- The "A" built from geometric shapes -->
+      <!-- Left stroke -->
+      <line x1="-20" y1="22" x2="0" y2="-28" stroke="#05D9E8" stroke-width="4" stroke-linecap="round"/>
+      <!-- Right stroke -->
+      <line x1="20" y1="22" x2="0" y2="-28" stroke="#05D9E8" stroke-width="4" stroke-linecap="round"/>
+      <!-- Crossbar -->
+      <line x1="-12" y1="4" x2="12" y2="4" stroke="#FF2A6D" stroke-width="3" stroke-linecap="round"/>
+      <!-- Dot at apex (like an agent's head) -->
+      <circle cx="0" cy="-32" r="5" fill="#05D9E8"/>
+    </g>
+
+    <!-- Data flow lines radiating from center -->
+    <g stroke-dasharray="3,5" stroke-width="1" opacity="0.35">
+      <line x1="0" y1="-50" x2="0" y2="-115" stroke="#05D9E8"/>
+      <line x1="43" y1="25" x2="100" y2="58" stroke="#FF2A6D"/>
+      <line x1="-43" y1="25" x2="-100" y2="58" stroke="#7C4DFF"/>
+      <line x1="43" y1="-25" x2="100" y2="-58" stroke="#05D9E8"/>
+      <line x1="-43" y1="-25" x2="-100" y2="-58" stroke="#FF2A6D"/>
+      <line x1="0" y1="50" x2="0" y2="115" stroke="#7C4DFF"/>
+    </g>
+
+    <!-- Node dots at endpoints -->
+    <g filter="url(#subtleGlow3)">
+      <circle cx="0" cy="-120" r="4" fill="#05D9E8"/>
+      <circle cx="104" cy="60" r="4" fill="#FF2A6D"/>
+      <circle cx="-104" cy="60" r="4" fill="#7C4DFF"/>
+      <circle cx="104" cy="-60" r="4" fill="#05D9E8"/>
+      <circle cx="-104" cy="-60" r="4" fill="#FF2A6D"/>
+      <circle cx="0" cy="120" r="4" fill="#7C4DFF"/>
+    </g>
+  </g>
+
+  <!-- Corner decorative brackets -->
+  <!-- Top-left -->
+  <g stroke="#05D9E8" stroke-width="2" stroke-opacity="0.3">
+    <line x1="40" y1="60" x2="40" y2="90"/>
+    <line x1="40" y1="60" x2="70" y2="60"/>
+  </g>
+  <!-- Top-right -->
+  <g stroke="#05D9E8" stroke-width="2" stroke-opacity="0.3">
+    <line x1="472" y1="60" x2="472" y2="90"/>
+    <line x1="472" y1="60" x2="442" y2="60"/>
+  </g>
+  <!-- Bottom-left -->
+  <g stroke="#FF2A6D" stroke-width="2" stroke-opacity="0.3">
+    <line x1="40" y1="452" x2="40" y2="422"/>
+    <line x1="40" y1="452" x2="70" y2="452"/>
+  </g>
+  <!-- Bottom-right -->
+  <g stroke="#FF2A6D" stroke-width="2" stroke-opacity="0.3">
+    <line x1="472" y1="452" x2="472" y2="422"/>
+    <line x1="472" y1="452" x2="442" y2="452"/>
+  </g>
+
+  <!-- Small floating pixel blocks -->
+  <g opacity="0.5">
+    <rect x="100" y="100" width="6" height="6" fill="#05D9E8" rx="1"/>
+    <rect x="400" y="110" width="4" height="4" fill="#FF2A6D" rx="1"/>
+    <rect x="90" y="380" width="5" height="5" fill="#7C4DFF" rx="1"/>
+    <rect x="410" y="390" width="6" height="6" fill="#FFD700" rx="1"/>
+    <rect x="150" y="440" width="4" height="4" fill="#05D9E8" rx="1"/>
+    <rect x="360" y="70" width="5" height="5" fill="#FF2A6D" rx="1"/>
+  </g>
+
+  <!-- Bottom branding -->
+  <text x="256" y="488" text-anchor="middle" font-family="SF Mono, Monaco, Menlo, monospace" font-size="10" font-weight="600" fill="#05D9E8" opacity="0.4" letter-spacing="5">AGENTCOMMAND</text>
+</svg>

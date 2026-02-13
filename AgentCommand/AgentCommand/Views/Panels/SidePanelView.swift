@@ -7,14 +7,7 @@ struct SidePanelView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
-            HStack {
-                Image(systemName: "command.circle.fill")
-                    .foregroundColor(Color(hex: "#00BCD4"))
-                Text(localization.localized(.agentCommandTitle))
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Spacer()
-            }
+            SidebarLogoView()
             .padding()
             .background(Color.white.opacity(0.03))
 

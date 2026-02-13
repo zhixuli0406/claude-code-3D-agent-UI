@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background gradient -->
+    <radialGradient id="bgFinal" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#16213E"/>
+      <stop offset="50%" stop-color="#0D0F1A"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+
+    <!-- Cyan neon glow -->
+    <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Pink neon glow -->
+    <filter id="glowPink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Strong glow for key elements -->
+    <filter id="glowStrong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft shadow -->
+    <filter id="softShadow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Isometric cube gradients -->
+    <linearGradient id="fTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#00BCD4" stop-opacity="0.65"/>
+    </linearGradient>
+    <linearGradient id="fLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00838F"/>
+      <stop offset="100%" stop-color="#004D40"/>
+    </linearGradient>
+    <linearGradient id="fRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ACC1"/>
+      <stop offset="100%" stop-color="#006064"/>
+    </linearGradient>
+
+    <!-- Small cube gradients (darker/secondary) -->
+    <linearGradient id="sTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C4DFF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#5E35B1" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="sLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4A148C"/>
+      <stop offset="100%" stop-color="#311B92"/>
+    </linearGradient>
+    <linearGradient id="sRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6A1B9A"/>
+      <stop offset="100%" stop-color="#4A148C"/>
+    </linearGradient>
+
+    <!-- Pink accent cube gradients -->
+    <linearGradient id="pTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF2A6D" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#E91E63" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="pLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#AD1457"/>
+      <stop offset="100%" stop-color="#880E4F"/>
+    </linearGradient>
+    <linearGradient id="pRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C62828"/>
+      <stop offset="100%" stop-color="#AD1457"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background: macOS rounded rect -->
+  <rect x="0" y="0" width="512" height="512" rx="112" ry="112" fill="url(#bgFinal)"/>
+
+  <!-- Subtle border -->
+  <rect x="2" y="2" width="508" height="508" rx="110" ry="110" fill="none" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.15"/>
+
+  <!-- Background grid (very subtle) -->
+  <g opacity="0.05">
+    <line x1="128" y1="0" x2="128" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="256" y1="0" x2="256" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="384" y1="0" x2="384" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="128" x2="512" y2="128" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="256" x2="512" y2="256" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="384" x2="512" y2="384" stroke="#00BCD4" stroke-width="0.5"/>
+  </g>
+
+  <!-- === Main Isometric Cube Composition === -->
+  <g transform="translate(256, 228)">
+
+    <!-- Shadow beneath cubes -->
+    <ellipse cx="0" cy="135" rx="100" ry="22" fill="#000" opacity="0.25"/>
+
+    <!-- === Large Main Cube (Agent/Command Center) === -->
+    <g filter="url(#softShadow)">
+      <!-- Top face -->
+      <polygon points="0,-72 84,-30 0,12 -84,-30" fill="url(#fTop)" stroke="#00E5FF" stroke-width="1.5" stroke-opacity="0.8"/>
+      <!-- Left face -->
+      <polygon points="-84,-30 0,12 0,96 -84,54" fill="url(#fLeft)" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.5"/>
+      <!-- Right face -->
+      <polygon points="84,-30 0,12 0,96 84,54" fill="url(#fRight)" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.5"/>
+    </g>
+
+    <!-- Grid pattern on top face -->
+    <g stroke="#00E5FF" stroke-width="0.5" stroke-opacity="0.3">
+      <line x1="-42" y1="-51" x2="42" y2="-9"/>
+      <line x1="-42" y1="-9" x2="42" y2="-51"/>
+      <line x1="0" y1="-72" x2="0" y2="12"/>
+      <line x1="-84" y1="-30" x2="84" y2="-30"/>
+    </g>
+
+    <!-- Voxel Agent Character on top of cube -->
+    <g transform="translate(0, -72)">
+      <!-- Agent body (pixel style) -->
+      <!-- Head -->
+      <rect x="-9" y="-40" width="18" height="16" rx="2" fill="#00E5FF" stroke="#00BCD4" stroke-width="0.8"/>
+      <!-- Eye pixels -->
+      <rect x="-6" y="-35" width="4" height="4" rx="1" fill="#0A0A1A"/>
+      <rect x="2" y="-35" width="4" height="4" rx="1" fill="#0A0A1A"/>
+      <!-- Body -->
+      <rect x="-11" y="-22" width="22" height="18" rx="2" fill="#00BCD4" stroke="#00838F" stroke-width="0.8"/>
+      <!-- Code symbol on body -->
+      <text x="0" y="-9" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#0A0A1A">&gt;_</text>
+      <!-- Legs -->
+      <rect x="-10" y="-2" width="8" height="10" rx="1" fill="#006064"/>
+      <rect x="2" y="-2" width="8" height="10" rx="1" fill="#006064"/>
+    </g>
+
+    <!-- === Small Purple Cube (floating, top-right) === -->
+    <g transform="translate(88, -60)" filter="url(#softShadow)">
+      <polygon points="0,-28 33,-12 0,4 -33,-12" fill="url(#sTop)" stroke="#B388FF" stroke-width="1" stroke-opacity="0.6"/>
+      <polygon points="-33,-12 0,4 0,36 -33,20" fill="url(#sLeft)" stroke="#7C4DFF" stroke-width="0.8" stroke-opacity="0.4"/>
+      <polygon points="33,-12 0,4 0,36 33,20" fill="url(#sRight)" stroke="#7C4DFF" stroke-width="0.8" stroke-opacity="0.4"/>
+    </g>
+
+    <!-- === Small Pink Cube (floating, bottom-left) === -->
+    <g transform="translate(-95, 30)" filter="url(#softShadow)">
+      <polygon points="0,-22 26,-9 0,4 -26,-9" fill="url(#pTop)" stroke="#FF5252" stroke-width="1" stroke-opacity="0.6"/>
+      <polygon points="-26,-9 0,4 0,28 -26,15" fill="url(#pLeft)" stroke="#FF2A6D" stroke-width="0.8" stroke-opacity="0.4"/>
+      <polygon points="26,-9 0,4 0,28 26,15" fill="url(#pRight)" stroke="#FF2A6D" stroke-width="0.8" stroke-opacity="0.4"/>
+    </g>
+
+    <!-- === Tiny Gold Cube (floating, far top) === -->
+    <g transform="translate(-55, -95)" opacity="0.8">
+      <polygon points="0,-14 16,-6 0,2 -16,-6" fill="#FFD700" fill-opacity="0.7" stroke="#FFD700" stroke-width="0.5" stroke-opacity="0.5"/>
+      <polygon points="-16,-6 0,2 0,16 -16,8" fill="#F9A825" fill-opacity="0.5"/>
+      <polygon points="16,-6 0,2 0,16 16,8" fill="#FBC02D" fill-opacity="0.5"/>
+    </g>
+
+    <!-- Connection lines between cubes (data flow) -->
+    <g stroke-dasharray="4,3" stroke-width="1" opacity="0.35">
+      <!-- Main to purple -->
+      <line x1="60" y1="-50" x2="78" y2="-55" stroke="#05D9E8"/>
+      <!-- Main to pink -->
+      <line x1="-60" y1="20" x2="-80" y2="25" stroke="#FF2A6D"/>
+      <!-- Main to gold -->
+      <line x1="-30" y1="-65" x2="-45" y2="-82" stroke="#FFD700"/>
+    </g>
+
+    <!-- Orbital ring -->
+    <ellipse cx="0" cy="15" rx="140" ry="32" fill="none" stroke="#00BCD4" stroke-width="0.8" stroke-opacity="0.2" stroke-dasharray="10,6" transform="rotate(-8, 0, 15)"/>
+
+  </g>
+
+  <!-- Floating particles -->
+  <g filter="url(#glowCyan)">
+    <circle cx="120" cy="175" r="2.5" fill="#05D9E8" opacity="0.7"/>
+    <circle cx="395" cy="195" r="2" fill="#05D9E8" opacity="0.6"/>
+    <circle cx="105" cy="330" r="2" fill="#7C4DFF" opacity="0.5"/>
+    <circle cx="408" cy="310" r="2.5" fill="#FF2A6D" opacity="0.6"/>
+    <circle cx="180" cy="125" r="1.5" fill="#FFD700" opacity="0.5"/>
+    <circle cx="345" cy="355" r="1.5" fill="#05D9E8" opacity="0.4"/>
+  </g>
+
+  <!-- Bottom branding -->
+  <g transform="translate(256, 425)">
+    <!-- Main title -->
+    <text text-anchor="middle" y="0" font-family="SF Mono, Monaco, Menlo, monospace" font-size="36" font-weight="900" letter-spacing="3" fill="#00E5FF" filter="url(#glowCyan)">AC</text>
+    <!-- Subtitle -->
+    <text text-anchor="middle" y="22" font-family="SF Mono, Monaco, Menlo, monospace" font-size="10" font-weight="500" letter-spacing="5" fill="#00BCD4" opacity="0.5">AGENT COMMAND</text>
+    <!-- Tagline -->
+    <text text-anchor="middle" y="38" font-family="SF Mono, Monaco, Menlo, monospace" font-size="7" font-weight="400" letter-spacing="3" fill="#7C4DFF" opacity="0.35">3D AGENT UI</text>
+  </g>
+
+  <!-- Top-left corner bracket -->
+  <g stroke="#00BCD4" stroke-width="1.5" stroke-opacity="0.2">
+    <line x1="36" y1="56" x2="36" y2="82"/>
+    <line x1="36" y1="56" x2="62" y2="56"/>
+  </g>
+  <!-- Top-right corner bracket -->
+  <g stroke="#00BCD4" stroke-width="1.5" stroke-opacity="0.2">
+    <line x1="476" y1="56" x2="476" y2="82"/>
+    <line x1="476" y1="56" x2="450" y2="56"/>
+  </g>
+  <!-- Bottom-left corner bracket -->
+  <g stroke="#FF2A6D" stroke-width="1.5" stroke-opacity="0.15">
+    <line x1="36" y1="456" x2="36" y2="430"/>
+    <line x1="36" y1="456" x2="62" y2="456"/>
+  </g>
+  <!-- Bottom-right corner bracket -->
+  <g stroke="#FF2A6D" stroke-width="1.5" stroke-opacity="0.15">
+    <line x1="476" y1="456" x2="476" y2="430"/>
+    <line x1="476" y1="456" x2="450" y2="456"/>
+  </g>
+</svg>

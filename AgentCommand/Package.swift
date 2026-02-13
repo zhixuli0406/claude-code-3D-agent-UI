@@ -10,9 +10,10 @@ let package = Package(
         .executableTarget(
             name: "AgentCommand",
             path: "AgentCommand",
-            exclude: ["Resources/Assets.xcassets"],
+            exclude: ["Resources/Logo"],
             resources: [
-                .copy("Resources/SampleConfigs")
+                .copy("Resources/SampleConfigs"),
+                .process("Resources/Assets.xcassets")
             ]
         ),
         .testTarget(

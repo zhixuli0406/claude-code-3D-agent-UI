@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgI" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#16213E"/>
+      <stop offset="50%" stop-color="#0D0F1A"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+
+    <filter id="gC" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="sS">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <linearGradient id="iTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#00BCD4" stop-opacity="0.65"/>
+    </linearGradient>
+    <linearGradient id="iLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00838F"/>
+      <stop offset="100%" stop-color="#004D40"/>
+    </linearGradient>
+    <linearGradient id="iRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ACC1"/>
+      <stop offset="100%" stop-color="#006064"/>
+    </linearGradient>
+    <linearGradient id="iSTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C4DFF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#5E35B1" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="iSLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4A148C"/>
+      <stop offset="100%" stop-color="#311B92"/>
+    </linearGradient>
+    <linearGradient id="iSRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6A1B9A"/>
+      <stop offset="100%" stop-color="#4A148C"/>
+    </linearGradient>
+    <linearGradient id="iPTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF2A6D" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#E91E63" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="iPLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#AD1457"/>
+      <stop offset="100%" stop-color="#880E4F"/>
+    </linearGradient>
+    <linearGradient id="iPRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C62828"/>
+      <stop offset="100%" stop-color="#AD1457"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="512" height="512" rx="112" ry="112" fill="url(#bgI)"/>
+  <rect x="2" y="2" width="508" height="508" rx="110" ry="110" fill="none" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.12"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.04">
+    <line x1="128" y1="0" x2="128" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="256" y1="0" x2="256" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="384" y1="0" x2="384" y2="512" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="128" x2="512" y2="128" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="256" x2="512" y2="256" stroke="#00BCD4" stroke-width="0.5"/>
+    <line x1="0" y1="384" x2="512" y2="384" stroke="#00BCD4" stroke-width="0.5"/>
+  </g>
+
+  <!-- Main composition centered -->
+  <g transform="translate(256, 256)">
+
+    <!-- Shadow -->
+    <ellipse cx="0" cy="120" rx="105" ry="24" fill="#000" opacity="0.2"/>
+
+    <!-- === Large Main Cube === -->
+    <g filter="url(#sS)">
+      <polygon points="0,-90 105,-37 0,16 -105,-37" fill="url(#iTop)" stroke="#00E5FF" stroke-width="1.8" stroke-opacity="0.8"/>
+      <polygon points="-105,-37 0,16 0,120 -105,67" fill="url(#iLeft)" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.5"/>
+      <polygon points="105,-37 0,16 0,120 105,67" fill="url(#iRight)" stroke="#00BCD4" stroke-width="1" stroke-opacity="0.5"/>
+    </g>
+
+    <!-- Grid on top -->
+    <g stroke="#00E5FF" stroke-width="0.6" stroke-opacity="0.3">
+      <line x1="-52" y1="-63" x2="52" y2="-11"/>
+      <line x1="-52" y1="-11" x2="52" y2="-63"/>
+      <line x1="0" y1="-90" x2="0" y2="16"/>
+      <line x1="-105" y1="-37" x2="105" y2="-37"/>
+    </g>
+
+    <!-- Voxel Agent on top -->
+    <g transform="translate(0, -90)">
+      <!-- Head -->
+      <rect x="-12" y="-48" width="24" height="22" rx="3" fill="#00E5FF" stroke="#00BCD4" stroke-width="1"/>
+      <!-- Eyes -->
+      <rect x="-7" y="-42" width="5" height="5" rx="1" fill="#0A0A1A"/>
+      <rect x="2" y="-42" width="5" height="5" rx="1" fill="#0A0A1A"/>
+      <!-- Eye shine -->
+      <rect x="-6" y="-41" width="2" height="2" fill="#FFF" opacity="0.7"/>
+      <rect x="3" y="-41" width="2" height="2" fill="#FFF" opacity="0.7"/>
+      <!-- Body -->
+      <rect x="-14" y="-24" width="28" height="24" rx="3" fill="#00BCD4" stroke="#00838F" stroke-width="1"/>
+      <!-- Terminal prompt on body -->
+      <text x="0" y="-8" text-anchor="middle" font-family="monospace" font-size="14" font-weight="800" fill="#0A0A1A">&gt;_</text>
+      <!-- Arms -->
+      <rect x="-22" y="-22" width="7" height="20" rx="2" fill="#00838F"/>
+      <rect x="15" y="-22" width="7" height="20" rx="2" fill="#00838F"/>
+      <!-- Legs -->
+      <rect x="-12" y="2" width="10" height="14" rx="2" fill="#004D40"/>
+      <rect x="2" y="2" width="10" height="14" rx="2" fill="#004D40"/>
+    </g>
+
+    <!-- === Purple Cube (top-right) === -->
+    <g transform="translate(105, -72)">
+      <polygon points="0,-32 38,-14 0,4 -38,-14" fill="url(#iSTop)" stroke="#B388FF" stroke-width="1" stroke-opacity="0.6"/>
+      <polygon points="-38,-14 0,4 0,40 -38,22" fill="url(#iSLeft)" stroke="#7C4DFF" stroke-width="0.8" stroke-opacity="0.4"/>
+      <polygon points="38,-14 0,4 0,40 38,22" fill="url(#iSRight)" stroke="#7C4DFF" stroke-width="0.8" stroke-opacity="0.4"/>
+    </g>
+
+    <!-- === Pink Cube (bottom-left) === -->
+    <g transform="translate(-112, 35)">
+      <polygon points="0,-26 30,-11 0,4 -30,-11" fill="url(#iPTop)" stroke="#FF5252" stroke-width="1" stroke-opacity="0.6"/>
+      <polygon points="-30,-11 0,4 0,32 -30,17" fill="url(#iPLeft)" stroke="#FF2A6D" stroke-width="0.8" stroke-opacity="0.4"/>
+      <polygon points="30,-11 0,4 0,32 30,17" fill="url(#iPRight)" stroke="#FF2A6D" stroke-width="0.8" stroke-opacity="0.4"/>
+    </g>
+
+    <!-- === Gold Cube (top-left, small) === -->
+    <g transform="translate(-70, -110)" opacity="0.85">
+      <polygon points="0,-18 20,-8 0,2 -20,-8" fill="#FFD700" fill-opacity="0.7" stroke="#FFD700" stroke-width="0.8" stroke-opacity="0.5"/>
+      <polygon points="-20,-8 0,2 0,20 -20,10" fill="#F9A825" fill-opacity="0.5"/>
+      <polygon points="20,-8 0,2 0,20 20,10" fill="#FBC02D" fill-opacity="0.5"/>
+    </g>
+
+    <!-- Connection lines -->
+    <g stroke-dasharray="4,3" stroke-width="1" opacity="0.3">
+      <line x1="72" y1="-60" x2="92" y2="-66" stroke="#05D9E8"/>
+      <line x1="-72" y1="22" x2="-94" y2="28" stroke="#FF2A6D"/>
+      <line x1="-38" y1="-78" x2="-56" y2="-96" stroke="#FFD700"/>
+    </g>
+
+    <!-- Orbital ring -->
+    <ellipse cx="0" cy="20" rx="158" ry="36" fill="none" stroke="#00BCD4" stroke-width="0.8" stroke-opacity="0.15" stroke-dasharray="10,6" transform="rotate(-6, 0, 20)"/>
+  </g>
+
+  <!-- Floating particles -->
+  <g filter="url(#gC)">
+    <circle cx="100" cy="180" r="2.5" fill="#05D9E8" opacity="0.6"/>
+    <circle cx="415" cy="200" r="2" fill="#05D9E8" opacity="0.5"/>
+    <circle cx="90" cy="360" r="2" fill="#7C4DFF" opacity="0.4"/>
+    <circle cx="425" cy="340" r="2.5" fill="#FF2A6D" opacity="0.5"/>
+    <circle cx="165" cy="120" r="1.5" fill="#FFD700" opacity="0.4"/>
+    <circle cx="355" cy="390" r="1.5" fill="#05D9E8" opacity="0.35"/>
+  </g>
+</svg>

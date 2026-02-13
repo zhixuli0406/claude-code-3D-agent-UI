@@ -24,17 +24,8 @@ struct SceneSelectionView: View {
             VStack(spacing: 24) {
                 Spacer()
 
-                // Title
-                VStack(spacing: 8) {
-                    Text(localization.localized(.agentCommand))
-                        .font(.system(size: 36, weight: .black, design: .monospaced))
-                        .foregroundColor(.white)
-                        .shadow(color: Color(hex: "#00BCD4").opacity(0.5), radius: 10)
-
-                    Text(localization.localized(.selectYourEnvironment))
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .foregroundColor(.gray)
-                }
+                // Title with Logo
+                SplashLogoView()
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : -20)
 
