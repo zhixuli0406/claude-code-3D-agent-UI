@@ -1,4 +1,28 @@
 import SwiftUI
+import AppKit
+
+// MARK: - Logo Image Loader
+
+/// Loads logo images from the SPM bundle.
+/// SPM does not compile .xcassets into an Asset Catalog (.car) for executable
+/// targets, so `Image("name", bundle: .module)` returns nil.  This helper
+/// resolves the PNG files directly from the copied xcassets directory structure.
+private func bundleLogoImage(asset: String, filePrefix: String) -> Image {
+    let scale = Int(NSScreen.main?.backingScaleFactor ?? 2)
+    let clampedScale = min(max(scale, 1), 3)
+    let subdirectory = "Assets.xcassets/\(asset).imageset"
+
+    for s in [clampedScale, 2, 1, 3] {
+        let filename = "\(filePrefix)-\(s)x"
+        if let url = Bundle.module.url(forResource: filename, withExtension: "png", subdirectory: subdirectory),
+           let nsImage = NSImage(contentsOf: url) {
+            return Image(nsImage: nsImage)
+        }
+    }
+
+    // Fallback: try compiled asset catalog (works when built with Xcode)
+    return Image(asset, bundle: .module)
+}
 
 // MARK: - Logo Size Variants
 
@@ -25,7 +49,7 @@ struct LogoView: View {
     var showGlow: Bool = true
 
     var body: some View {
-        Image("LogoIcon", bundle: .module)
+        bundleLogoImage(asset: "LogoIcon", filePrefix: "logo-icon")
             .resizable()
             .interpolation(.high)
             .aspectRatio(contentMode: .fit)
@@ -117,7 +141,7 @@ struct SplashLogoView: View {
         VStack(spacing: 16) {
             // Icon-only logo (LogoFull already contains brand text, so use LogoIcon
             // to avoid duplicating the title text rendered below)
-            Image("LogoIcon", bundle: .module)
+            bundleLogoImage(asset: "LogoIcon", filePrefix: "logo-icon")
                 .resizable()
                 .interpolation(.high)
                 .aspectRatio(contentMode: .fit)
@@ -159,7 +183,7 @@ struct SidebarLogoView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Image("LogoNavbar", bundle: .module)
+            bundleLogoImage(asset: "LogoNavbar", filePrefix: "logo-navbar")
                 .resizable()
                 .interpolation(.high)
                 .aspectRatio(contentMode: .fit)

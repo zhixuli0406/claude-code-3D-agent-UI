@@ -576,6 +576,7 @@ class AppState: ObservableObject {
 
         // Initialize orchestrator
         orchestrator.appState = self
+        orchestrator.configureManagers(lifecycleManager: nil)
         orchestratorCancellable = orchestrator.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
