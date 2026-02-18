@@ -135,6 +135,12 @@ PLIST
 
 echo "[OK] App bundle created"
 
+# Ad-hoc code sign (required on Apple Silicon)
+echo ""
+echo "Code signing..."
+codesign --force --deep --sign - "$APP_BUNDLE"
+echo "[OK] Code signed (ad-hoc)"
+
 # Install to /Applications
 echo ""
 echo "Installing to $INSTALL_DIR..."

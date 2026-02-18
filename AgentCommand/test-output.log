@@ -1,0 +1,1150 @@
+warning: 'agentcommand': found 2 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/M-SERIES-TEST-REPORT.md
+    /Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/TEST-REPORT.md
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/8] Emitting module AgentCommand
+[4/8] Compiling AgentCommand LogoView.swift
+[5/8] Compiling AgentCommand AppState.swift
+[6/10] Compiling AgentCommand SceneSelectionView.swift
+[7/10] Compiling AgentCommand SidePanelView.swift
+[7/12] Write Objects.LinkFileList
+[8/12] Linking AgentCommand
+[9/12] Applying AgentCommand
+[11/56] Emitting module AgentCommandTests
+[12/60] Compiling AgentCommandTests SessionHistoryAnalyticsManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SmartSchedulingTests.swift:196:13: warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+194 |     func testOptimizeSchedule_SingleTask_NoOptimization() {
+195 |         manager.addTask(name: "Only", description: "", priority: .medium, estimatedTokens: 100)
+196 |         let beforeCount = manager.optimizations.count
+    |             `- warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+197 |         manager.optimizeSchedule()
+198 |         // Single task shouldn't produce optimization records (needs > 1 pending)
+[13/60] Compiling AgentCommandTests SessionHistoryAnalyticsModelsTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SmartSchedulingTests.swift:196:13: warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+194 |     func testOptimizeSchedule_SingleTask_NoOptimization() {
+195 |         manager.addTask(name: "Only", description: "", priority: .medium, estimatedTokens: 100)
+196 |         let beforeCount = manager.optimizations.count
+    |             `- warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+197 |         manager.optimizeSchedule()
+198 |         // Single task shouldn't produce optimization records (needs > 1 pending)
+[14/60] Compiling AgentCommandTests SmartSchedulingTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SmartSchedulingTests.swift:196:13: warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+194 |     func testOptimizeSchedule_SingleTask_NoOptimization() {
+195 |         manager.addTask(name: "Only", description: "", priority: .medium, estimatedTokens: 100)
+196 |         let beforeCount = manager.optimizations.count
+    |             `- warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+197 |         manager.optimizeSchedule()
+198 |         // Single task shouldn't produce optimization records (needs > 1 pending)
+[15/60] Compiling AgentCommandTests SubAgentMonitorTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SmartSchedulingTests.swift:196:13: warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+194 |     func testOptimizeSchedule_SingleTask_NoOptimization() {
+195 |         manager.addTask(name: "Only", description: "", priority: .medium, estimatedTokens: 100)
+196 |         let beforeCount = manager.optimizations.count
+    |             `- warning: initialization of immutable value 'beforeCount' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+197 |         manager.optimizeSchedule()
+198 |         // Single task shouldn't produce optimization records (needs > 1 pending)
+[16/60] Compiling AgentCommandTests RAGContentChunkerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/RAGHybridRankerTests.swift:16:13: warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 14 |                               fileType: RAGFileType = .swift,
+ 15 |                               lineCount: Int = 50) -> RAGDocument {
+ 16 |         var doc = RAGDocument(
+    |             `- warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 17 |             filePath: filePath,
+ 18 |             fileName: fileName,
+[17/60] Compiling AgentCommandTests RAGEmbeddingServiceTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/RAGHybridRankerTests.swift:16:13: warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 14 |                               fileType: RAGFileType = .swift,
+ 15 |                               lineCount: Int = 50) -> RAGDocument {
+ 16 |         var doc = RAGDocument(
+    |             `- warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 17 |             filePath: filePath,
+ 18 |             fileName: fileName,
+[18/60] Compiling AgentCommandTests RAGHybridRankerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/RAGHybridRankerTests.swift:16:13: warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 14 |                               fileType: RAGFileType = .swift,
+ 15 |                               lineCount: Int = 50) -> RAGDocument {
+ 16 |         var doc = RAGDocument(
+    |             `- warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 17 |             filePath: filePath,
+ 18 |             fileName: fileName,
+[19/60] Compiling AgentCommandTests RAGModelsTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/RAGHybridRankerTests.swift:16:13: warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 14 |                               fileType: RAGFileType = .swift,
+ 15 |                               lineCount: Int = 50) -> RAGDocument {
+ 16 |         var doc = RAGDocument(
+    |             `- warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 17 |             filePath: filePath,
+ 18 |             fileName: fileName,
+[20/60] Compiling AgentCommandTests ReportExportManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/RAGHybridRankerTests.swift:16:13: warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 14 |                               fileType: RAGFileType = .swift,
+ 15 |                               lineCount: Int = 50) -> RAGDocument {
+ 16 |         var doc = RAGDocument(
+    |             `- warning: variable 'doc' was never mutated; consider changing to 'let' constant
+ 17 |             filePath: filePath,
+ 18 |             fileName: fileName,
+[21/60] Compiling AgentCommandTests CleanupPolicyTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/DecompositionScenarioTests.swift:231:13: warning: variable 'started' was never mutated; consider changing to 'let' constant
+229 | 
+230 |         // Setup and Independent Task are ready
+231 |         var started = simulateExecuteBatch(commanderId: cmd)
+    |             `- warning: variable 'started' was never mutated; consider changing to 'let' constant
+232 |         XCTAssertEqual(started, 2) // Setup + Independent
+233 | 
+
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/HSeriesIntegrationTests.swift:355:13: warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+353 | 
+354 |     func testAutoActionAssignment() {
+355 |         let manager = AnomalyDetectionManager()
+    |             `- warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+356 | 
+357 |         // Test all anomaly types for auto-action
+[22/60] Compiling AgentCommandTests CodeKnowledgeGraphTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/DecompositionScenarioTests.swift:231:13: warning: variable 'started' was never mutated; consider changing to 'let' constant
+229 | 
+230 |         // Setup and Independent Task are ready
+231 |         var started = simulateExecuteBatch(commanderId: cmd)
+    |             `- warning: variable 'started' was never mutated; consider changing to 'let' constant
+232 |         XCTAssertEqual(started, 2) // Setup + Independent
+233 | 
+
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/HSeriesIntegrationTests.swift:355:13: warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+353 | 
+354 |     func testAutoActionAssignment() {
+355 |         let manager = AnomalyDetectionManager()
+    |             `- warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+356 | 
+357 |         // Test all anomaly types for auto-action
+[23/60] Compiling AgentCommandTests ConcurrencyControllerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/DecompositionScenarioTests.swift:231:13: warning: variable 'started' was never mutated; consider changing to 'let' constant
+229 | 
+230 |         // Setup and Independent Task are ready
+231 |         var started = simulateExecuteBatch(commanderId: cmd)
+    |             `- warning: variable 'started' was never mutated; consider changing to 'let' constant
+232 |         XCTAssertEqual(started, 2) // Setup + Independent
+233 | 
+
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/HSeriesIntegrationTests.swift:355:13: warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+353 | 
+354 |     func testAutoActionAssignment() {
+355 |         let manager = AnomalyDetectionManager()
+    |             `- warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+356 | 
+357 |         // Test all anomaly types for auto-action
+[24/60] Compiling AgentCommandTests DecompositionScenarioTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/DecompositionScenarioTests.swift:231:13: warning: variable 'started' was never mutated; consider changing to 'let' constant
+229 | 
+230 |         // Setup and Independent Task are ready
+231 |         var started = simulateExecuteBatch(commanderId: cmd)
+    |             `- warning: variable 'started' was never mutated; consider changing to 'let' constant
+232 |         XCTAssertEqual(started, 2) // Setup + Independent
+233 | 
+
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/HSeriesIntegrationTests.swift:355:13: warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+353 | 
+354 |     func testAutoActionAssignment() {
+355 |         let manager = AnomalyDetectionManager()
+    |             `- warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+356 | 
+357 |         // Test all anomaly types for auto-action
+[25/60] Compiling AgentCommandTests HSeriesIntegrationTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/DecompositionScenarioTests.swift:231:13: warning: variable 'started' was never mutated; consider changing to 'let' constant
+229 | 
+230 |         // Setup and Independent Task are ready
+231 |         var started = simulateExecuteBatch(commanderId: cmd)
+    |             `- warning: variable 'started' was never mutated; consider changing to 'let' constant
+232 |         XCTAssertEqual(started, 2) // Setup + Independent
+233 | 
+
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/HSeriesIntegrationTests.swift:355:13: warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+353 | 
+354 |     func testAutoActionAssignment() {
+355 |         let manager = AnomalyDetectionManager()
+    |             `- warning: initialization of immutable value 'manager' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+356 | 
+357 |         // Test all anomaly types for auto-action
+[26/60] Compiling AgentCommandTests IntentClassifierTests.swift
+[27/60] Compiling AgentCommandTests LifecycleEventTests.swift
+[28/60] Compiling AgentCommandTests LifecycleHealthCheckerTests.swift
+[29/60] Compiling AgentCommandTests LifecycleIntegrationTests.swift
+[30/60] Compiling AgentCommandTests LifecycleLoggerTests.swift
+[31/60] Compiling AgentCommandTests AgentLifecycleStateMachineTests.swift
+[32/60] Compiling AgentCommandTests AgentLifecycleStateTests.swift
+[33/60] Compiling AgentCommandTests AnalyticsDashboardManagerTests.swift
+[34/60] Compiling AgentCommandTests AnalyticsDashboardModelsTests.swift
+[35/60] Compiling AgentCommandTests AnomalyDetectionTests.swift
+[36/60] Compiling AgentCommandTests SubAgentPoolManagerTests.swift
+[37/60] Compiling AgentCommandTests TaskPrioritySchedulerTests.swift
+[38/60] Compiling AgentCommandTests TeamPerformanceManagerTests.swift
+[39/60] Compiling AgentCommandTests TeamPerformanceModelsTests.swift
+[40/60] Compiling AgentCommandTests APIUsageAnalyticsManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/APIUsageAnalyticsManagerTests.swift:322:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+320 | 
+321 |     func testGenerateForecast_HasDataPoints() {
+322 |         for i in 0..<5 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+323 |             manager.recordAPICall(
+324 |                 model: "claude-opus-4",
+[41/60] Compiling AgentCommandTests APIUsageAnalyticsModelsTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/APIUsageAnalyticsManagerTests.swift:322:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+320 | 
+321 |     func testGenerateForecast_HasDataPoints() {
+322 |         for i in 0..<5 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+323 |             manager.recordAPICall(
+324 |                 model: "claude-opus-4",
+[42/60] Compiling AgentCommandTests AdvancedAnalyticsDashboardManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/APIUsageAnalyticsManagerTests.swift:322:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+320 | 
+321 |     func testGenerateForecast_HasDataPoints() {
+322 |         for i in 0..<5 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+323 |             manager.recordAPICall(
+324 |                 model: "claude-opus-4",
+[43/60] Compiling AgentCommandTests AgentCleanupManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/APIUsageAnalyticsManagerTests.swift:322:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+320 | 
+321 |     func testGenerateForecast_HasDataPoints() {
+322 |         for i in 0..<5 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+323 |             manager.recordAPICall(
+324 |                 model: "claude-opus-4",
+[44/60] Compiling AgentCommandTests AgentLifecycleManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/APIUsageAnalyticsManagerTests.swift:322:13: warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+320 | 
+321 |     func testGenerateForecast_HasDataPoints() {
+322 |         for i in 0..<5 {
+    |             `- warning: immutable value 'i' was never used; consider replacing with '_' or removing it [#no-usage]
+323 |             manager.recordAPICall(
+324 |                 model: "claude-opus-4",
+[45/60] Compiling AgentCommandTests MemoryBenchmarkTests.swift
+[46/60] Compiling AgentCommandTests PromptHistoryAndDataFlowTests.swift
+[47/60] Compiling AgentCommandTests PromptOptimizationIntegrationTests.swift
+[48/60] Compiling AgentCommandTests PromptOptimizationManagerTests.swift
+[49/60] Compiling AgentCommandTests PromptOptimizationModelsTests.swift
+[50/60] Compiling AgentCommandTests ReportExportModelsTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SemanticQueryProcessorTests.swift:120:13: warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+118 |         // but caseInsensitive className also matches, causing dedup overlap.
+119 |         // Instead test that extraction runs without crash and verify via the full pipeline.
+120 |         let allTypes = Set(entities.map(\.type))
+    |             `- warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+121 |         // If functionName was deduplicated, className should be present as it was extracted first
+122 |         XCTAssertFalse(entities.isEmpty, "Should extract at least some entities")
+[51/60] Compiling AgentCommandTests ReportGenerationManagerTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SemanticQueryProcessorTests.swift:120:13: warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+118 |         // but caseInsensitive className also matches, causing dedup overlap.
+119 |         // Instead test that extraction runs without crash and verify via the full pipeline.
+120 |         let allTypes = Set(entities.map(\.type))
+    |             `- warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+121 |         // If functionName was deduplicated, className should be present as it was extracted first
+122 |         XCTAssertFalse(entities.isEmpty, "Should extract at least some entities")
+[52/60] Compiling AgentCommandTests SemanticQueryModelsTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SemanticQueryProcessorTests.swift:120:13: warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+118 |         // but caseInsensitive className also matches, causing dedup overlap.
+119 |         // Instead test that extraction runs without crash and verify via the full pipeline.
+120 |         let allTypes = Set(entities.map(\.type))
+    |             `- warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+121 |         // If functionName was deduplicated, className should be present as it was extracted first
+122 |         XCTAssertFalse(entities.isEmpty, "Should extract at least some entities")
+[53/60] Compiling AgentCommandTests SemanticQueryProcessorTests.swift
+/Users/lizhixu/Project/claude-code-3D-agent-UI/AgentCommand/Tests/SemanticQueryProcessorTests.swift:120:13: warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+118 |         // but caseInsensitive className also matches, causing dedup overlap.
+119 |         // Instead test that extraction runs without crash and verify via the full pipeline.
+120 |         let allTypes = Set(entities.map(\.type))
+    |             `- warning: initialization of immutable value 'allTypes' was never used; consider replacing with assignment to '_' or removing it [#no-usage]
+121 |         // If functionName was deduplicated, className should be present as it was extracted first
+122 |         XCTAssertFalse(entities.isEmpty, "Should extract at least some entities")
+[54/60] Compiling AgentCommandTests LifecycleStressTests.swift
+[55/60] Compiling AgentCommandTests M4M5IntegrationTests.swift
+[56/60] Compiling AgentCommandTests MSeriesDataVisualizationTests.swift
+[57/60] Compiling AgentCommandTests MSeriesEndToEndIntegrationTests.swift
+[58/60] Compiling AgentCommandTests MSeriesIntegrationTests.swift
+[58/60] Write Objects.LinkFileList
+[59/60] Linking AgentCommandPackageTests
+Build complete! (14.90s)
+Test Suite 'All tests' started at 2026-02-14 12:11:27.246.
+Test Suite 'AgentCommandPackageTests.xctest' started at 2026-02-14 12:11:27.249.
+Test Suite 'ABTestingTests' started at 2026-02-14 12:11:27.249.
+Test Case '-[AgentCommandTests.ABTestingTests testActiveABTestsCount]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testActiveABTestsCount]' passed (0.014 seconds).
+Test Case '-[AgentCommandTests.ABTestingTests testCreateABTest]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testCreateABTest]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.ABTestingTests testCreateABTestAddsToList]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testCreateABTestAddsToList]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.ABTestingTests testUpdateBothVariantsCompletes]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testUpdateBothVariantsCompletes]' passed (0.005 seconds).
+Test Case '-[AgentCommandTests.ABTestingTests testUpdateVariantA]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testUpdateVariantA]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.ABTestingTests testWinnerDetermination]' started.
+Test Case '-[AgentCommandTests.ABTestingTests testWinnerDetermination]' passed (0.001 seconds).
+Test Suite 'ABTestingTests' passed at 2026-02-14 12:11:27.272.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.022 (0.023) seconds
+Test Suite 'APICallMetricsTests' started at 2026-02-14 12:11:27.272.
+Test Case '-[AgentCommandTests.APICallMetricsTests testErrorMetric]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testErrorMetric]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedCost]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedCost]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedLatencyMilliseconds]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedLatencyMilliseconds]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedLatencySeconds]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testFormattedLatencySeconds]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testMetricCodable]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testMetricCodable]' passed (0.003 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testMetricCreation]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testMetricCreation]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APICallMetricsTests testTotalTokens]' started.
+Test Case '-[AgentCommandTests.APICallMetricsTests testTotalTokens]' passed (0.000 seconds).
+Test Suite 'APICallMetricsTests' passed at 2026-02-14 12:11:27.275.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'APIUsageAnalyticsEdgeCaseTests' started at 2026-02-14 12:11:27.275.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownEmptyEntries]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownEmptyEntries]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownEntryFormattedCost]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownEntryFormattedCost]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownSingleEntry]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBreakdownSingleEntry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertAllLevelDisplayNames]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertAllLevelDisplayNames]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertExactCritical]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertExactCritical]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertExactThreshold]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertExactThreshold]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertJustBelowCritical]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertJustBelowCritical]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertJustBelowThreshold]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertJustBelowThreshold]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertOverBudget]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testBudgetAlertOverBudget]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testForecastHighCost]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testForecastHighCost]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testForecastWithEmptyDataPoints]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testForecastWithEmptyDataPoints]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedCostZero]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedCostZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedLatencyAtExactly1000ms]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedLatencyAtExactly1000ms]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedLatencyJustBelow1000ms]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testFormattedLatencyJustBelow1000ms]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricLargeTokenCount]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricLargeTokenCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricUniqueIDs]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricUniqueIDs]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricWithCustomTaskType]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricWithCustomTaskType]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricZeroTokens]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testMetricZeroTokens]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsCodable]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsCodable]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsCostPerCallNonZero]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsCostPerCallNonZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsDefaultValues]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsDefaultValues]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsTokensPerCallNonZero]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testModelStatsTokensPerCallNonZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testSummaryAllErrors]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testSummaryAllErrors]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testSummaryNoErrors]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsEdgeCaseTests testSummaryNoErrors]' passed (0.000 seconds).
+Test Suite 'APIUsageAnalyticsEdgeCaseTests' passed at 2026-02-14 12:11:27.280.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'APIUsageAnalyticsIntegrationTests' started at 2026-02-14 12:11:27.280.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testAnalyticsDataPointsForExport]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testAnalyticsDataPointsForExport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testBudgetAlertCustomThreshold]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testBudgetAlertCustomThreshold]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testBudgetAlertProgressionThroughLevels]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testBudgetAlertProgressionThroughLevels]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testCostBreakdownEntrySorted]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testCostBreakdownEntrySorted]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testCostBreakdownPercentagesSum]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testCostBreakdownPercentagesSum]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testForecastWithDataPoints]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testForecastWithDataPoints]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testMetricsAggregation]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testMetricsAggregation]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testModelStatsComparison]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsIntegrationTests testModelStatsComparison]' passed (0.000 seconds).
+Test Suite 'APIUsageAnalyticsIntegrationTests' passed at 2026-02-14 12:11:27.281.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'APIUsageAnalyticsManagerTests' started at 2026-02-14 12:11:27.281.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testAvgLatency_Computed]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testAvgLatency_Computed]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testAvgLatency_EmptyRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testAvgLatency_EmptyRecords]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testBudgetAlertLevelProgressionWithSmallIncrements]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testBudgetAlertLevelProgressionWithSmallIncrements]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testBudgetSpendDoesNotUpdateWhenInactive]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testBudgetSpendDoesNotUpdateWhenInactive]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_EmptyRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_EmptyRecords]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_NoErrors]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_NoErrors]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_WithErrors]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testErrorRate_WithErrors]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_EmptyRecordsGuard]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_EmptyRecordsGuard]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_EvictionCapAt10]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_EvictionCapAt10]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_GroupsByModel]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_GroupsByModel]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_SortedByCostDesc]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateCostBreakdown_SortedByCostDesc]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_ActualPointsHaveEqualBounds]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_ActualPointsHaveEqualBounds]' passed (0.005 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_HasDataPoints]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_HasDataPoints]' passed (0.004 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_PredictedPointsHaveWiderBounds]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_PredictedPointsHaveWiderBounds]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_RequiresAtLeast3Records]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_RequiresAtLeast3Records]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_SkipsWithFewerThan3Records]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_SkipsWithFewerThan3Records]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_WithSufficientRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testGenerateForecast_WithSufficientRecords]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_BudgetSet]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_BudgetSet]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_CostBreakdownsNotEmpty]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_CostBreakdownsNotEmpty]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_ForecastSet]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_ForecastSet]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_ModelStats]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_ModelStats]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_RecordCount]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_RecordCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_SummaryUpdated]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testLoadSampleData_SummaryUpdated]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_Basic]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_Basic]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_EvictionCapAt500]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_EvictionCapAt500]' passed (0.207 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_InsertsAtFront]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_InsertsAtFront]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_UpdatesBudgetSpend]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_UpdatesBudgetSpend]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_UpdatesSummary]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_UpdatesSummary]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_WithError]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRecordAPICall_WithError]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRemoveBudget]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRemoveBudget]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRemoveBudget_WhenNoBudget]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testRemoveBudget_WhenNoBudget]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_CarriesForwardSpend]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_CarriesForwardSpend]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_CreatesAlert]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_CreatesAlert]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_DefaultThreshold]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSetBudget_DefaultThreshold]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStartMonitoring]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStartMonitoring]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStopMonitoring]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStopMonitoring]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStopMonitoring_WhenNotMonitoring]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testStopMonitoring_WhenNotMonitoring]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSummaryPeriodStartAndEnd]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testSummaryPeriodStartAndEnd]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testTotalCost_Computed]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testTotalCost_Computed]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testTotalCost_EmptyReturnsZero]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testTotalCost_EmptyReturnsZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_Accumulates]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_Accumulates]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_NoBudget_NoOp]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_NoBudget_NoOp]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_NormalToWarningToCritical]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_NormalToWarningToCritical]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_TriggersCriticalLevel]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_TriggersCriticalLevel]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_TriggersWarningLevel]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateBudgetSpend_TriggersWarningLevel]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_CalculatesPerModelValues]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_CalculatesPerModelValues]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_GroupsCorrectly]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_GroupsCorrectly]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_SingleModel]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_SingleModel]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_SortedByCostDesc]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_SortedByCostDesc]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_WithNoRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateModelStats_WithNoRecords]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateSummary_CalculatesFromRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateSummary_CalculatesFromRecords]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateSummary_ReturnsEmptyWhenNoRecords]' started.
+Test Case '-[AgentCommandTests.APIUsageAnalyticsManagerTests testUpdateSummary_ReturnsEmptyWhenNoRecords]' passed (0.000 seconds).
+Test Suite 'APIUsageAnalyticsManagerTests' passed at 2026-02-14 12:11:27.511.
+	 Executed 52 tests, with 0 failures (0 unexpected) in 0.227 (0.230) seconds
+Test Suite 'APIUsageSummaryTests' started at 2026-02-14 12:11:27.511.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testEmptySummary]' started.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testEmptySummary]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testErrorRate]' started.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testErrorRate]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testErrorRateZeroDivision]' started.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testErrorRateZeroDivision]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testFormattedCost]' started.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testFormattedCost]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testSummaryCodable]' started.
+Test Case '-[AgentCommandTests.APIUsageSummaryTests testSummaryCodable]' passed (0.000 seconds).
+Test Suite 'APIUsageSummaryTests' passed at 2026-02-14 12:11:27.512.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AdvancedAnalyticsDashboardManagerTests' started at 2026-02-14 12:11:27.512.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAddWidgetToNonExistentReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAddWidgetToNonExistentReport]' passed (0.002 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAddWidgetToReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAddWidgetToReport]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDay]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDay]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDayEmpty]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDayEmpty]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDaySinglePoint]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testAggregateByDaySinglePoint]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkByModel]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkByModel]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkByModelEmpty]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkByModelEmpty]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkLimitEnforcement]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testBenchmarkLimitEnforcement]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateBenchmark]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateBenchmark]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateReport]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateReportWithWidgets]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testCreateReportWithWidgets]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDefaultReportGeneration]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDefaultReportGeneration]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteNonExistentReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteNonExistentReport]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteReportClearsCurrentReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testDeleteReportClearsCurrentReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testEnforceReportLimit]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testEnforceReportLimit]' passed (0.012 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastConfidenceWithStableData]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastConfidenceWithStableData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastConfidenceWithVolatileData]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastConfidenceWithVolatileData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastDataPointsContainActualAndPredicted]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastDataPointsContainActualAndPredicted]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastLimitEnforcement]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testForecastLimitEnforcement]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithEmptyData]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithEmptyData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithMinimalData]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithMinimalData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithSufficientData]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateForecastWithSufficientData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsBatchProcessing]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsBatchProcessing]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsCaching]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsCaching]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsModelSelection]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsModelSelection]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsNoTipsForGoodUsage]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsNoTipsForGoodUsage]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsTokenReduction]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testGenerateOptimizationTipsTokenReduction]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testIsLoadingDuringForecast]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testIsLoadingDuringForecast]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testNoDefaultReportWhenReportsExist]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testNoDefaultReportWhenReportsExist]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testOptimizationTipsLimitEnforcement]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testOptimizationTipsLimitEnforcement]' passed (0.002 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testRemoveNonExistentWidget]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testRemoveNonExistentWidget]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testRemoveWidgetFromReport]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testRemoveWidgetFromReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testReorderWidgets]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testReorderWidgets]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testShutdownSaves]' started.
+Test Case '-[AgentCommandTests.AdvancedAnalyticsDashboardManagerTests testShutdownSaves]' passed (0.001 seconds).
+Test Suite 'AdvancedAnalyticsDashboardManagerTests' passed at 2026-02-14 12:11:27.548.
+	 Executed 35 tests, with 0 failures (0 unexpected) in 0.034 (0.036) seconds
+Test Suite 'AgentCleanupManagerTests' started at 2026-02-14 12:11:27.548.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAdjustedTimeout_Normal]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAdjustedTimeout_Normal]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameActive_CancelsTimer]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameActive_CancelsTimer]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameActive_RemovesIdleTracking]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameActive_RemovesIdleTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameIdle_TracksTime]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testAgentBecameIdle_TracksTime]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCancelAllTimers]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCancelAllTimers]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCancelTeamCleanup]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCancelTeamCleanup]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCurrentMemoryUsageMB_ReturnsNonNegative]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testCurrentMemoryUsageMB_ReturnsNonNegative]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testIdleDuration_NoTracking]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testIdleDuration_NoTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testIdleDuration_TrackedAgent]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testIdleDuration_TrackedAgent]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testMultipleAgentsTracked]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testMultipleAgentsTracked]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testPolicyChangeAffectsTimeouts]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testPolicyChangeAffectsTimeouts]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRecordActivity]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRecordActivity]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRecordResourceUsage]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRecordResourceUsage]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRemoveAgent_CleansUpAll]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testRemoveAgent_CleansUpAll]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleSuspendedTimeout]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleSuspendedTimeout]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleTeamCleanup_CreatesTimer]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleTeamCleanup_CreatesTimer]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleTeamCleanup_ReplacesExistingTimer]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testScheduleTeamCleanup_ReplacesExistingTimer]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testShutdown_ClearsAll]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testShutdown_ClearsAll]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testTimeSinceLastActivity_NoRecord]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testTimeSinceLastActivity_NoRecord]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testTimeSinceLastActivity_Recorded]' started.
+Test Case '-[AgentCommandTests.AgentCleanupManagerTests testTimeSinceLastActivity_Recorded]' passed (0.000 seconds).
+Test Suite 'AgentCleanupManagerTests' passed at 2026-02-14 12:11:27.551.
+	 Executed 20 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'AgentLifecycleContextTests' started at 2026-02-14 12:11:27.551.
+Test Case '-[AgentCommandTests.AgentLifecycleContextTests testDefaultInit]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleContextTests testDefaultInit]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleContextTests testFullInit]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleContextTests testFullInit]' passed (0.000 seconds).
+Test Suite 'AgentLifecycleContextTests' passed at 2026-02-14 12:11:27.551.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'AgentLifecycleManagerTests' started at 2026-02-14 12:11:27.551.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testActiveAgentCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testActiveAgentCount]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testAgentsInState]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testAgentsInState]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testAvailableAgents]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testAvailableAgents]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testBeginDestroyingAgents]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testBeginDestroyingAgents]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCanFireEvent]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCanFireEvent]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCanFireEvent_UnregisteredAgent]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCanFireEvent_UnregisteredAgent]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCleanupCandidates]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCleanupCandidates]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCompleteDestruction]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testCompleteDestruction]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testEmergencyCleanup]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testEmergencyCleanup]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testEvictOldestPooledAgents]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testEvictOldestPooledAgents]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_InvalidTransition]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_InvalidTransition]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_SuspendedResumeWithoutSession_Rejected]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_SuspendedResumeWithoutSession_Rejected]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_UnregisteredAgent]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_UnregisteredAgent]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_ValidTransition]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_ValidTransition]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_WithSessionId]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFireEvent_WithSessionId]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFullLifecycle_CreateWorkComplete]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFullLifecycle_CreateWorkComplete]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFullLifecycle_MultipleAgents]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testFullLifecycle_MultipleAgents]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testIdleAgentCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testIdleAgentCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testInvalidTransitionsAreLogged]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testInvalidTransitionsAreLogged]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testOnStateChangedCallback]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testOnStateChangedCallback]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testOnStateChangedNotCalledForInvalidTransition]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testOnStateChangedNotCalledForInvalidTransition]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRegisterAgent]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRegisterAgent]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRegisterAgent_CustomInitialState]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRegisterAgent_CustomInitialState]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRunningProcessCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testRunningProcessCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testSuspendedAgentCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testSuspendedAgentCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTeamDisbandCallback]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTeamDisbandCallback]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionsAreLogged]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionsAreLogged]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToCompleted_SetsIdleTracking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToCompleted_SetsIdleTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToDestroyed_CleansUpTracking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToDestroyed_CleansUpTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToIdle_TriggersIdleTracking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToIdle_TriggersIdleTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToWorking_ClearsIdleTracking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testTransitionToWorking_ClearsIdleTracking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testUnregisterAgent]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleManagerTests testUnregisterAgent]' passed (0.000 seconds).
+Test Suite 'AgentLifecycleManagerTests' passed at 2026-02-14 12:11:27.559.
+	 Executed 32 tests, with 0 failures (0 unexpected) in 0.006 (0.008) seconds
+Test Suite 'AgentLifecycleStateMachineTests' started at 2026-02-14 12:11:27.559.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testAnswerReceived]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testAnswerReceived]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCanFire]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCanFire]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedAssignNewTask]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedAssignNewTask]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedDisbandScheduled]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedDisbandScheduled]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedReturnToPool_PoolFull]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedReturnToPool_PoolFull]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedReturnToPool_WithCapacity]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testCompletedReturnToPool_WithCapacity]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testDefaultTransitionCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testDefaultTransitionCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testDestroyingToDestroyed]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testDestroyingToDestroyed]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testErrorDisbandScheduled]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testErrorDisbandScheduled]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testErrorRetry]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testErrorRetry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_ErrorAndRetry]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_ErrorAndRetry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_HappyPath]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_HappyPath]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_IdleTimeoutToCleanup]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_IdleTimeoutToCleanup]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_PoolReuse]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_PoolReuse]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_SuspendAndResume]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_SuspendAndResume]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_SuspendTimeout]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testFullLifecyclePath_SuspendTimeout]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToDestroying]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToDestroying]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToPooled_PoolFull_GuardRejects]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToPooled_PoolFull_GuardRejects]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToPooled_WithCapacity]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToPooled_WithCapacity]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToSuspendedIdle]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToSuspendedIdle]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToWorking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testIdleToWorking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInitializingToIdle]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInitializingToIdle]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransition_CompletedCannotThink]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransition_CompletedCannotThink]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransition_IdleCannotCompleteTask]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransition_IdleCannotCompleteTask]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransitionReturnsNil]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testInvalidTransitionReturnsNil]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testOnTransitionCallbackFired]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testOnTransitionCallbackFired]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testOnTransitionNotFiredForInvalidTransition]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testOnTransitionNotFiredForInvalidTransition]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionDenied]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionDenied]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionGranted]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionGranted]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionProcessTerminated]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPermissionProcessTerminated]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPlanApproved]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPlanApproved]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPlanRejected]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPlanRejected]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPooledAssignTask]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPooledAssignTask]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPooledEviction]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testPooledEviction]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testReviewingPlanProcessTerminated]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testReviewingPlanProcessTerminated]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedCancel]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedCancel]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedIdleAssignTask]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedIdleAssignTask]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedIdleCleanupTriggered]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedIdleCleanupTriggered]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedResumeWithoutSession_GuardRejects]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedResumeWithoutSession_GuardRejects]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedResumeWithSession]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedResumeWithSession]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedTimeout]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testSuspendedTimeout]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testTargetState]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testTargetState]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testTargetStateForInvalidTransition]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testTargetStateForInvalidTransition]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToCompleted]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToCompleted]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToError]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToError]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToWorking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testThinkingToWorking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testValidEventsFromDestroyed]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testValidEventsFromDestroyed]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testValidEventsFromIdle]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testValidEventsFromIdle]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWaitingForAnswerProcessTerminated]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWaitingForAnswerProcessTerminated]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToCompleted]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToCompleted]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToError]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToError]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToRequestingPermission]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToRequestingPermission]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToReviewingPlan]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToReviewingPlan]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToThinking]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToThinking]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToWaitingForAnswer]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateMachineTests testWorkingToWaitingForAnswer]' passed (0.000 seconds).
+Test Suite 'AgentLifecycleStateMachineTests' passed at 2026-02-14 12:11:27.568.
+	 Executed 55 tests, with 0 failures (0 unexpected) in 0.007 (0.009) seconds
+Test Suite 'AgentLifecycleStateTests' started at 2026-02-14 12:11:27.568.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllCasesCount]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllCasesCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllStatesHaveDisplayName]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllStatesHaveDisplayName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllStatesHaveHexColor]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testAllStatesHaveHexColor]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testCodableRoundTrip]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testCodableRoundTrip]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsActive_IncludesWorkStates]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsActive_IncludesWorkStates]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsAvailableForTask]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsAvailableForTask]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsCleanupCandidate]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsCleanupCandidate]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsSuspended]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsSuspended]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsTerminal_OnlyDestroyedIsTerminal]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testIsTerminal_OnlyDestroyedIsTerminal]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testLegacyStatusMapping]' started.
+Test Case '-[AgentCommandTests.AgentLifecycleStateTests testLegacyStatusMapping]' passed (0.000 seconds).
+Test Suite 'AgentLifecycleStateTests' passed at 2026-02-14 12:11:27.570.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'AnalyticsDashboardEdgeCaseTests' started at 2026-02-14 12:11:27.570.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testAllImpactLevelsHaveDisplayName]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testAllImpactLevelsHaveDisplayName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkBestEntryTieBreaker]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkBestEntryTieBreaker]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkEmptyBestEntry]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkEmptyBestEntry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkWithSingleEntry]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testBenchmarkWithSingleEntry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceAtExactBoundary100]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceAtExactBoundary100]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceAtZero]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceAtZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceJustBelow60]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceJustBelow60]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceJustBelow80]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testConfidenceJustBelow80]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointNegativeValue]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointNegativeValue]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointVeryLargeValue]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointVeryLargeValue]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointZeroValue]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testDataPointZeroValue]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryScorePercentageOne]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryScorePercentageOne]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryScorePercentageZero]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryScorePercentageZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryWithEmptyDetails]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testEntryWithEmptyDetails]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testErrorRateMetricUnit]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testErrorRateMetricUnit]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testLast30DaysInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testLast30DaysInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testLast90DaysInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testLast90DaysInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testReportUniqueIDs]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testReportUniqueIDs]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testReportWithEmptyName]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testReportWithEmptyName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testResponseTimeMetricUnit]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testResponseTimeMetricUnit]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTaskCountMetricUnit]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTaskCountMetricUnit]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTipFormattedSavingsLargeAmount]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTipFormattedSavingsLargeAmount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTipFormattedSavingsZero]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testTipFormattedSavingsZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testWidgetHashableAndIdentifiable]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardEdgeCaseTests testWidgetHashableAndIdentifiable]' passed (0.000 seconds).
+Test Suite 'AnalyticsDashboardEdgeCaseTests' passed at 2026-02-14 12:11:27.574.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'AnalyticsDashboardIntegrationTests' started at 2026-02-14 12:11:27.574.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testBenchmarkEntriesSortByScore]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testBenchmarkEntriesSortByScore]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testBenchmarkWithDetails]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testBenchmarkWithDetails]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testForecastDataPointConsistency]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testForecastDataPointConsistency]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testReportWidgetDataSourceCoverage]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testReportWidgetDataSourceCoverage]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testReportWithMultipleWidgetTypes]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardIntegrationTests testReportWithMultipleWidgetTypes]' passed (0.000 seconds).
+Test Suite 'AnalyticsDashboardIntegrationTests' passed at 2026-02-14 12:11:27.575.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AnalyticsDashboardManagerTests' started at 2026-02-14 12:11:27.575.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_MultipleWidgets_PositionsIncrement]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_MultipleWidgets_PositionsIncrement]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_ToExistingReport]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_ToExistingReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_ToNonExistentReport]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_ToNonExistentReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_UpdatesUpdatedAt]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAddWidget_UpdatesUpdatedAt]' passed (0.013 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_AllTipsHaveExpectedFields]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_AllTipsHaveExpectedFields]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_DoesNotDuplicateByTitle]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_DoesNotDuplicateByTitle]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_EvictionCapAt30]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_EvictionCapAt30]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_EvictsUnappliedFirst]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_EvictsUnappliedFirst]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_GeneratesSuggestions]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_GeneratesSuggestions]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_SetsIsAnalyzingDuringExecution]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAnalyzeOptimizations_SetsIsAnalyzingDuringExecution]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_AfterApplying]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_AfterApplying]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_AllApplied]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_AllApplied]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_InitiallyZero]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testAppliedSavingsCount_InitiallyZero]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_MarksAsApplied]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_MarksAsApplied]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_MultipleApplications]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_MultipleApplications]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_NonExistentId]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testApplyOptimization_NonExistentId]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_Basic]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_Basic]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_DefaultDescription]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_DefaultDescription]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_EvictsNonDefaultBeforeDefault]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_EvictsNonDefaultBeforeDefault]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_EvictsOldestNonDefaultWhenExceedingCap]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_EvictsOldestNonDefaultWhenExceedingCap]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_InsertsAtFront]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testCreateReport_InsertsAtFront]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testDeleteReport_ById]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testDeleteReport_ById]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testDeleteReport_NonExistentId]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testDeleteReport_NonExistentId]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_AllMetrics]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_AllMetrics]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_CreatesBenchmark]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_CreatesBenchmark]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_DoesNotReplaceDifferentMetric]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_DoesNotReplaceDifferentMetric]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_EntriesHaveValidScores]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_EntriesHaveValidScores]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_EvictionCapAt10]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_EvictionCapAt10]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_ReplacesExistingForSameMetric]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_ReplacesExistingForSameMetric]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_SetsIsAnalyzingDuringExecution]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_SetsIsAnalyzingDuringExecution]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_UsesDefaultAgentsWithoutAppState]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateBenchmark_UsesDefaultAgentsWithoutAppState]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_ConfidenceIsValid]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_ConfidenceIsValid]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_CreatesForEachMetric]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_CreatesForEachMetric]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_DoesNotReplaceDifferentMetric]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_DoesNotReplaceDifferentMetric]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_EvictionCapAt10]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_EvictionCapAt10]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_HasHistoricalAndProjectedDataPoints]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_HasHistoricalAndProjectedDataPoints]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_ReplacesExistingForSameMetric]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_ReplacesExistingForSameMetric]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_SetsIsAnalyzingDuringExecution]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testGenerateForecast_SetsIsAnalyzingDuringExecution]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testInitialState_AllCollectionsEmpty]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testInitialState_AllCollectionsEmpty]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testInitialState_AppStateIsNil]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testInitialState_AppStateIsNil]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_BenchmarkCount]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_BenchmarkCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_BenchmarkMetrics]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_BenchmarkMetrics]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ForecastCount]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ForecastCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ForecastMetrics]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ForecastMetrics]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OptimizationCount]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OptimizationCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OptimizationsNotApplied]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OptimizationsNotApplied]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OverviewReportIsDefault]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_OverviewReportIsDefault]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_PerformanceReportIsNotDefault]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_PerformanceReportIsNotDefault]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportCount]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportCount]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportNames]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportNames]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportsHaveWidgets]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testLoadSampleData_ReportsHaveWidgets]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_FromNonExistentReport]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_FromNonExistentReport]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_RemovesAndReindexesPositions]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_RemovesAndReindexesPositions]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_UpdatesUpdatedAt]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testRemoveWidget_UpdatesUpdatedAt]' passed (0.013 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testSelectedTimeRange_DefaultValue]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testSelectedTimeRange_DefaultValue]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_AllUnapplied]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_AllUnapplied]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_DecreasesAfterApplying]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_DecreasesAfterApplying]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_EmptyOptimizations]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_EmptyOptimizations]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_ZeroWhenAllApplied]' started.
+Test Case '-[AgentCommandTests.AnalyticsDashboardManagerTests testTotalPotentialSavings_ZeroWhenAllApplied]' passed (0.000 seconds).
+Test Suite 'AnalyticsDashboardManagerTests' passed at 2026-02-14 12:11:27.615.
+	 Executed 59 tests, with 0 failures (0 unexpected) in 0.037 (0.040) seconds
+Test Suite 'AnalyticsDataPointTests' started at 2026-02-14 12:11:27.615.
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointCodable]' started.
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointCodable]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointCreation]' started.
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointCreation]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointWithoutLabel]' started.
+Test Case '-[AgentCommandTests.AnalyticsDataPointTests testDataPointWithoutLabel]' passed (0.000 seconds).
+Test Suite 'AnalyticsDataPointTests' passed at 2026-02-14 12:11:27.616.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'AnalyticsTimeRangeTests' started at 2026-02-14 12:11:27.616.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testAllRangesHaveDisplayName]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testAllRangesHaveDisplayName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testCustomRangeDateInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testCustomRangeDateInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testLast24HoursInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testLast24HoursInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testLast7DaysInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testLast7DaysInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.Anerror: Exited with unexpected signal code 11
+alyticsTimeRangeTests testLastHourInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testLastHourInterval]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testNonCustomRangesHaveDateInterval]' started.
+Test Case '-[AgentCommandTests.AnalyticsTimeRangeTests testNonCustomRangesHaveDateInterval]' passed (0.000 seconds).
+Test Suite 'AnalyticsTimeRangeTests' passed at 2026-02-14 12:11:27.617.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AnomalyDetectionIntegrationTests' started at 2026-02-14 12:11:27.617.
+Test Case '-[AgentCommandTests.AnomalyDetectionIntegrationTests testAutoActionAssignment]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionIntegrationTests testAutoActionAssignment]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionIntegrationTests testFullAnomalyDetectionWorkflow]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionIntegrationTests testFullAnomalyDetectionWorkflow]' passed (0.000 seconds).
+Test Suite 'AnomalyDetectionIntegrationTests' passed at 2026-02-14 12:11:27.618.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AnomalyDetectionManagerTests' started at 2026-02-14 12:11:27.618.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testCheckForAnomalies_WithoutAppState]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testCheckForAnomalies_WithoutAppState]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry_EvictionCap]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry_EvictionCap]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry_EvictsInactiveFirst]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testConfigureRetry_EvictsInactiveFirst]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testDismissAlert]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testDismissAlert]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testErrorPattern_EvictsLeastFrequent]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testErrorPattern_EvictsLeastFrequent]' passed (0.003 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testLoadSampleData]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testLoadSampleData]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_ExcessiveTokensCritical]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_ExcessiveTokensCritical]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_ExcessiveTokensWarning]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_ExcessiveTokensWarning]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_InfiniteLoop]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_InfiniteLoop]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_RepeatedErrors]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_AutoAction_RepeatedErrors]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_EvictsOldAlerts]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_EvictsOldAlerts]' passed (0.032 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_EvictsResolvedFirst]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_EvictsResolvedFirst]' passed (0.044 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_InsertsAtFront]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_InsertsAtFront]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_TracksErrorPattern]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_TracksErrorPattern]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_WithMetrics]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testReportAnomaly_WithMetrics]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAlert]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAlert]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAlert_NonExistentId]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAlert_NonExistentId]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAllAlerts]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testResolveAllAlerts]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testSetDefaultRetryConfig]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testSetDefaultRetryConfig]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStartMonitoring]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStartMonitoring]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_AfterReportAnomaly]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_AfterReportAnomaly]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_AfterResolve]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_AfterResolve]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_TopPatterns]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStats_TopPatterns]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStopMonitoring]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testStopMonitoring]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testToggleRetryConfig]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testToggleRetryConfig]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testTrackTaskStart]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testTrackTaskStart]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testTrackTokenUsage]' started.
+Test Case '-[AgentCommandTests.AnomalyDetectionManagerTests testTrackTokenUsage]' passed (0.000 seconds).
+Test Suite 'AnomalyDetectionManagerTests' passed at 2026-02-14 12:11:27.703.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.083 (0.085) seconds
+Test Suite 'AnomalySeverityTests' started at 2026-02-14 12:11:27.703.
+Test Case '-[AgentCommandTests.AnomalySeverityTests testAllCasesHaveHexColor]' started.
+Test Case '-[AgentCommandTests.AnomalySeverityTests testAllCasesHaveHexColor]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalySeverityTests testAllCasesHaveIconName]' started.
+Test Case '-[AgentCommandTests.AnomalySeverityTests testAllCasesHaveIconName]' passed (0.000 seconds).
+Test Suite 'AnomalySeverityTests' passed at 2026-02-14 12:11:27.703.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'AnomalyTypeTests' started at 2026-02-14 12:11:27.703.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveDisplayName]' started.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveDisplayName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveHexColor]' started.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveHexColor]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveIconName]' started.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testAllCasesHaveIconName]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyTypeTests testIdentifiable]' started.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testIdentifiable]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AnomalyTypeTests testRawValues]' started.
+Test Case '-[AgentCommandTests.AnomalyTypeTests testRawValues]' passed (0.000 seconds).
+Test Suite 'AnomalyTypeTests' passed at 2026-02-14 12:11:27.704.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'AntiPatternDetectionTests' started at 2026-02-14 12:11:27.704.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testAntiPatternsSortedBySeverity]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testAntiPatternsSortedBySeverity]' passed (0.008 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsChineseImplicitAssumption]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsChineseImplicitAssumption]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsChineseOverloading]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsChineseOverloading]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsImplicitAssumption]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsImplicitAssumption]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsMissingConstraints]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsMissingConstraints]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsMultipleVaguePatterns]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsMultipleVaguePatterns]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsNegativeFraming]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsNegativeFraming]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsOverloading]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsOverloading]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsRedundancy]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsRedundancy]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsScopeCreep]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsScopeCreep]' passed (0.007 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsVagueness]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testDetectsVagueness]' passed (0.000 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testNoAntiPatternsForGoodPrompt]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testNoAntiPatternsForGoodPrompt]' passed (0.001 seconds).
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testNoMissingConstraintsWhenPresent]' started.
+Test Case '-[AgentCommandTests.AntiPatternDetectionTests testNoMissingConstraintsWhenPresent]' passed (0.001 seconds).
+Test Suite 'AntiPatternDetectionTests' passed at 2026-02-14 12:11:27.726.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.021 (0.022) seconds
+Test Suite 'AppStateChartToggleTests' started at 2026-02-14 12:11:27.726.
+Test Case '-[AgentCommandTests.AppStateChartToggleTests testSessionHistoryChartsToggle]' started.
+◇ Test run started.
+↳ Testing Library Version: 1085
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

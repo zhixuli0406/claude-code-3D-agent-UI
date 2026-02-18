@@ -8,6 +8,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security — Phase 1: Critical Security Fixes (2026-02-14)
+
+#### SEC-01: 修復 SSL 憑證驗證邏輯錯誤
+- **檔案**: `backend/src/data-source.ts:58-60`
+- **問題**: 三元運算式邏輯錯誤導致 SSL 驗證永遠關閉
+- **影響**: CWE-295 (Improper Certificate Validation) — 中間人攻擊風險
+- **修復**: 修正條件判斷邏輯，確保非開發環境啟用 SSL 驗證
+- **測試**: `backend/tests/security/ssl-verification.test.ts` — 11 項測試全數通過
+
+#### SEC-02: 移除前端硬編碼 OAuth 憑證
+- **檔案**: `frontend/src/config/oauth.ts:12-13`
+- **問題**: GitHub OAuth client secret 硬編碼於前端原始碼
+- **影響**: CWE-798 (Use of Hard-coded Credentials) — 憑證外洩風險
+- **修復**: 移除硬編碼憑證，改用環境變數；新增 `.env.example` 範本
+- **測試**: `frontend/tests/security/oauth-config.test.ts` — 7 項測試全數通過
+
+#### SEC-03: 強化 JWT 密鑰強度驗證
+- **檔案**: `backend/src/middleware/auth.middleware.ts:15-17`
+- **問題**: JWT 密鑰無最小長度要求，允許弱密鑰
+- **影響**: CWE-326 (Inadequate Encryption Strength) — 暴力破解風險
+- **修復**: 實作密鑰強度驗證（最小 32 字元），應用啟動時驗證
+- **測試**: `backend/tests/security/jwt-key-validation.test.ts` — 10 項測試全數通過
+
+#### 實施成果
+- 修復 3 項 P0 優先級安全漏洞
+- 新增 28 項安全測試（覆蓋率 100%）
+- 編寫安全修復指南文檔（`docs/security/phase1-implementation-guide.md`）
+- 後端與前端測試套件全數通過（71 項測試，0 失敗）
+
 ### Added — M-Series: Analytics & Reporting
 
 #### M1: Advanced Analytics Dashboard

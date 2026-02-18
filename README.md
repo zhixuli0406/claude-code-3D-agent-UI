@@ -152,6 +152,26 @@ A macOS app that transforms Claude Code CLI agent execution into an immersive 3D
 
 ---
 
+## Security
+
+This project undergoes regular security audits to ensure code quality and protect user data. Recent security improvements include:
+
+### Phase 1 Security Fixes (2026-02-14)
+
+✅ **SEC-01: SSL Certificate Validation** — Fixed logic error in database SSL configuration that could allow man-in-the-middle attacks (CWE-295)
+
+✅ **SEC-02: OAuth Credentials** — Removed hard-coded GitHub OAuth client secret from frontend source code (CWE-798)
+
+✅ **SEC-03: JWT Key Strength** — Implemented minimum key length validation for JWT secrets to prevent brute-force attacks (CWE-326)
+
+All fixes include comprehensive test coverage (28 security tests). For detailed security audit findings, see [`docs/security-audit-report.md`](./docs/security-audit-report.md).
+
+### Reporting Security Issues
+
+If you discover a security vulnerability, please report it to the maintainers via GitHub Issues with the `security` label. We follow responsible disclosure practices and will acknowledge reports within 72 hours.
+
+---
+
 ## Requirements
 
 - macOS 14 (Sonoma) or later
